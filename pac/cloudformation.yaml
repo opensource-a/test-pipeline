@@ -962,7 +962,7 @@ Resources:
   CodeBuildBuildProject:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub 'https://s3.amazonaws.com/${1S3Bucket}/api/pipeline/create-codebuild-project/cloudformation.yaml'
+      TemplateURL: !Sub 'https://s3.amazonaws.com/${1S3Bucket}/ui/pipeline/create-codebuild-project/cloudformation.yaml'
       Parameters:
         0SystemName: !Ref 0SystemName
         1KMSKeyArn: !GetAtt 
@@ -985,7 +985,7 @@ Resources:
   CodeBuildCfnDeployProject:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub 'https://s3.amazonaws.com/${1S3Bucket}/api/pipeline/create-codebuild-project/cloudformation.yaml'
+      TemplateURL: !Sub 'https://s3.amazonaws.com/${1S3Bucket}/ui/pipeline/create-codebuild-project/cloudformation.yaml'
       Parameters:
         0SystemName: !Ref 0SystemName
         1KMSKeyArn: !GetAtt 
@@ -1008,7 +1008,7 @@ Resources:
   CodeBuildSmokeTestProject:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub 'https://s3.amazonaws.com/${1S3Bucket}/api/pipeline/create-codebuild-project/cloudformation.yaml'
+      TemplateURL: !Sub 'https://s3.amazonaws.com/${1S3Bucket}/ui/pipeline/create-codebuild-project/cloudformation.yaml'
       Parameters:
         0SystemName: !Ref 0SystemName
         1KMSKeyArn: !GetAtt 
@@ -1031,7 +1031,7 @@ Resources:
   CodeBuildFunctionalTestProject:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub 'https://s3.amazonaws.com/${1S3Bucket}/api/pipeline/create-codebuild-project/cloudformation.yaml'
+      TemplateURL: !Sub 'https://s3.amazonaws.com/${1S3Bucket}/ui/pipeline/create-codebuild-project/cloudformation.yaml'
       Parameters:
         0SystemName: !Ref 0SystemName
         1KMSKeyArn: !GetAtt 
@@ -1054,7 +1054,7 @@ Resources:
   CodeBuildElbSwitchProject:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub 'https://s3.amazonaws.com/${1S3Bucket}/api/pipeline/create-codebuild-project/cloudformation.yaml'
+      TemplateURL: !Sub 'https://s3.amazonaws.com/${1S3Bucket}/ui/pipeline/create-codebuild-project/cloudformation.yaml'
       Parameters:
         0SystemName: !Ref 0SystemName
         1KMSKeyArn: !GetAtt 
