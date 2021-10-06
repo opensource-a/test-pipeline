@@ -14,23 +14,29 @@ phases:
       - BUILD_NUMBER=$J
       - echo $BUILD_NUMBER
       - cp $E injected-parameters.json
+      - Env=$(aws secretsmanager get-secret-value --secret-id $PipelineStackName-$SystemComponent-$Env-Env-Parameters --query SecretString --output text | jq -rR 'fromjson? | .EnvName')
+      - Ami=$(aws secretsmanager get-secret-value --secret-id $PipelineStackName-$SystemComponent-$Env-Env-Parameters --query SecretString --output text | jq -rR 'fromjson? | .Ami')
+      - InstanceType=$(aws secretsmanager get-secret-value --secret-id $PipelineStackName-$SystemComponent-$Env-Env-Parameters --query SecretString --output text | jq -rR 'fromjson? | .InstanceType')
+      - KeyPairName=$(aws secretsmanager get-secret-value --secret-id $PipelineStackName-$SystemComponent-$Env-Env-Parameters --query SecretString --output text | jq -rR 'fromjson? | .KeyPairName')
+      - Vpc=$(aws secretsmanager get-secret-value --secret-id $PipelineStackName-$SystemComponent-$Env-Env-Parameters --query SecretString --output text | jq -rR 'fromjson? | .Vpc')
+      - Subnets=$(aws secretsmanager get-secret-value --secret-id $PipelineStackName-$SystemComponent-$Env-Env-Parameters --query SecretString --output text | jq -rR 'fromjson? | .Subnets')
+      - SecurityGroup=$(aws secretsmanager get-secret-value --secret-id $PipelineStackName-$SystemComponent-$Env-Env-Parameters --query SecretString --output text | jq -rR 'fromjson? | .SecurityGroup')      
       - |
-        sed -i  "s/#BlueBuildNumber/$BUILD_NUMBER/g" injected-parameters.json;
-        sed -i  "s/#GreenBuildNumber/$buildInService/g" injected-parameters.json
-        sed -i  "s/#PipelineName/$B/g" injected-parameters.json;
-        sed -i  "s/#Env/$D/g" injected-parameters.json;
-        sed -i  "s/#AmiId/$L/g" injected-parameters.json;
+        sed -i  "s/#Env/$Env/g" injected-parameters.json;
+        sed -i  "s/#Company/$CompanyName/g" injected-parameters.json;
+        sed -i  "s/#VpcId/$Vpc/g" injected-parameters.json;
+        sed -i  "s/#AmiId/$Ami/g" injected-parameters.json;
         sed -i  "s/#SourcePortNumber/$Q/g" injected-parameters.json;
-        sed -i  "s/#InstanceType/$M/g" injected-parameters.json;
-        sed -i  "s/#KeyPairName/$N/g" injected-parameters.json;
-        sed -i  "s/#SecurityGroup/$P/g" injected-parameters.json;
+        sed -i  "s/#InstanceType/$InstanceType/g" injected-parameters.json;
+        sed -i  "s/#KeyPairName/$KeyPairName/g" injected-parameters.json;
+        sed -i  "s/#SecurityGroup/$SecurityGroup/g" injected-parameters.json;
         sed -i  "s/#NameTagPrefix/$K/g" injected-parameters.json;
         sed -i  "s~#PermissionsBoundary~$O~g" injected-parameters.json;
-        sed -i  "s/#SystemComponent/$C/g" injected-parameters.json;
-        sed -i  "s/#SystemName/$SystemName/g" injected-parameters.json;
+        sed -i  "s/#SystemComponent/$SystemComponent/g" injected-parameters.json;
+        sed -i  "s/#Solution/$SystemName/g" injected-parameters.json;
         sed -i  "s~#RepositoryUri~$R~g" injected-parameters.json;
         sed -i  "s~#ArgOne~$G~g" injected-parameters.json;
-        sed -i  "s~#Subnet~$SubnetBlue~g" injected-parameters.json;
+        sed -i  "s~#SubnetId~$Subnets~g" injected-parameters.json;
 
       - cat injected-parameters.json; 
       - cat $F;
