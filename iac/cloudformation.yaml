@@ -1,0 +1,511 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: AWS CloudFormation :Creates AWS Resources for Application-Solution
+
+Parameters:
+  pCompanyName:
+    Description: Company Name - Mandatory Parameter
+    Type: String
+  pCompanyGroupName:
+    Description: Company Group Name - Mandatory Parameter
+    Type: String    
+  pSolutionName:
+    Description: solution Name - Mandatory Parameter
+    Type: String    
+  pApplicationName:
+    Description: Application Name - Mandatory Parameter
+    Type: String     
+  pApplicationGroup:
+    Description: Company Application Group used in EC2 tags - Mandatory Parameter
+    Type: String
+    MinLength: 3
+    MaxLength: 60
+    ConstraintDescription: Applicaiton Groups of the EC2 instance.
+  pPatchGroup:
+    Description: Patch Group
+    Type: String
+    ConstraintDescription: This must be valid Patch Group
+  pLandscape:
+    Description: Application Landscape - Mandatory Parameter
+    Type: String
+    ConstraintDescription: Landscape tag.
+    AllowedValues:
+      - DEV
+      - TEST
+      - STAGE
+      - PROD
+  pEc2RootEBSVolumeSize:
+    Description: The volume size, in gibibytes (GiB).
+    Type: String
+    ConstraintDescription: This must be valid number
+  pEc2SDFEBSVolumeSize:
+    Description: The volume size, in gibibytes (GiB). /opt
+    Type: String
+    ConstraintDescription: This must be valid number
+  pEc2SDBEBSVolumeSize:
+    Description: The volume size, in gibibytes (GiB). Additional EBS Volume. Update the size
+    Type: String
+    ConstraintDescription: This must be valid number
+  pAvailabilityZone:
+    Type: String
+    Description: Availability zone where we need this EC2 to be placed
+    AllowedValues:
+      - us-east-1a
+      - us-east-1b
+      - us-east-1c
+      - us-east-1d
+      - us-east-1e
+    ConstraintDescription: AWS Availability zone where EC2 instance will be created.
+  pCostCenter:
+    Type: String
+    Description: CostCenter
+  pWBSE:
+    Type: String
+    Description: Project WBS ID.
+  pITDR:
+    Type: String
+    Description: ITDR number.
+  pCriticality:
+    Type: String
+    AllowedValues:
+      - C1
+      - C2
+      - C3
+      - C4
+    Description: Application Criticality
+
+  pAMIId:
+    Description: Base AMI ID
+    Type: String
+    MinLength: 3
+    MaxLength: 60
+    ConstraintDescription: Base AMI ID
+  pHostName:
+    Description: FQDN Hostname of EC2 instance - Mandatory Parameter
+    Type: String
+    MinLength: 3
+    MaxLength: 60
+    ConstraintDescription: Host name can not be empty
+
+  pEC2TagName:
+    Description: EC2 Name Tag - Mandatory Parameter
+    Type: String
+    MinLength: 3
+    MaxLength: 60
+    ConstraintDescription: Name Tag. Can not be empty
+  ###########
+  pOperatingSystem:
+    Description: Operating System Tag
+    Type: String
+    Default: Redhat Enterprise Linux 8.x
+
+  pApplicationSubGroup:
+    Description: Application Sub Group
+    Type: String
+
+  pFundingSource:
+    Type: String
+    Description: Funding Source. CapEx or OpEx
+    AllowedValues:
+      - CapEx
+      - OpEx
+  pEC2Backup:
+    Type: String
+    Description: EC2 Backup required?
+    AllowedValues:
+      - No
+      - Yes
+
+
+  ###########################
+  pInstanceType:
+    Description: EC2 instance type
+    Type: String
+    AllowedValues: [t3.nano,t3.micro,t3.small,t3.medium,t3.large,t3.xlarge,t3.2xlarge,
+      t3a.nano,t3a.micro,t3a.small,t3a.medium,t3a.large,t3a.xlarge,t3a.2xlarge,
+      m5.large,m5.xlarge,m5.2xlarge,m5.4xlarge,m5.8xlarge,
+      m5a.large,m5a.xlarge,m5a.2xlarge,m5a.4xlarge,m5a.8xlarge,
+      c5.large,c5.xlarge,c5.2xlarge,c5.4xlarge,c5.9xlarge,
+      c5a.large,c5a.xlarge,c5a.2xlarge,c5a.4xlarge,c5a.8xlarge,
+      r5.large,r5.xlarge,r5.2xlarge,r5.4xlarge,r5.8xlarge,
+      r5a.large,r5a.xlarge,r5a.2xlarge,r5a.4xlarge,r5a.8xlarge]
+    ConstraintDescription: Must be a valid EC2 instance type.
+
+  pInstanceMaxSize:
+    Description: Autoscaling Max Size
+    Type: Number
+    ConstraintDescription: Autoscaling Max Size
+  pInstanceMinSize:
+    Description: Autoscaling Min Size
+    Type: Number
+    ConstraintDescription:  Autoscaling Min Size
+  pClusterNodeDesired:
+    Description: Desired number of nodes in the cluster.
+    Type: Number
+  pUnixUser:
+    Description: Desired number of nodes in the cluster.
+    Type: String
+  pSolutionS3BucketName:
+    Description: Artifact bucket for applications in solution
+    Type: String
+  pVPCId:
+    Description: VPCId
+    Type: String  
+  pSubnetId:
+    Description: SubnetId
+    Type: String  
+  pSecurityGroupID: 
+    Description: SecurityGroupId
+    Type: String    
+  pEC2KeyName: 
+    Description: KeyPairName
+    Type: String  
+  pELBSubnetId:
+    Description: ELBSubnetId
+    Type: CommaDelimitedList      
+  pELBSecurityGroupID: 
+    Description: ELBSecurityGroupId
+    Type: String    
+Conditions:
+  NonProd: !Or [!Equals [!Ref pLandscape, DEV], !Equals [!Ref pLandscape, TEST], !Equals [!Ref pLandscape, STAGE]]
+  Prod:
+    Fn::Equals:
+      - !Ref pLandscape
+      - "PROD"
+  SDBEBSVolCondtion: !Not [!Equals [!Ref pEc2SDBEBSVolumeSize, 0]]
+
+Resources:
+  rEC2IAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Join [ "-",[ !Ref AWS::StackName, !Ref pApplicationGroup, !Ref pApplicationSubGroup, !Ref pLandscape, "EC2Role"]]
+      Path: /
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+
+      Policies:
+      - PolicyName: !Sub ${pApplicationName}-inline-policy
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Action:
+                - ssm:GetParameters
+                - ssm:GetParameter
+                - ssm:GetParametersByPath
+              Resource:
+                - !Sub arn:${AWS::Partition}:ssm:*:*:parameter/${pCompanyName}/${pApplicationGroup}/${pLandscape}/*
+
+            - Effect: Allow
+              Action:
+                - ssm:DescribeParameters
+              Resource: "*"
+            - Effect: Allow
+              Action:
+                - ec2:AttachVolume
+                - ec2:DetachVolume
+                - ec2:CreateVolume
+                - ec2:CreateTags
+                - ec2:Describe*
+              Resource: "*"
+            - Effect: Allow
+              Action:
+              - secretsmanager:GetSecretValue
+              - secretsmanager:DescribeSecret
+              Resource:
+               - !Sub arn:${AWS::Partition}:secretsmanager:*:*:secret:/${pCompanyName}/${pApplicationGroup}/${pLandscape}/*
+
+            - Sid: AllowSharedServicesS3Access
+              Effect: Allow
+              Action:
+              - s3:Get*
+              - s3:List*
+              Resource:
+               - !Sub arn:${AWS::Partition}:s3:::${pCompanyName}-${pCompanyGroupName}-${AWS::AccountId}-${AWS::Region}/*
+               - !Sub arn:${AWS::Partition}:s3:::${pCompanyName}-${pCompanyGroupName}-${AWS::AccountId}-${AWS::Region}/*
+
+            - Sid: AllowApplicationS3Access
+              Effect: Allow
+              Action:
+              - s3:*
+              Resource:
+               - !Sub arn:${AWS::Partition}:s3:::${pSolutionS3BucketName}/*
+               - !Sub arn:${AWS::Partition}:s3:::${pSolutionS3BucketName}
+
+      ManagedPolicyArns:
+        - !Sub arn:${AWS::Partition}:iam::aws:policy/AmazonSSMManagedInstanceCore
+        - !Sub arn:${AWS::Partition}:iam::aws:policy/CloudWatchAgentServerPolicy
+        - !Sub arn:${AWS::Partition}:iam::aws:policy/CloudWatchAgentAdminPolicy
+
+
+  rIAMInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      InstanceProfileName: !Join [ "-",[!Ref AWS::StackName, !Ref pApplicationGroup, !Ref pApplicationSubGroup, !Ref pLandscape, "EC2Role"]]
+      Roles:
+      - !Ref rEC2IAMRole
+
+  rClusterNodeGroup:
+    DependsOn:
+      - rALB
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      DesiredCapacity: !Ref pClusterNodeDesired
+      LaunchConfigurationName: !Ref rNodeLaunchConfig
+      HealthCheckType: ELB
+      HealthCheckGracePeriod: 120
+      MaxSize: !Ref pInstanceMaxSize
+      MinSize: !Ref pInstanceMinSize
+      TargetGroupARNs:
+        - !Ref rDefaultTargetGroup
+      VPCZoneIdentifier:
+        - !Ref pSubnetId
+
+      Tags:
+        - Key: Name
+          Value: !Join [ "-",[ !Ref AWS::StackName, !Ref pLandscape, !Ref pApplicationSubGroup , "node"]]
+          PropagateAtLaunch: true
+        - Key: CostCenter
+          Value: !Ref pCostCenter
+          PropagateAtLaunch: true
+        - Key: Landscape
+          Value: !Ref pLandscape
+          PropagateAtLaunch: true
+        - Key: ApplicationGroup
+          Value: !Ref pApplicationGroup
+          PropagateAtLaunch: true
+        - Key: ApplicationSubGroup
+          Value: !Ref pApplicationSubGroup
+          PropagateAtLaunch: true
+        - Key: FundingSource
+          Value: !Ref pFundingSource
+          PropagateAtLaunch: true
+        - Key: OperatingSystem
+          Value: !Ref pOperatingSystem
+          PropagateAtLaunch: true
+        - Key: EC2Backup
+          Value: !Ref pEC2Backup
+          PropagateAtLaunch: true
+        - Key: WBSE
+          Value: !Ref pWBSE
+          PropagateAtLaunch: true
+        - Key: ITDR
+          Value: !Ref pITDR
+          PropagateAtLaunch: true
+        # - Fn::If:
+        #   - NonProd
+        #   #TRUE
+        #   - Key: BackupTier
+        #     Value: NONPROD
+        #     PropagateAtLaunch: true
+        #   #FALSE
+        #   - Key: BackupTier
+        #     Value: PROD
+        #     PropagateAtLaunch: true
+        # - Fn::If:
+        #   - NonProd
+        #   #TRUE
+        #   - Key: CriticalityNONPROD
+        #     Value: !Ref pCriticality
+        #     PropagateAtLaunch: true
+        #   #FALSE
+          # - Key: CriticalityPROD
+          #   Value: !Ref pCriticality
+          #   PropagateAtLaunch: true
+        # - Key: PatchGroup
+        #   Value: !Ref pPatchGroup
+        #   PropagateAtLaunch: true
+        # - Key: OperatingSystem
+        #   Value: !Ref pOperatingSystem
+        #   PropagateAtLaunch: true
+        # - Key: managed-by
+        #   Value: !Sub ${pCompanyName}-${pCompanyGroupName}
+        #   PropagateAtLaunch: true
+  rScaleUpPolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AdjustmentType: ChangeInCapacity
+      AutoScalingGroupName: !Ref rClusterNodeGroup
+      Cooldown: 60
+      ScalingAdjustment: 1
+
+  rScaleDownPolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AdjustmentType: ChangeInCapacity
+      AutoScalingGroupName: !Ref rClusterNodeGroup
+      Cooldown: 60
+      ScalingAdjustment: -1
+
+  rCPUAlarmHigh:
+   Type: AWS::CloudWatch::Alarm
+   Properties:
+        AlarmDescription: Scale-up if CPU > 50% for 1 minutes
+        MetricName: CPUUtilization
+        Namespace: AWS/EC2
+        Statistic: Average
+        Period: 60
+        EvaluationPeriods: 1
+        Threshold: 50
+        AlarmActions:
+        - !Ref rScaleUpPolicy
+        Dimensions:
+        - Name: AutoScalingGroupName
+          Value:
+           Ref: rClusterNodeGroup
+        ComparisonOperator: GreaterThanThreshold
+
+  # rCPUAlarmLow:
+  #  Type: AWS::CloudWatch::Alarm
+  #  Properties:
+  #       AlarmDescription: Scale-down if CPU < 45% for 1 minute
+  #       MetricName: CPUUtilization
+  #       Namespace: AWS/EC2
+  #       Statistic: Average
+  #       Period: 60
+  #       EvaluationPeriods: 1
+  #       Threshold: 45
+  #       AlarmActions:
+  #       - !Ref rScaleDownPolicy
+  #       Dimensions:
+  #       - Name: AutoScalingGroupName
+  #         Value:
+  #          Ref: rClusterNodeGroup
+  #       ComparisonOperator: LessThanThreshold
+
+  rNodeLaunchConfig:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    CreationPolicy:
+      ResourceSignal:
+        Count: 1
+        Timeout: "PT30M"
+    Properties:
+      AssociatePublicIpAddress: true
+      InstanceType: !Ref pInstanceType
+      SecurityGroups: 
+        - !Ref pSecurityGroupID
+      KeyName: !Ref pEC2KeyName
+      ImageId: !Ref pAMIId
+      #IamInstanceProfile: CompanyEC2DomainJoinRole
+      IamInstanceProfile: !Ref rIAMInstanceProfile
+
+      EbsOptimized: True
+      #DisableApiTermination: True
+      BlockDeviceMappings:
+        -
+          DeviceName: "/dev/sda1"
+          Ebs:
+            VolumeSize: !Ref pEc2RootEBSVolumeSize
+            VolumeType: gp3
+            DeleteOnTermination: true
+            Encrypted: true
+        -
+          DeviceName: "/dev/sdf"
+          #/dev/sdf maps to /opt
+          Ebs:
+            VolumeSize: !Ref pEc2SDFEBSVolumeSize
+            VolumeType: gp3
+            DeleteOnTermination: true
+            Encrypted: true
+        - Fn::If:
+          - SDBEBSVolCondtion
+          - DeviceName: /dev/sdb
+            Ebs:
+              VolumeType: gp3
+              DeleteOnTermination: true
+              VolumeSize: !Ref pEc2SDBEBSVolumeSize
+              Encrypted: true
+          - Ref: AWS::NoValue
+      UserData:
+        Fn::Base64: !Sub
+          - |
+            #!/bin/bash
+            yum update -y
+            yum install -y httpd
+            service httpd start
+            chkconfig httpd on
+            cd /var/www/html
+            echo "<html><h1>Hello! Welcome to the ${pLandscape} environment...</h1></html>" > index.html
+          - newRoleArn: !Ref rIAMInstanceProfile
+  rELBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Join [ "-",[ !Ref AWS::StackName, !Ref pApplicationGroup, !Ref pApplicationSubGroup, !Ref pLandscape, "sg"]]
+      GroupDescription: 'Port access rules for the Elastic LoadBalancer'
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 10.0.0.0/8
+        - FromPort: 80
+          ToPort: 80
+          IpProtocol: tcp
+          CidrIp: 10.0.0.0/8
+        - FromPort: 443
+          ToPort: 443
+          IpProtocol: tcp
+          CidrIp: 10.0.0.0/8
+
+  rALB:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      #Name: !Sub ${pApplicationGroup}-${pLandscape}-app-lb
+      Type: application
+      SecurityGroups:
+        - !Ref pELBSecurityGroupID
+        - !GetAtt rELBSecurityGroup.GroupId
+      Scheme: internal
+      Subnets: !Ref pELBSubnetId
+      Tags:
+          - Key: CostCenter
+            Value: !Ref pCostCenter
+          - Key: Landscape
+            Value: !Ref pLandscape
+          - Key: ApplicationGroup
+            Value: !Ref pApplicationGroup
+          - Key: ApplicationSubGroup
+            Value: !Ref pApplicationSubGroup
+          - Key: FundingSource
+            Value: !Ref pFundingSource
+    DependsOn:
+      - rELBSecurityGroup 
+  rLoadBalancerListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref rALB
+      Port: 80
+      #Port: 443
+      # Certificates:
+      #   - CertificateArn: !Ref pCertificateARN
+      Protocol: HTTP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref rDefaultTargetGroup
+
+  rDefaultTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckIntervalSeconds: 80
+      HealthCheckTimeoutSeconds: 10
+      HealthCheckPort: traffic-port
+      HealthCheckPath: /index.html
+      HealthCheckProtocol: HTTP
+      HealthyThresholdCount: 5
+      UnhealthyThresholdCount: 8
+      #Name: !Sub ${pApplicationGroup}-${pLandscape}-app-tg
+      Port: 80
+      Protocol: HTTP
+      Matcher:
+        HttpCode: 200,401
+      VpcId: !Ref pVPCId
+
+Outputs:
+  oALBDNS:
+    Value: !GetAtt
+      - rALB
+      - DNSName
