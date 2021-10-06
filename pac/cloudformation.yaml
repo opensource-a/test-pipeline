@@ -553,23 +553,16 @@ Resources:
                 Provider: !Ref ActB04ActionProvider
               Configuration:
                 EnvironmentVariables: !Sub >-
-                  [{"name":"A","value":"${AWS::StackName}"},
-                  {"name":"B","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
-                  {"name":"C","value":"${7SystemComponent}"},
-                  {"name":"D","value":"${EnvA01EnvironmentName}"},
+                  [{"name":"PipelineStackName","value":"${AWS::StackName}"},
+                  {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
+                  {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
+                  {"name":"EnvironmentSecret","value":"${AWS::StackName}-${7SystemComponent}-${EnvA01EnvironmentName}-Env-Parameters"},
                   {"name":"E","value":"${4DeploymentTemplateParameterFileName}"},
                   {"name":"F","value":"${4ADeploymentTemplateFileName}"},
-                  {"name":"G","value":"${EnvA13ArgOne}"},
-                  {"name":"H","value":"${EnvA07Vpc}"},
-                  {"name":"I","value":"${AWS::StackName}-${7SystemComponent}-${EnvA01EnvironmentName}-stack-${AWS::AccountId}"},
-                  {"name":"J","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
-                  {"name":"K","value":"${EnvA10EC2NameTagPrefix}"},
-                  {"name":"L","value":"${EnvA04Ami}"},
-                  {"name":"M","value":"${EnvA05InstanceType}"},
-                  {"name":"N","value":"${EnvA06KeyPairName}"},
-                  {"name":"O","value":"${6PermissionsBoundary}"},
-                  {"name":"P","value":"${EnvA09SecurityGroup}"},{"name":"Q","value":"${EnvA14SourceContainerPort}"},
-                  {"name":"R","value":"${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${Repository}"}]
+                  {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"Env","value":"${EnvA01EnvironmentName}"},
+                  {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvA01EnvironmentName}-stack-${AWS::AccountId}"},
+                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"}
                 ProjectName: !GetAtt CodeBuildCfnDeployProject.Outputs.CodeBuildProjectName
               InputArtifacts:
                 - Name: !Sub '${7SystemComponent}-source-code'
@@ -655,24 +648,16 @@ Resources:
                 Provider: !Ref ActB04ActionProvider
               Configuration:
                 EnvironmentVariables: !Sub >-
-                  [{"name":"A","value":"${AWS::StackName}"},
-                  {"name":"B","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
-                  {"name":"C","value":"${7SystemComponent}"},
-                  {"name":"D","value":"${EnvB01EnvironmentName}"},
+                  [{"name":"PipelineStackName","value":"${AWS::StackName}"},
+                  {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
+                  {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
+                  {"name":"EnvironmentSecret","value":"${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-Env-Parameters"},
                   {"name":"E","value":"${4DeploymentTemplateParameterFileName}"},
                   {"name":"F","value":"${4ADeploymentTemplateFileName}"},
-                  {"name":"G","value":"${EnvB13ArgOne}"},
-                  {"name":"H","value":"${EnvB07Vpc}"},
-                  {"name":"I","value":"${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-stack-${AWS::AccountId}"},
-                  {"name":"J","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
-                  {"name":"K","value":"${EnvB10EC2NameTagPrefix}"},
-                  {"name":"L","value":"${EnvB04Ami}"},
-                  {"name":"M","value":"${EnvB05InstanceType}"},
-                  {"name":"N","value":"${EnvB06KeyPairName}"},
-                  {"name":"O","value":"${6PermissionsBoundary}"},
-                  {"name":"P","value":"${EnvB09SecurityGroup}"},
-                  {"name":"Q","value":"${EnvB14SourceContainerPort}"},
-                  {"name":"R","value":"${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${Repository}"}]
+                  {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"Env","value":"${EnvB01EnvironmentName}"},
+                  {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-stack-${AWS::AccountId}"},
+                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"}
                 ProjectName: !GetAtt CodeBuildCfnDeployProject.Outputs.CodeBuildProjectName
               InputArtifacts:
                 - Name: !Sub '${7SystemComponent}-source-code'
@@ -783,23 +768,16 @@ Resources:
                 Provider: !Ref ActB04ActionProvider
               Configuration:
                 EnvironmentVariables: !Sub >-
-                  [{"name":"A","value":"${AWS::StackName}"},
-                  {"name":"B","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
-                  {"name":"C","value":"${7SystemComponent}"},
-                  {"name":"D","value":"${EnvC01EnvironmentName}"},
+                  [{"name":"PipelineStackName","value":"${AWS::StackName}"},
+                  {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
+                  {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
+                  {"name":"EnvironmentSecret","value":"${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-Env-Parameters"},
                   {"name":"E","value":"${4DeploymentTemplateParameterFileName}"},
                   {"name":"F","value":"${4ADeploymentTemplateFileName}"},
-                  {"name":"G","value":"${EnvC13ArgOne}"},
-                  {"name":"H","value":"${EnvC07Vpc}"},
-                  {"name":"I","value":"${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-stack-${AWS::AccountId}"},
-                  {"name":"J","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
-                  {"name":"K","value":"${EnvC10EC2NameTagPrefix}"},
-                  {"name":"L","value":"${EnvC04Ami}"},
-                  {"name":"M","value":"${EnvC05InstanceType}"},
-                  {"name":"N","value":"${EnvC06KeyPairName}"},
-                  {"name":"O","value":"${6PermissionsBoundary}"},
-                  {"name":"P","value":"${EnvC09SecurityGroup}"},{"name":"Q","value":"${EnvC14SourceContainerPort}"},
-                  {"name":"R","value":"${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${Repository}"}]
+                  {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"Env","value":"${EnvC01EnvironmentName}"},
+                  {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-stack-${AWS::AccountId}"},
+                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"}
                 ProjectName: !GetAtt CodeBuildCfnDeployProject.Outputs.CodeBuildProjectName
               InputArtifacts:
                 - Name: !Sub '${7SystemComponent}-source-code'
@@ -885,24 +863,16 @@ Resources:
                 Provider: !Ref ActB04ActionProvider
               Configuration:
                 EnvironmentVariables: !Sub >-
-                  [{"name":"A","value":"${AWS::StackName}"},
-                  {"name":"B","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
-                  {"name":"C","value":"${7SystemComponent}"},
-                  {"name":"D","value":"${EnvD01EnvironmentName}"},
+                  [{"name":"PipelineStackName","value":"${AWS::StackName}"},
+                  {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
+                  {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
+                  {"name":"EnvironmentSecret","value":"${AWS::StackName}-${7SystemComponent}-${EnvD01EnvironmentName}-Env-Parameters"},
                   {"name":"E","value":"${4DeploymentTemplateParameterFileName}"},
                   {"name":"F","value":"${4ADeploymentTemplateFileName}"},
-                  {"name":"G","value":"${EnvD13ArgOne}"},
-                  {"name":"H","value":"${EnvD07Vpc}"},
-                  {"name":"I","value":"${AWS::StackName}-${7SystemComponent}-${EnvD01EnvironmentName}-stack-${AWS::AccountId}"},
-                  {"name":"J","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
-                  {"name":"K","value":"${EnvD10EC2NameTagPrefix}"},
-                  {"name":"L","value":"${EnvD04Ami}"},
-                  {"name":"M","value":"${EnvD05InstanceType}"},
-                  {"name":"N","value":"${EnvD06KeyPairName}"},
-                  {"name":"O","value":"${6PermissionsBoundary}"},
-                  {"name":"P","value":"${EnvD09SecurityGroup}"},
-                  {"name":"Q","value":"${EnvD14SourceContainerPort}"},
-                  {"name":"R","value":"${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${Repository}"}]
+                  {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"Env","value":"${EnvD01EnvironmentName}"},
+                  {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvD01EnvironmentName}-stack-${AWS::AccountId}"},
+                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"}
                 ProjectName: !GetAtt CodeBuildCfnDeployProject.Outputs.CodeBuildProjectName
               InputArtifacts:
                 - Name: !Sub '${7SystemComponent}-source-code'
