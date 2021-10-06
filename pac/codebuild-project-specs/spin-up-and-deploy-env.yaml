@@ -9,9 +9,8 @@ phases:
       - ls
       - DeploymentSubnets="1,2"
       - echo $DeploymentSubnets
-      - echo $H
-      - echo $I
-      - BUILD_NUMBER=$J
+      - echo $DeploymentStackName
+      - BUILD_NUMBER=$BuildNumber
       - echo $BUILD_NUMBER
       - cp $E injected-parameters.json
       - Env=$(aws secretsmanager get-secret-value --secret-id $PipelineStackName-$SystemComponent-$Env-Env-Parameters --query SecretString --output text | jq -rR 'fromjson? | .EnvName')
@@ -41,14 +40,14 @@ phases:
       - cat injected-parameters.json; 
       - cat $F;
       - |
-        if ! aws cloudformation describe-stacks --stack-name $I ; then
+        if ! aws cloudformation describe-stacks --stack-name $DeploymentStackName ; then
           echo -e "\nStack does not exist, creating ..."
-          aws cloudformation create-stack --stack-name $I --template-body file://$F --parameters file://injected-parameters.json --capabilities CAPABILITY_NAMED_IAM
+          aws cloudformation create-stack --stack-name $DeploymentStackName --template-body file://$F --parameters file://injected-parameters.json --capabilities CAPABILITY_NAMED_IAM
           echo "Waiting for stack to be created ..."
-          aws cloudformation wait stack-create-complete --stack-name $I 
+          aws cloudformation wait stack-create-complete --stack-name $DeploymentStackName 
         else
           echo -e "\nStack exists, attempting update ..."
-          aws cloudformation update-stack --stack-name $I --template-body file://$F --parameters file://injected-parameters.json --capabilities CAPABILITY_NAMED_IAM
+          aws cloudformation update-stack --stack-name $DeploymentStackName --template-body file://$F --parameters file://injected-parameters.json --capabilities CAPABILITY_NAMED_IAM
           echo "Waiting for stack to be updated ..."
-          aws cloudformation wait stack-update-complete --stack-name $I
+          aws cloudformation wait stack-update-complete --stack-name $DeploymentStackName
         fi 
