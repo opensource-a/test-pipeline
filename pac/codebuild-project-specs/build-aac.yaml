@@ -15,8 +15,8 @@ phases:
       - echo $branch_name
       - repo_name=$(basename `git config --get remote.origin.url`)
       - echo $repo_name
-      - sed -i "s/repo_name/$repo_name/g" src/index.html
-      - sed -i "s~branch_name~$branch_name~g" src/index.html
+      - sed -i "s/repo_name/$repo_name/g" aac/index.html
+      - sed -i "s~branch_name~$branch_name~g" aac/index.html
       - sed -i "s/commit_number/$commit_number, build $CODEBUILD_BUILD_NUMBER, pipelineXID $PipelineExecutionId /g" aac/index.html
 
 artifacts:
