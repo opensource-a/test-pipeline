@@ -5,7 +5,7 @@
    },
    {
       "ParameterKey": "pELBSubnetId",
-      "ParameterValue": "subnet-36f80a17,subnet-fda454a2"
+      "ParameterValue": "#SubnetId"
    },
    {
       "ParameterKey": "pFundingSource",
@@ -13,7 +13,7 @@
    },
    {
       "ParameterKey": "pSecurityGroupID",
-      "ParameterValue": "sg-556c827b"
+      "ParameterValue": "#SecurityGroup"
    },
    {
       "ParameterKey": "pCompanyGroupName",
@@ -29,7 +29,7 @@
    },
    {
       "ParameterKey": "pSubnetId",
-      "ParameterValue": "subnet-36f80a17"
+      "ParameterValue": "#SubnetId"
    },
    {
       "ParameterKey": "pApplicationGroup",
@@ -45,7 +45,7 @@
    },
    {
       "ParameterKey": "pVPCId",
-      "ParameterValue": "vpc-97ceceed"
+      "ParameterValue": "#VpcId"
    },
    {
       "ParameterKey": "pCostCenter",
@@ -61,11 +61,11 @@
    },
    {
       "ParameterKey": "pEC2Backup",
-      "ParameterValue": "true"
+      "ParameterValue": "false"
    },
    {
       "ParameterKey": "pInstanceType",
-      "ParameterValue": "t3.large"
+      "ParameterValue": "#InstanceType"
    },
    {
       "ParameterKey": "pEC2TagName",
@@ -73,7 +73,7 @@
    },
    {
       "ParameterKey": "pEC2KeyName",
-      "ParameterValue": "test"
+      "ParameterValue": "#KeyPairName"
    },
    {
       "ParameterKey": "pSolutionName",
@@ -105,7 +105,7 @@
    },
    {
       "ParameterKey": "pELBSecurityGroupID",
-      "ParameterValue": "sg-556c827b"
+      "ParameterValue": "#SecurityGroup"
    },
    {
       "ParameterKey": "pSolutionS3BucketName",
@@ -117,7 +117,7 @@
    },
    {
       "ParameterKey": "pLandscape",
-      "ParameterValue": "#Landscape"
+      "ParameterValue": "#Env"
    },
    {
       "ParameterKey": "pInstanceMaxSize",
@@ -129,7 +129,7 @@
    },
    {
       "ParameterKey": "pAMIId",
-      "ParameterValue": "ami-087c17d1fe0178315"
+      "ParameterValue": "#AmiId"
    },
    {
       "ParameterKey": "pHostName",
