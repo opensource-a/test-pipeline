@@ -1,0 +1,138 @@
+[
+   {
+      "ParameterKey": "pOperatingSystem",
+      "ParameterValue": "amazon-linux2"
+   },
+   {
+      "ParameterKey": "pELBSubnetId",
+      "ParameterValue": "subnet-36f80a17,subnet-fda454a2"
+   },
+   {
+      "ParameterKey": "pFundingSource",
+      "ParameterValue": "CapEx"
+   },
+   {
+      "ParameterKey": "pSecurityGroupID",
+      "ParameterValue": "sg-556c827b"
+   },
+   {
+      "ParameterKey": "pCompanyGroupName",
+      "ParameterValue": "cloud"
+   },
+   {
+      "ParameterKey": "pAvailabilityZone",
+      "ParameterValue": "us-east-1a"
+   },
+   {
+      "ParameterKey": "pCompanyName",
+      "ParameterValue": "company"
+   },
+   {
+      "ParameterKey": "pSubnetId",
+      "ParameterValue": "subnet-36f80a17"
+   },
+   {
+      "ParameterKey": "pApplicationGroup",
+      "ParameterValue": "ApplicationGroup"
+   },
+   {
+      "ParameterKey": "pUnixUser",
+      "ParameterValue": "testdevuser"
+   },
+   {
+      "ParameterKey": "pEc2SDFEBSVolumeSize",
+      "ParameterValue": "100"
+   },
+   {
+      "ParameterKey": "pVPCId",
+      "ParameterValue": "vpc-97ceceed"
+   },
+   {
+      "ParameterKey": "pCostCenter",
+      "ParameterValue": "1111"
+   },
+   {
+      "ParameterKey": "pCriticality",
+      "ParameterValue": "C3"
+   },
+   {
+      "ParameterKey": "pEc2SDBEBSVolumeSize",
+      "ParameterValue": "0"
+   },
+   {
+      "ParameterKey": "pEC2Backup",
+      "ParameterValue": "true"
+   },
+   {
+      "ParameterKey": "pInstanceType",
+      "ParameterValue": "t3.large"
+   },
+   {
+      "ParameterKey": "pEC2TagName",
+      "ParameterValue": "solution"
+   },
+   {
+      "ParameterKey": "pEC2KeyName",
+      "ParameterValue": "test"
+   },
+   {
+      "ParameterKey": "pSolutionName",
+      "ParameterValue": "solution"
+   },
+   {
+      "ParameterKey": "pWBSE",
+      "ParameterValue": "1234"
+   },
+   {
+      "ParameterKey": "pInstanceMinSize",
+      "ParameterValue": "1"
+   },
+   {
+      "ParameterKey": "pApplicationName",
+      "ParameterValue": "application"
+   },
+   {
+      "ParameterKey": "pClusterNodeDesired",
+      "ParameterValue": "5"
+   },
+   {
+      "ParameterKey": "pITDR",
+      "ParameterValue": "TBD"
+   },
+   {
+      "ParameterKey": "pEc2RootEBSVolumeSize",
+      "ParameterValue": "60"
+   },
+   {
+      "ParameterKey": "pELBSecurityGroupID",
+      "ParameterValue": "sg-556c827b"
+   },
+   {
+      "ParameterKey": "pSolutionS3BucketName",
+      "ParameterValue": "solution-name"
+   },
+   {
+      "ParameterKey": "pPatchGroup",
+      "ParameterValue": "TBD"
+   },
+   {
+      "ParameterKey": "pLandscape",
+      "ParameterValue": "DEV"
+   },
+   {
+      "ParameterKey": "pInstanceMaxSize",
+      "ParameterValue": "10"
+   },
+   {
+      "ParameterKey": "pApplicationSubGroup",
+      "ParameterValue": "Solution"
+   },
+   {
+      "ParameterKey": "pAMIId",
+      "ParameterValue": "ami-087c17d1fe0178315"
+   },
+   {
+      "ParameterKey": "pHostName",
+      "ParameterValue": "solution"
+   }
+]
