@@ -7,14 +7,6 @@ phases:
   build:
     commands:
       - ls
-      - commit_number=$(git rev-parse HEAD | head -c7)
-      - echo $commit_number
-      - branch_name_with_slash=$(git rev-parse --abbrev-ref HEAD)
-      - echo $branch_name_with_slash
-      - branch_name=$(echo $branch_name_with_slash | sed "s~/~-~g")
-      - echo $branch_name
-      - repo_name=$(basename `git config --get remote.origin.url`)
-      - echo $repo_name
       - sed -i "s/repo_name/$repo_name/g" aac/index.html
       - sed -i "s~branch_name~$branch_name~g" aac/index.html
       - sed -i "s/commit_number/$commit_number, build $CODEBUILD_BUILD_NUMBER, pipelineXID $PipelineExecutionId /g" aac/index.html
