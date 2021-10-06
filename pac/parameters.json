@@ -5,11 +5,11 @@
   },
   {
     "ParameterKey": "1S3Bucket",
-    "ParameterValue": "system.company.com"
+    "ParameterValue": "test.company.com"
   },
   {
     "ParameterKey": "2S3SourceObject",
-    "ParameterValue": "ui/source/angularjs/ui.zip"
+    "ParameterValue": "ui/source/ui.zip"
   },
   {
     "ParameterKey": "3SmokeTestDirectory",
@@ -57,15 +57,15 @@
   },
   {
     "ParameterKey": "EnvA04Ami",
-    "ParameterValue": "ami-04d29b6f966df1537"
+    "ParameterValue": "ami-087c17d1fe0178315"
   },
   {
     "ParameterKey": "EnvA05InstanceType",
-    "ParameterValue": "t2.micro"
+    "ParameterValue": "t3.large"
   },
   {
     "ParameterKey": "EnvA06KeyPairName",
-    "ParameterValue": "system-pipeline-ui"
+    "ParameterValue": "test"
   },
   {
     "ParameterKey": "EnvA07Vpc",
@@ -113,15 +113,15 @@
   },
   {
     "ParameterKey": "EnvB04Ami",
-    "ParameterValue": "ami-04d29b6f966df1537"
+    "ParameterValue": "ami-087c17d1fe0178315"
   },
   {
     "ParameterKey": "EnvB05InstanceType",
-    "ParameterValue": "t2.micro"
+    "ParameterValue": "t3.large"
   },
   {
     "ParameterKey": "EnvB06KeyPairName",
-    "ParameterValue": "system-pipeline-ui"
+    "ParameterValue": "test"
   },
   {
     "ParameterKey": "EnvB07Vpc",
@@ -157,7 +157,7 @@
   },
   {
     "ParameterKey": "EnvC01EnvironmentName",
-    "ParameterValue": "STAGING"
+    "ParameterValue": "STAGE"
   },
   {
     "ParameterKey": "EnvC02ELBName",
@@ -169,15 +169,15 @@
   },
   {
     "ParameterKey": "EnvC04Ami",
-    "ParameterValue": "ami-04d29b6f966df1537"
+    "ParameterValue": "ami-087c17d1fe0178315"
   },
   {
     "ParameterKey": "EnvC05InstanceType",
-    "ParameterValue": "t2.micro"
+    "ParameterValue": "t3.large"
   },
   {
     "ParameterKey": "EnvC06KeyPairName",
-    "ParameterValue": "system-pipeline-ui"
+    "ParameterValue": "test"
   },
   {
     "ParameterKey": "EnvC07Vpc",
@@ -225,15 +225,15 @@
   },
   {
     "ParameterKey": "EnvD04Ami",
-    "ParameterValue": "ami-04d29b6f966df1537"
+    "ParameterValue": "ami-087c17d1fe0178315"
   },
   {
     "ParameterKey": "EnvD05InstanceType",
-    "ParameterValue": "t2.micro"
+    "ParameterValue": "t3.large"
   },
   {
     "ParameterKey": "EnvD06KeyPairName",
-    "ParameterValue": "system-pipeline-ui"
+    "ParameterValue": "test"
   },
   {
     "ParameterKey": "EnvD07Vpc",
