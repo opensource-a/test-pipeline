@@ -175,85 +175,93 @@ Conditions:
 
 Resources:
   rEC2IAMRole:
-    Type: AWS::IAM::Role
+    Type: 'AWS::IAM::Role'
     Properties:
-      RoleName: !Join [ "-",[ !Ref AWS::StackName, !Ref pApplicationGroup, !Ref pApplicationSubGroup, !Ref pLandscape, "EC2Role"]]
+      RoleName: !Join 
+        - '-'
+        - - !Ref 'AWS::StackName'
+          - !Ref pApplicationGroup
+          - !Ref pApplicationSubGroup
+          - !Ref pLandscape
+          - EC2Role
       Path: /
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
             Action:
-              - sts:AssumeRole
+              - 'sts:AssumeRole'
             Principal:
               Service:
                 - ec2.amazonaws.com
-
       Policies:
-      - PolicyName: !Sub ${pApplicationName}-inline-policy
-        PolicyDocument:
-          Version: 2012-10-17
-          Statement:
-            - Effect: Allow
-              Action:
-                - ssm:GetParameters
-                - ssm:GetParameter
-                - ssm:GetParametersByPath
-              Resource:
-                - !Sub arn:${AWS::Partition}:ssm:*:*:parameter/${pCompanyName}/${pApplicationGroup}/${pLandscape}/*
-
-            - Effect: Allow
-              Action:
-                - ssm:DescribeParameters
-              Resource: "*"
-            - Effect: Allow
-              Action:
-                - ec2:AttachVolume
-                - ec2:DetachVolume
-                - ec2:CreateVolume
-                - ec2:CreateTags
-                - ec2:Describe*
-              Resource: "*"
-            - Effect: Allow
-              Action:
-              - secretsmanager:GetSecretValue
-              - secretsmanager:DescribeSecret
-              Resource:
-               - !Sub arn:${AWS::Partition}:secretsmanager:*:*:secret:/${pCompanyName}/${pApplicationGroup}/${pLandscape}/*
-
-            - Sid: AllowSharedServicesS3Access
-              Effect: Allow
-              Action:
-              - s3:Get*
-              - s3:List*
-              Resource:
-               - !Sub arn:${AWS::Partition}:s3:::${pCompanyName}-${pCompanyGroupName}-${AWS::AccountId}-${AWS::Region}/*
-               - !Sub arn:${AWS::Partition}:s3:::${pCompanyName}-${pCompanyGroupName}-${AWS::AccountId}-${AWS::Region}/*
-
-            - Sid: AllowApplicationS3Access
-              Effect: Allow
-              Action:
-              - s3:*
-              Resource:
-               - !Sub arn:${AWS::Partition}:s3:::${pSolutionS3BucketName}/*
-               - !Sub arn:${AWS::Partition}:s3:::${pSolutionS3BucketName}
-
+        - PolicyName: !Sub '${pApplicationName}-inline-policy'
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'ssm:GetParameters'
+                  - 'ssm:GetParameter'
+                  - 'ssm:GetParametersByPath'
+                Resource:
+                  - !Sub >-
+                    arn:${AWS::Partition}:ssm:*:*:parameter/${pCompanyName}/${pApplicationGroup}/${pLandscape}/*
+              - Effect: Allow
+                Action:
+                  - 'ssm:DescribeParameters'
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - 'ec2:AttachVolume'
+                  - 'ec2:DetachVolume'
+                  - 'ec2:CreateVolume'
+                  - 'ec2:CreateTags'
+                  - 'ec2:Describe*'
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - 'secretsmanager:GetSecretValue'
+                  - 'secretsmanager:DescribeSecret'
+                Resource:
+                  - !Sub >-
+                    arn:${AWS::Partition}:secretsmanager:*:*:secret:/${pCompanyName}/${pApplicationGroup}/${pLandscape}/*
+              - Sid: AllowSharedServicesS3Access
+                Effect: Allow
+                Action:
+                  - 's3:Get*'
+                  - 's3:List*'
+                Resource:
+                  - !Sub >-
+                    arn:${AWS::Partition}:s3:::${pCompanyName}-${pCompanyGroupName}-${AWS::AccountId}-${AWS::Region}/*
+                  - !Sub >-
+                    arn:${AWS::Partition}:s3:::${pCompanyName}-${pCompanyGroupName}-${AWS::AccountId}-${AWS::Region}/*
+              - Sid: AllowApplicationS3Access
+                Effect: Allow
+                Action:
+                  - 's3:*'
+                Resource:
+                  - !Sub 'arn:${AWS::Partition}:s3:::${pSolutionS3BucketName}/*'
+                  - !Sub 'arn:${AWS::Partition}:s3:::${pSolutionS3BucketName}'
       ManagedPolicyArns:
-        - !Sub arn:${AWS::Partition}:iam::aws:policy/AmazonSSMManagedInstanceCore
-        - !Sub arn:${AWS::Partition}:iam::aws:policy/CloudWatchAgentServerPolicy
-        - !Sub arn:${AWS::Partition}:iam::aws:policy/CloudWatchAgentAdminPolicy
-
-
+        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/AmazonSSMManagedInstanceCore'
+        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/CloudWatchAgentServerPolicy'
+        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/CloudWatchAgentAdminPolicy'
   rIAMInstanceProfile:
-    Type: AWS::IAM::InstanceProfile
+    Type: 'AWS::IAM::InstanceProfile'
     Properties:
-      InstanceProfileName: !Join [ "-",[!Ref AWS::StackName, !Ref pApplicationGroup, !Ref pApplicationSubGroup, !Ref pLandscape, "EC2Role"]]
+      InstanceProfileName: !Join 
+        - '-'
+        - - !Ref 'AWS::StackName'
+          - !Ref pApplicationGroup
+          - !Ref pApplicationSubGroup
+          - !Ref pLandscape
+          - EC2Role
       Roles:
-      - !Ref rEC2IAMRole
-
+        - !Ref rEC2IAMRole
   rClusterNodeGroup:
     DependsOn:
       - rALB
-    Type: AWS::AutoScaling::AutoScalingGroup
+    Type: 'AWS::AutoScaling::AutoScalingGroup'
     Properties:
       DesiredCapacity: !Ref pClusterNodeDesired
       LaunchConfigurationName: !Ref rNodeLaunchConfig
@@ -265,10 +273,14 @@ Resources:
         - !Ref rDefaultTargetGroup
       VPCZoneIdentifier:
         - !Ref pSubnetId
-
       Tags:
         - Key: Name
-          Value: !Join [ "-",[ !Ref AWS::StackName, !Ref pLandscape, !Ref pApplicationSubGroup , "node"]]
+          Value: !Join 
+            - '-'
+            - - !Ref 'AWS::StackName'
+              - !Ref pLandscape
+              - !Ref pApplicationSubGroup
+              - node
           PropagateAtLaunch: true
         - Key: CostCenter
           Value: !Ref pCostCenter
@@ -297,146 +309,103 @@ Resources:
         - Key: ITDR
           Value: !Ref pITDR
           PropagateAtLaunch: true
-        # - Fn::If:
-        #   - NonProd
-        #   #TRUE
-        #   - Key: BackupTier
-        #     Value: NONPROD
-        #     PropagateAtLaunch: true
-        #   #FALSE
-        #   - Key: BackupTier
-        #     Value: PROD
-        #     PropagateAtLaunch: true
-        # - Fn::If:
-        #   - NonProd
-        #   #TRUE
-        #   - Key: CriticalityNONPROD
-        #     Value: !Ref pCriticality
-        #     PropagateAtLaunch: true
-        #   #FALSE
-          # - Key: CriticalityPROD
-          #   Value: !Ref pCriticality
-          #   PropagateAtLaunch: true
-        # - Key: PatchGroup
-        #   Value: !Ref pPatchGroup
-        #   PropagateAtLaunch: true
-        # - Key: OperatingSystem
-        #   Value: !Ref pOperatingSystem
-        #   PropagateAtLaunch: true
-        # - Key: managed-by
-        #   Value: !Sub ${pCompanyName}-${pCompanyGroupName}
-        #   PropagateAtLaunch: true
   rScaleUpPolicy:
-    Type: AWS::AutoScaling::ScalingPolicy
+    Type: 'AWS::AutoScaling::ScalingPolicy'
     Properties:
       AdjustmentType: ChangeInCapacity
       AutoScalingGroupName: !Ref rClusterNodeGroup
       Cooldown: 60
       ScalingAdjustment: 1
-
   rScaleDownPolicy:
-    Type: AWS::AutoScaling::ScalingPolicy
+    Type: 'AWS::AutoScaling::ScalingPolicy'
     Properties:
       AdjustmentType: ChangeInCapacity
       AutoScalingGroupName: !Ref rClusterNodeGroup
       Cooldown: 60
       ScalingAdjustment: -1
-
   rCPUAlarmHigh:
-   Type: AWS::CloudWatch::Alarm
-   Properties:
-        AlarmDescription: Scale-up if CPU > 50% for 1 minutes
-        MetricName: CPUUtilization
-        Namespace: AWS/EC2
-        Statistic: Average
-        Period: 60
-        EvaluationPeriods: 1
-        Threshold: 50
-        AlarmActions:
+    Type: 'AWS::CloudWatch::Alarm'
+    Properties:
+      AlarmDescription: Scale-up if CPU > 50% for 1 minutes
+      MetricName: CPUUtilization
+      Namespace: AWS/EC2
+      Statistic: Average
+      Period: 60
+      EvaluationPeriods: 1
+      Threshold: 50
+      AlarmActions:
         - !Ref rScaleUpPolicy
-        Dimensions:
+      Dimensions:
         - Name: AutoScalingGroupName
           Value:
-           Ref: rClusterNodeGroup
-        ComparisonOperator: GreaterThanThreshold
-
-  # rCPUAlarmLow:
-  #  Type: AWS::CloudWatch::Alarm
-  #  Properties:
-  #       AlarmDescription: Scale-down if CPU < 45% for 1 minute
-  #       MetricName: CPUUtilization
-  #       Namespace: AWS/EC2
-  #       Statistic: Average
-  #       Period: 60
-  #       EvaluationPeriods: 1
-  #       Threshold: 45
-  #       AlarmActions:
-  #       - !Ref rScaleDownPolicy
-  #       Dimensions:
-  #       - Name: AutoScalingGroupName
-  #         Value:
-  #          Ref: rClusterNodeGroup
-  #       ComparisonOperator: LessThanThreshold
-
+            Ref: rClusterNodeGroup
+      ComparisonOperator: GreaterThanThreshold
   rNodeLaunchConfig:
-    Type: AWS::AutoScaling::LaunchConfiguration
+    Type: 'AWS::AutoScaling::LaunchConfiguration'
     CreationPolicy:
       ResourceSignal:
         Count: 1
-        Timeout: "PT30M"
+        Timeout: PT30M
     Properties:
       AssociatePublicIpAddress: true
       InstanceType: !Ref pInstanceType
-      SecurityGroups: 
+      SecurityGroups:
         - !Ref pSecurityGroupID
       KeyName: !Ref pEC2KeyName
       ImageId: !Ref pAMIId
-      #IamInstanceProfile: CompanyEC2DomainJoinRole
       IamInstanceProfile: !Ref rIAMInstanceProfile
-
-      EbsOptimized: True
-      #DisableApiTermination: True
+      EbsOptimized: true
       BlockDeviceMappings:
-        -
-          DeviceName: "/dev/sda1"
+        - DeviceName: /dev/sda1
           Ebs:
             VolumeSize: !Ref pEc2RootEBSVolumeSize
             VolumeType: gp3
             DeleteOnTermination: true
             Encrypted: true
-        -
-          DeviceName: "/dev/sdf"
-          #/dev/sdf maps to /opt
+        - DeviceName: /dev/sdf
           Ebs:
             VolumeSize: !Ref pEc2SDFEBSVolumeSize
             VolumeType: gp3
             DeleteOnTermination: true
             Encrypted: true
-        - Fn::If:
-          - SDBEBSVolCondtion
-          - DeviceName: /dev/sdb
-            Ebs:
-              VolumeType: gp3
-              DeleteOnTermination: true
-              VolumeSize: !Ref pEc2SDBEBSVolumeSize
-              Encrypted: true
-          - Ref: AWS::NoValue
+        - 'Fn::If':
+            - SDBEBSVolCondtion
+            - DeviceName: /dev/sdb
+              Ebs:
+                VolumeType: gp3
+                DeleteOnTermination: true
+                VolumeSize: !Ref pEc2SDBEBSVolumeSize
+                Encrypted: true
+            - Ref: 'AWS::NoValue'
       UserData:
-        Fn::Base64: !Sub
-          - |
+        'Fn::Base64': !Sub 
+          - >
             #!/bin/bash
+
             yum update -y
+
             yum install -y httpd
+
             service httpd start
+
             chkconfig httpd on
+
             cd /var/www/html
-            echo "<html><h1>Hello! Welcome to the ${pLandscape} environment...</h1></html>" > index.html
+
+            echo "<html><h1>Hello! Welcome to the ${pLandscape}
+            environment...</h1></html>" > index.html
           - newRoleArn: !Ref rIAMInstanceProfile
   rELBSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
+    Type: 'AWS::EC2::SecurityGroup'
     Properties:
-      GroupName: !Join [ "-",[ !Ref AWS::StackName, !Ref pApplicationGroup, !Ref pApplicationSubGroup, !Ref pLandscape, "sg"]]
-      GroupDescription: 'Port access rules for the Elastic LoadBalancer'
+      GroupName: !Join 
+        - '-'
+        - - !Ref 'AWS::StackName'
+          - !Ref pApplicationGroup
+          - !Ref pApplicationSubGroup
+          - !Ref pLandscape
+          - sg
+      GroupDescription: Port access rules for the Elastic LoadBalancer
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22
@@ -450,11 +419,9 @@ Resources:
           ToPort: 443
           IpProtocol: tcp
           CidrIp: 0.0.0.0/0
-
   rALB:
-    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
     Properties:
-      #Name: !Sub ${pApplicationGroup}-${pLandscape}-app-lb
       Type: application
       SecurityGroups:
         - !Ref pELBSecurityGroupID
@@ -462,33 +429,29 @@ Resources:
       Scheme: internet-facing
       Subnets: !Ref pELBSubnetId
       Tags:
-          - Key: CostCenter
-            Value: !Ref pCostCenter
-          - Key: Landscape
-            Value: !Ref pLandscape
-          - Key: ApplicationGroup
-            Value: !Ref pApplicationGroup
-          - Key: ApplicationSubGroup
-            Value: !Ref pApplicationSubGroup
-          - Key: FundingSource
-            Value: !Ref pFundingSource
+        - Key: CostCenter
+          Value: !Ref pCostCenter
+        - Key: Landscape
+          Value: !Ref pLandscape
+        - Key: ApplicationGroup
+          Value: !Ref pApplicationGroup
+        - Key: ApplicationSubGroup
+          Value: !Ref pApplicationSubGroup
+        - Key: FundingSource
+          Value: !Ref pFundingSource
     DependsOn:
-      - rELBSecurityGroup 
+      - rELBSecurityGroup
   rLoadBalancerListener:
-    Type: AWS::ElasticLoadBalancingV2::Listener
+    Type: 'AWS::ElasticLoadBalancingV2::Listener'
     Properties:
       LoadBalancerArn: !Ref rALB
       Port: 80
-      #Port: 443
-      # Certificates:
-      #   - CertificateArn: !Ref pCertificateARN
       Protocol: HTTP
       DefaultActions:
         - Type: forward
           TargetGroupArn: !Ref rDefaultTargetGroup
-
   rDefaultTargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
     Properties:
       HealthCheckIntervalSeconds: 80
       HealthCheckTimeoutSeconds: 10
@@ -497,15 +460,13 @@ Resources:
       HealthCheckProtocol: HTTP
       HealthyThresholdCount: 5
       UnhealthyThresholdCount: 8
-      #Name: !Sub ${pApplicationGroup}-${pLandscape}-app-tg
       Port: 80
       Protocol: HTTP
       Matcher:
-        HttpCode: 200,401
+        HttpCode: '200,401'
       VpcId: !Ref pVPCId
-
 Outputs:
   oALBDNS:
-    Value: !GetAtt
+    Value: !GetAtt 
       - rALB
       - DNSName
