@@ -562,7 +562,7 @@ Resources:
                   {"name":"SystemComponent","value":"${7SystemComponent}"},
                   {"name":"Env","value":"${EnvA01EnvironmentName}"},
                   {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvA01EnvironmentName}-stack-${AWS::AccountId}"},
-                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"}
+                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"]
                 ProjectName: !GetAtt CodeBuildCfnDeployProject.Outputs.CodeBuildProjectName
               InputArtifacts:
                 - Name: !Sub '${7SystemComponent}-source-code'
@@ -657,7 +657,7 @@ Resources:
                   {"name":"SystemComponent","value":"${7SystemComponent}"},
                   {"name":"Env","value":"${EnvB01EnvironmentName}"},
                   {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-stack-${AWS::AccountId}"},
-                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"}
+                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"]
                 ProjectName: !GetAtt CodeBuildCfnDeployProject.Outputs.CodeBuildProjectName
               InputArtifacts:
                 - Name: !Sub '${7SystemComponent}-source-code'
@@ -777,7 +777,7 @@ Resources:
                   {"name":"SystemComponent","value":"${7SystemComponent}"},
                   {"name":"Env","value":"${EnvC01EnvironmentName}"},
                   {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-stack-${AWS::AccountId}"},
-                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"}
+                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"]
                 ProjectName: !GetAtt CodeBuildCfnDeployProject.Outputs.CodeBuildProjectName
               InputArtifacts:
                 - Name: !Sub '${7SystemComponent}-source-code'
@@ -872,7 +872,7 @@ Resources:
                   {"name":"SystemComponent","value":"${7SystemComponent}"},
                   {"name":"Env","value":"${EnvD01EnvironmentName}"},
                   {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvD01EnvironmentName}-stack-${AWS::AccountId}"},
-                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"}
+                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"]
                 ProjectName: !GetAtt CodeBuildCfnDeployProject.Outputs.CodeBuildProjectName
               InputArtifacts:
                 - Name: !Sub '${7SystemComponent}-source-code'
