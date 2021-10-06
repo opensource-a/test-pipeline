@@ -1,0 +1,3 @@
+s3Bucket: system.company.com
+pipelineFilesPath: ui/pipeline
+stackName: ui-pipeline-101

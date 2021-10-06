@@ -1,0 +1,58 @@
+version: 0.2
+env:
+  exported-variables:
+    - CODEBUILD_BUILD_NUMBER
+    - commit_number
+phases:
+  build:
+    commands:
+      - ls
+      - commit_number=$(git rev-parse HEAD | head -c7)
+      - echo $commit_number
+      - branch_name_with_slash=$(git rev-parse --abbrev-ref HEAD)
+      - echo $branch_name_with_slash
+      - branch_name=$(echo $branch_name_with_slash | sed "s~/~-~g")
+      - echo $branch_name
+      - repo_name=$(basename `git config --get remote.origin.url`)
+      - echo $repo_name
+      - sed -i "s/repo_name/$repo_name/g" src/index.html
+      - sed -i "s~branch_name~$branch_name~g" src/index.html
+      - sed -i "s/commit_number/$commit_number, build $CODEBUILD_BUILD_NUMBER, pipelineXID $PipelineExecutionId /g" src/index.html
+      - cd aac
+      - echo n | npm install -g @angular/cli --silent
+      - echo n | npm install --silent
+      - ng analytics off
+      - ng config -g cli.warnings.versionMismatch false
+      - ng build
+      - cp Dockerfile dist/my-app/Dockerfile
+      - cp httprewrite.conf.template dist/my-app/httprewrite.conf.template                
+      - cd dist/my-app
+      - tag="TagSet=[{Key=Repo,Value=$repo_name},{Key=Branch,Value=$branch_name},{Key=Commit-Number,Value=$commit_number}, {Key=Build-Number,Value=$CODEBUILD_BUILD_NUMBER}]"
+      - echo $tag
+      - dockerhub_login=$(aws secretsmanager get-secret-value --secret-id dockerhub --region us-east-1 --query SecretString --output text | jq -r .dockerhub_login)
+      - dockerhub_password=$(aws secretsmanager get-secret-value --secret-id dockerhub --region us-east-1 --query SecretString --output text | jq -r .dockerhub_password)
+
+      - docker login --username $dockerhub_login --password $dockerhub_password
+      # - REPOSITORY_URI="${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${Repository}"
+      # - docker build --tag $REPOSITORY_URI:$repo_name-$branch_name-$commit_number-$CODEBUILD_BUILD_NUMBER .
+      - docker build --tag $REPOSITORY_URI:$PipelineExecutionId .
+      - docker image ls -a
+      # account number and image name is hard coded, and stack name has to be passed as a variable
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $REPOSITORY_URI
+      - docker push $REPOSITORY_URI:$PipelineExecutionId
+      # - aws ssm put-parameter --name $PipelineExecutionId --type "String" --value $CODEBUILD_BUILD_NUMBER --overwrite
+      # - docker push $REPOSITORY_URI:$repo_name-$branch_name-$commit_number-$CODEBUILD_BUILD_NUMBER      
+      - docker tag $REPOSITORY_URI:$PipelineExecutionId $REPOSITORY_URI:$repo_name
+      - docker push $REPOSITORY_URI:$repo_name
+      - docker tag $REPOSITORY_URI:$PipelineExecutionId $REPOSITORY_URI:$branch_name
+      - docker push $REPOSITORY_URI:$branch_name
+      - docker tag $REPOSITORY_URI:$PipelineExecutionId $REPOSITORY_URI:$commit_number
+      - docker push $REPOSITORY_URI:$commit_number
+      - docker tag $REPOSITORY_URI:$PipelineExecutionId $REPOSITORY_URI:$CODEBUILD_BUILD_NUMBER
+      - docker push $REPOSITORY_URI:$CODEBUILD_BUILD_NUMBER
+      - docker tag $REPOSITORY_URI:$PipelineExecutionId $REPOSITORY_URI:latest
+      - docker push $REPOSITORY_URI:latest
+artifacts:
+  files:
+    - aac/dist/my-app/**/*
+    - ${TemplateFile}

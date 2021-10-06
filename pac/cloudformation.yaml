@@ -1,0 +1,1478 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  0SystemName:
+    Type: String
+    Description: Name of system being deployed
+  1S3Bucket:
+    Type: String
+    Description: Which s3-bucket contains the Source Code?
+  2S3SourceObject:
+    Type: String
+    Description: Which s3-object contains the Source Code?
+  3SmokeTestDirectory:
+    Type: String
+    Description: Which path in the source code object contains the Smoke Test Scripts?
+  3AFunctionalTestDirectory:
+    Type: String
+    Description: Which path in the source code object contains the Smoke Test Scripts?    
+  4DeploymentTemplateParameterFileName:
+    Type: String
+    Description: >-
+      What is the full filename (with extension) of the deployment
+      cloudformation parameter file?
+  4ADeploymentTemplateFileName:
+    Type: String
+    Description: >-
+      What is the full filename (with extension) of the deployment
+      cloudformation template file?      
+  5PollForSourceChanges:
+    Type: String
+    Description: >-
+      Is this true or false? Codepipeline will continuously poll s3-bucket for
+      new versions of the artifacts    
+  6PermissionsBoundary:
+    Type: String
+    Description: Permissions Boundary ARN for all roles
+  7SystemComponent:
+    Type: String
+    Description: Name of system component handled by this pipeline
+  8CompanyName:
+    Type: String
+    Description: Name of the company    
+  EnvA01EnvironmentName:
+    Type: String
+    Description: EnvA Environment Name
+  EnvA02ELBName:
+    Type: String
+    Description: EnvA ELB Name
+  EnvA03Url:
+    Type: String
+    Description: EnvA Enduser URL
+  EnvA04Ami:
+    Type: String
+    Description: EnvA AmiId for deployment EC2s
+  EnvA05InstanceType:
+    Type: String
+    Description: EnvA Instance type for deployment EC2s
+  EnvA06KeyPairName:
+    Type: String
+    Description: Key Pair to associate with EnvA deployment EC2s
+  EnvA07Vpc:
+    Type: String
+    Description: VPC for Env A deployment EC2s and codebuild stages that need a vpc
+  EnvA08Subnets:
+    Type: String
+    Description: Subnets for deployment EC2s and codebuild stages that need a subnet
+  EnvA09SecurityGroup:
+    Type: String
+    Description: >-
+      Security Group for Env A deployment EC2s and codebuild stages that need a
+      security group
+  EnvA10EC2NameTagPrefix:
+    Type: String
+    Description: Name tag prefix for Env A deployment EC2s
+  EnvA11NotificationEmailAddress:
+    Type: String
+    Description: Who should receive notification emails for EnvA?
+  EnvA12ApprovalEmailAddress:
+    Type: String
+    Description: Who should receive approval emails for EnvA?
+  EnvA13ArgOne:
+    Type: String
+    Description: Staging (non-prod) Argument One for System Component
+  EnvA14SourceContainerPort:
+    Type: String
+    Description: EnvA System Component Default container image port
+  EnvB01EnvironmentName:
+    Type: String
+    Description: EnvB Environment Name
+  EnvB02ELBName:
+    Type: String
+    Description: EnvB ELB Name
+  EnvB03Url:
+    Type: String
+    Description: EnvB Enduser URL
+  EnvB04Ami:
+    Type: String
+    Description: EnvB AmiId for deployment EC2s
+  EnvB05InstanceType:
+    Type: String
+    Description: EnvB Instance type for deployment EC2s
+  EnvB06KeyPairName:
+    Type: String
+    Description: Key Pair to associate with EnvB deployment EC2s
+  EnvB07Vpc:
+    Type: String
+    Description: VPC for Env A deployment EC2s and codebuild stages that need a vpc
+  EnvB08Subnets:
+    Type: String
+    Description: Subnets for deployment EC2s and codebuild stages that need a subnet
+  EnvB09SecurityGroup:
+    Type: String
+    Description: >-
+      Security Group for Env A deployment EC2s and codebuild stages that need a
+      security group
+  EnvB10EC2NameTagPrefix:
+    Type: String
+    Description: Name tag prefix for Env B deployment EC2s
+  EnvB11NotificationEmailAddress:
+    Type: String
+    Description: Who should receive notification emails for EnvB?
+  EnvB12ApprovalEmailAddress:
+    Type: String
+    Description: Who should receive approval emails for EnvB?
+  EnvB13ArgOne:
+    Type: String
+    Description: Staging (non-prod) Argument One for System Component
+  EnvB14SourceContainerPort:
+    Type: String
+    Description: EnvA System Component Default container image port
+  EnvC01EnvironmentName:
+    Type: String
+    Description: EnvC Environment Name
+  EnvC02ELBName:
+    Type: String
+    Description: EnvC ELB Name
+  EnvC03Url:
+    Type: String
+    Description: EnvC Enduser URL
+  EnvC04Ami:
+    Type: String
+    Description: EnvC AmiId for deployment EC2s
+  EnvC05InstanceType:
+    Type: String
+    Description: EnvC Instance type for deployment EC2s
+  EnvC06KeyPairName:
+    Type: String
+    Description: Key Pair to associate with EnvC deployment EC2s
+  EnvC07Vpc:
+    Type: String
+    Description: VPC for Env A deployment EC2s and codebuild stages that need a vpc
+  EnvC08Subnets:
+    Type: String
+    Description: Subnets for deployment EC2s and codebuild stages that need a subnet
+  EnvC09SecurityGroup:
+    Type: String
+    Description: >-
+      Security Group for Env A deployment EC2s and codebuild stages that need a
+      security group
+  EnvC10EC2NameTagPrefix:
+    Type: String
+    Description: Name tag prefix for Env A deployment EC2s
+  EnvC11NotificationEmailAddress:
+    Type: String
+    Description: Who should receive notification emails for EnvC?
+  EnvC12ApprovalEmailAddress:
+    Type: String
+    Description: Who should receive approval emails for EnvC?
+  EnvC13ArgOne:
+    Type: String
+    Description: Staging (non-prod) Argument One for System Component
+  EnvC14SourceContainerPort:
+    Type: String
+    Description: EnvC System Component Default container image port
+  EnvD01EnvironmentName:
+    Type: String
+    Description: EnvD Environment Name
+  EnvD02ELBName:
+    Type: String
+    Description: EnvD ELB Name
+  EnvD03Url:
+    Type: String
+    Description: EnvD Enduser URL
+  EnvD04Ami:
+    Type: String
+    Description: EnvD AmiId for deployment EC2s
+  EnvD05InstanceType:
+    Type: String
+    Description: EnvD Instance type for deployment EC2s
+  EnvD06KeyPairName:
+    Type: String
+    Description: Key Pair to associate with EnvD deployment EC2s
+  EnvD07Vpc:
+    Type: String
+    Description: VPC for Env D deployment EC2s and codebuild stages that need a vpc
+  EnvD08Subnets:
+    Type: String
+    Description: Subnets for deployment EC2s and codebuild stages that need a subnet
+  EnvD09SecurityGroup:
+    Type: String
+    Description: >-
+      Security Group for Env D deployment EC2s and codebuild stages that need a
+      security group
+  EnvD10EC2NameTagPrefix:
+    Type: String
+    Description: Name tag prefix for Env D deployment EC2s
+  EnvD11NotificationEmailAddress:
+    Type: String
+    Description: Who should receive notification emails for EnvD?
+  EnvD12ApprovalEmailAddress:
+    Type: String
+    Description: Who should receive approval emails for EnvD?
+  EnvD13ArgOne:
+    Type: String
+    Description: Staging (non-prod) Argument One for System Component
+  EnvD14SourceContainerPort:
+    Type: String
+    Description: EnvD System Component Default container image port
+  StgA01StageNamePrefix:
+    Type: String
+    Description: StgA Stage Name Prefix
+  StgB01StageNamePrefix:
+    Type: String
+    Description: StgB Stage Name Prefix
+  StgC01StageNamePrefix:
+    Type: String
+    Description: StgC Stage Name Prefix    
+  StgD01StageNamePrefix:
+    Type: String
+    Description: StgC Stage Name Prefix    
+  ActA01ActionNamePrefix:
+    Type: String
+    Description: ActA Action Name Prefix  
+  ActA02ActionCategory:
+    Type: String
+    Description: ActA Action Category 
+  ActA03ActionOwner:
+    Type: String
+    Description: ActA Action Owner     
+  ActA04ActionProvider:
+    Type: String
+    Description: ActA Action Provider    
+  ActA05ActionNamespace:
+    Type: String
+    Description: ActA Action Namespace for Action Result variables       
+  ActB01ActionNamePrefix:
+    Type: String
+    Description: ActB Action Name Prefix  
+  ActB02ActionCategory:
+    Type: String
+    Description: ActB Action Category 
+  ActB03ActionOwner:
+    Type: String
+    Description: ActB Action Owner     
+  ActB04ActionProvider:
+    Type: String
+    Description: ActB Action Provider    
+  ActB05ActionNamespace:
+    Type: String
+    Description: ActB Action Namespace for Action Result variables     
+  ActC01ActionNamePrefix:
+    Type: String
+    Description: ActC Action Name Prefix  
+  ActC02ActionCategory:
+    Type: String
+    Description: ActC Action Category 
+  ActC03ActionOwner:
+    Type: String
+    Description: ActC Action Owner     
+  ActC04ActionProvider:
+    Type: String
+    Description: ActC Action Provider    
+  ActC05ActionNamespace:
+    Type: String
+    Description: ActC Action Namespace for Action Result variables      
+  ActD01ActionNamePrefix:
+    Type: String
+    Description: ActD Action Name Prefix  
+  ActD02ActionCategory:
+    Type: String
+    Description: ActD Action Category 
+  ActD03ActionOwner:
+    Type: String
+    Description: ActD Action Owner     
+  ActD04ActionProvider:
+    Type: String
+    Description: ActD Action Provider    
+  ActD05ActionNamespace:
+    Type: String
+    Description: ActD Action Namespace for Action Result variables    
+  ActE01ActionNamePrefix:
+    Type: String
+    Description: ActE Action Name Prefix  
+  ActE02ActionCategory:
+    Type: String
+    Description: ActE Action Category 
+  ActE03ActionOwner:
+    Type: String
+    Description: ActE Action Owner     
+  ActE04ActionProvider:
+    Type: String
+    Description: ActE Action Provider    
+  ActE05ActionNamespace:
+    Type: String
+    Description: ActE Action Namespace for Action Result variables         
+Resources:
+  EnvAParameterStore:
+    Type: 'AWS::SSM::Parameter'
+    Properties:
+      Name: !Sub >-
+        ${AWS::StackName}-${7SystemComponent}-${EnvA01EnvironmentName}-InstanceInService
+      Tier: Standard
+      Type: StringList
+      Value: 'null'
+  EnvBParameterStore:
+    Type: 'AWS::SSM::Parameter'
+    Properties:
+      Name: !Sub >-
+        ${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-InstanceInService
+      Tier: Standard
+      Type: StringList
+      Value: 'null'
+  EnvCParameterStore:
+    Type: 'AWS::SSM::Parameter'
+    Properties:
+      Name: !Sub >-
+        ${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-InstanceInService
+      Tier: Standard
+      Type: StringList
+      Value: 'null'
+  EnvDParameterStore:
+    Type: 'AWS::SSM::Parameter'
+    Properties:
+      Name: !Sub >-
+        ${AWS::StackName}-${7SystemComponent}-${EnvD01EnvironmentName}-InstanceInService
+      Tier: Standard
+      Type: StringList
+      Value: 'null'
+  CodePipelineRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: !Sub '${AWS::StackName}-codepipeline-role-${AWS::AccountId}'
+      PermissionsBoundary: !Ref 6PermissionsBoundary
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - codepipeline.amazonaws.com
+                - cloudformation.amazonaws.com
+                - sns.amazonaws.com
+                - codebuild.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Policies:
+        - PolicyName: permissionsfortherole
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action: '*'
+                Resource: '*'
+  S3BucketForPipelineArtifacts:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Sub '${AWS::StackName}-codepipeline-bucket-${AWS::AccountId}'
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              KMSMasterKeyID: !GetAtt 
+                - KMSKey
+                - Arn
+              SSEAlgorithm: 'aws:kms'
+    DependsOn:
+      - KMSKey
+  KMSKey:
+    Type: 'AWS::KMS::Key'
+    Properties:
+      Enabled: 'true'
+      EnableKeyRotation: 'false'
+      KeyUsage: ENCRYPT_DECRYPT
+      PendingWindowInDays: '7'
+      KeyPolicy:
+        Version: 2012-10-17
+        Id: key-default-1
+        Statement:
+          - Sid: Enable IAM User Permissions
+            Effect: Allow
+            Principal:
+              AWS: !Sub 'arn:aws:iam::${AWS::AccountId}:root'
+            Action: 'kms:*'
+            Resource: '*'
+          - Sid: Allow administration of the key
+            Effect: Allow
+            Principal:
+              AWS:
+                - '*'
+            Action:
+              - 'kms:Create*'
+              - 'kms:Describe*'
+              - 'kms:Enable*'
+              - 'kms:List*'
+              - 'kms:Put*'
+              - 'kms:Update*'
+              - 'kms:Revoke*'
+              - 'kms:Disable*'
+              - 'kms:Get*'
+              - 'kms:Delete*'
+              - 'kms:ScheduleKeyDeletion'
+              - 'kms:CancelKeyDeletion'
+            Resource: '*'
+          - Sid: Allow use of the key
+            Effect: Allow
+            Principal:
+              AWS:
+                - '*'
+            Action:
+              - 'kms:DescribeKey'
+              - 'kms:Encrypt'
+              - 'kms:Decrypt'
+              - 'kms:ReEncrypt*'
+              - 'kms:GenerateDataKey'
+              - 'kms:GenerateDataKeyWithoutPlaintext'
+            Resource: '*'
+  Repository:
+    Type: 'AWS::ECR::Repository'
+    Properties:
+      RepositoryName: !Sub '${AWS::StackName}-repository'
+  EnvASecret:
+    Type: 'AWS::SecretsManager::Secret'
+    Properties:
+      Name: !Sub '${AWS::StackName}-${7SystemComponent}-${EnvA01EnvironmentName}-Env-Parameters'
+      KmsKeyId: !Ref KMSKey
+      Description: This secret has the parameters that are exclusive to the environment
+      SecretString: !Sub >- 
+        {"EnvName":"${EnvA01EnvironmentName}","ELBName":"${EnvA02ELBName}",
+        "Url":"${EnvA03Url}","Ami":"${EnvA04Ami}",
+        "InstanceType":"${EnvA05InstanceType}","KeyPairName":"${EnvA06KeyPairName}",
+        "Vpc":"${EnvA07Vpc}","Subnets":"${EnvA08Subnets}",
+        "SecurityGroup":"${EnvA09SecurityGroup}","EC2NameTagPrefix":"${EnvA10EC2NameTagPrefix}",
+        "NotificationEmailAddress":"${EnvA11NotificationEmailAddress}","ApprovalEmailAddress":"${EnvA12ApprovalEmailAddress}",
+        "ArgOne":"${EnvA13ArgOne}","SourceContainerPort":"${EnvA14SourceContainerPort}"}
+    DependsOn:
+      - KMSKey        
+  EnvBSecret:
+    Type: 'AWS::SecretsManager::Secret'
+    Properties:
+      Name: !Sub '${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-Env-Parameters'
+      KmsKeyId: !Ref KMSKey
+      Description: This secret has the parameters that are exclusive to the environment
+      SecretString: !Sub >-
+        {"EnvName":"${EnvB01EnvironmentName}","ELBName":"${EnvB02ELBName}",
+        "Url":"${EnvB03Url}","Ami":"${EnvB04Ami}",
+        "InstanceType":"${EnvB05InstanceType}","KeyPairName":"${EnvB06KeyPairName}",
+        "Vpc":"${EnvB07Vpc}","Subnets":"${EnvB08Subnets}",
+        "SecurityGroup":"${EnvB09SecurityGroup}","EC2NameTagPrefix":"${EnvB10EC2NameTagPrefix}",
+        "NotificationEmailAddress":"${EnvB11NotificationEmailAddress}","ApprovalEmailAddress":"${EnvB12ApprovalEmailAddress}",
+        "ArgOne":"${EnvB13ArgOne}","SourceContainerPort":"${EnvB14SourceContainerPort}"}
+    DependsOn:
+      - KMSKey        
+  EnvCSecret:
+    Type: 'AWS::SecretsManager::Secret'
+    Properties:
+      Name: !Sub '${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-Env-Parameters'
+      KmsKeyId: !Ref KMSKey
+      Description: This secret has the parameters that are exclusive to the environment
+      SecretString: !Sub >-
+        {"EnvName":"${EnvC01EnvironmentName}","ELBName":"${EnvC02ELBName}",
+        "Url":"${EnvC03Url}","Ami":"${EnvC04Ami}",
+        "InstanceType":"${EnvC05InstanceType}","KeyPairName":"${EnvC06KeyPairName}",
+        "Vpc":"${EnvC07Vpc}","Subnets":"${EnvC08Subnets}",
+        "SecurityGroup":"${EnvC09SecurityGroup}","EC2NameTagPrefix":"${EnvC10EC2NameTagPrefix}",
+        "NotificationEmailAddress":"${EnvC11NotificationEmailAddress}","ApprovalEmailAddress":"${EnvC12ApprovalEmailAddress}",
+        "ArgOne":"${EnvC13ArgOne}","SourceContainerPort":"${EnvC14SourceContainerPort}"}
+    DependsOn:
+      - KMSKey        
+  EnvDSecret:
+    Type: 'AWS::SecretsManager::Secret'
+    Properties:
+      Name: !Sub '${AWS::StackName}-${7SystemComponent}-${EnvD01EnvironmentName}-Env-Parameters'
+      KmsKeyId: !Ref KMSKey
+      Description: This secret has the parameters that are exclusive to the environment
+      SecretString: !Sub >-
+        {"EnvName":"${EnvD01EnvironmentName}","ELBName":"${EnvD02ELBName}",
+        "Url":"${EnvD03Url}","Ami":"${EnvD04Ami}",
+        "InstanceType":"${EnvD05InstanceType}","KeyPairName":"${EnvD06KeyPairName}",
+        "Vpc":"${EnvD07Vpc}","Subnets":"${EnvD08Subnets}",
+        "SecurityGroup":"${EnvD09SecurityGroup}","EC2NameTagPrefix":"${EnvD10EC2NameTagPrefix}",
+        "NotificationEmailAddress":"${EnvD11NotificationEmailAddress}","ApprovalEmailAddress":"${EnvD12ApprovalEmailAddress}",
+        "ArgOne":"${EnvD13ArgOne}","SourceContainerPort":"${EnvD14SourceContainerPort}"}
+    DependsOn:
+      - KMSKey
+  Pipeline:
+    Type: 'AWS::CodePipeline::Pipeline'
+    Properties:
+      Name: !Sub '${AWS::StackName}-codepipeline-${AWS::AccountId}'
+      RoleArn: !GetAtt 
+        - CodePipelineRole
+        - Arn
+      ArtifactStore:
+        Location: !Ref S3BucketForPipelineArtifacts
+        Type: S3
+        EncryptionKey:
+          Id: !GetAtt 
+            - KMSKey
+            - Arn
+          Type: KMS
+      Stages:
+        - Name: !Sub '${StgA01StageNamePrefix}-${0SystemName}-${7SystemComponent}'
+          Actions:
+            - Name: !Sub 'get-${StgA01StageNamePrefix}-${0SystemName}-${7SystemComponent}'
+              Region: !Ref 'AWS::Region'
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Provider: S3
+                Version: '1'
+              Configuration:
+                S3Bucket: !Ref 1S3Bucket
+                PollForSourceChanges: !Ref 5PollForSourceChanges
+                S3ObjectKey: !Sub '${2S3SourceObject}'
+              OutputArtifacts:
+                - Name: !Sub '${7SystemComponent}-source-code'
+              RunOrder: 1
+        - Name: !Sub '${StgB01StageNamePrefix}-${0SystemName}-${7SystemComponent}'
+          Actions:
+            - Name: !Sub '${ActA01ActionNamePrefix}-${0SystemName}-${7SystemComponent}'
+              Region: !Ref 'AWS::Region'
+              Namespace: !Ref ActA05ActionNamespace
+              ActionTypeId:
+                Category: !Ref ActA02ActionCategory
+                Owner: !Ref ActA03ActionOwner
+                Version: 1
+                Provider: !Ref ActA04ActionProvider
+              Configuration:
+                EnvironmentVariables: >-
+                  [{"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"}]
+                ProjectName: !GetAtt CodeBuildBuildProject.Outputs.CodeBuildProjectName
+              InputArtifacts:
+                - Name: !Sub '${7SystemComponent}-source-code'
+              OutputArtifacts:
+                - Name: !Sub '${7SystemComponent}-build-artifacts'
+              RunOrder: 1
+        - Name: !Sub '${StgC01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvA01EnvironmentName}-env'
+          Actions:
+            - Name: !Sub '${ActB01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvA01EnvironmentName}-env'
+              Region: !Ref 'AWS::Region'
+             
+              ActionTypeId:
+                Category: !Ref ActB02ActionCategory
+                Owner: !Ref ActB03ActionOwner
+                Version: 1
+                Provider: !Ref ActB04ActionProvider
+              Configuration:
+                EnvironmentVariables: !Sub >-
+                  [{"name":"A","value":"${AWS::StackName}"},
+                  {"name":"B","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
+                  {"name":"C","value":"${7SystemComponent}"},
+                  {"name":"D","value":"${EnvA01EnvironmentName}"},
+                  {"name":"E","value":"${4DeploymentTemplateParameterFileName}"},
+                  {"name":"F","value":"${4ADeploymentTemplateFileName}"},
+                  {"name":"G","value":"${EnvA13ArgOne}"},
+                  {"name":"H","value":"${EnvA07Vpc}"},
+                  {"name":"I","value":"${AWS::StackName}-${7SystemComponent}-${EnvA01EnvironmentName}-stack-${AWS::AccountId}"},
+                  {"name":"J","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
+                  {"name":"K","value":"${EnvA10EC2NameTagPrefix}"},
+                  {"name":"L","value":"${EnvA04Ami}"},
+                  {"name":"M","value":"${EnvA05InstanceType}"},
+                  {"name":"N","value":"${EnvA06KeyPairName}"},
+                  {"name":"O","value":"${6PermissionsBoundary}"},
+                  {"name":"P","value":"${EnvA09SecurityGroup}"},{"name":"Q","value":"${EnvA14SourceContainerPort}"},
+                  {"name":"R","value":"${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${Repository}"}]
+                ProjectName: !GetAtt CodeBuildCfnDeployProject.Outputs.CodeBuildProjectName
+              InputArtifacts:
+                - Name: !Sub '${7SystemComponent}-source-code'
+              RunOrder: 1
+            - Name: !Sub '${ActC01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvA01EnvironmentName}-deployment'
+              Region: !Ref 'AWS::Region'
+            
+              ActionTypeId:
+                Category: !Ref ActC02ActionCategory
+                Owner: !Ref ActC03ActionOwner
+                Version: 1
+                Provider: !Ref ActC04ActionProvider
+              Configuration:
+                EnvironmentVariables: !Sub >-
+                  [{"name":"PipelineStackName","value":"${AWS::StackName}"},
+                  {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
+                  {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
+                  {"name":"ElbName","value":"${EnvA02ELBName}"},
+                  {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"Env","value":"${EnvA01EnvironmentName}"},
+                  {"name":"DeploymentVPC","value":"${EnvA07Vpc}"},
+                  {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvA01EnvironmentName}-stack-${AWS::AccountId}"},
+                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
+                  {"name":"TestDirectory","value":"${3SmokeTestDirectory}"}]
+                ProjectName: !GetAtt CodeBuildSmokeTestProject.Outputs.CodeBuildProjectName
+              InputArtifacts:
+                - Name: !Sub '${7SystemComponent}-source-code'
+              OutputArtifacts: []
+              RunOrder: 2
+            - Name: !Sub '${ActE01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvA01EnvironmentName}-elb'
+              Region: !Ref 'AWS::Region'
+
+              ActionTypeId:
+                Category: !Ref ActE02ActionCategory
+                Owner: !Ref ActE03ActionOwner
+                Version: 1
+                Provider: !Ref ActE04ActionProvider
+              Configuration:
+                EnvironmentVariables: !Sub >-
+                  [{"name":"PipelineStackName","value":"${AWS::StackName}"},
+                  {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
+                  {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
+                  {"name":"ElbName","value":"${EnvA02ELBName}"},
+                  {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"Env","value":"${EnvA01EnvironmentName}"},
+                  {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvA01EnvironmentName}-stack-${AWS::AccountId}"},
+                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
+                  {"name":"CommitNumber","value":"#{${ActA05ActionNamespace}.commit_number}"}]
+                ProjectName: !GetAtt CodeBuildElbSwitchProject.Outputs.CodeBuildProjectName
+              InputArtifacts:
+                - Name: !Sub '${7SystemComponent}-source-code'
+              OutputArtifacts: []
+              RunOrder: 3
+        - Name: !Sub '${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvA01EnvironmentName}-env'
+          Actions:
+            - Name: !Sub 'promote-${EnvA01EnvironmentName}-to-${EnvB01EnvironmentName}'
+              ActionTypeId:
+                Category: Approval
+                Owner: AWS
+                Provider: Manual
+                Version: '1'
+              RunOrder: 1
+              Configuration:
+                CustomData: !Sub >-
+                  Approve
+                  https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Approved&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvA01EnvironmentName}-env&approval_action=promote-${EnvA01EnvironmentName}-to-${EnvB01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}
+                  or Reject
+                  https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Rejected&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvA01EnvironmentName}-env&approval_action=promote-${EnvA01EnvironmentName}-to-${EnvB01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}
+                ExternalEntityLink: !Ref EnvA03Url
+                NotificationArn: !Ref EnvAApprovalSNSTopic
+              OutputArtifacts: []
+              InputArtifacts: []
+              Region: !Ref 'AWS::Region'              
+        - Name: !Sub '${StgC01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvB01EnvironmentName}-env'
+          Actions:
+            - Name: !Sub '${ActB01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvB01EnvironmentName}-env'
+              Region: !Ref 'AWS::Region'
+            
+              ActionTypeId:
+                Category: !Ref ActB02ActionCategory
+                Owner: !Ref ActB03ActionOwner
+                Version: 1
+                Provider: !Ref ActB04ActionProvider
+              Configuration:
+                EnvironmentVariables: !Sub >-
+                  [{"name":"A","value":"${AWS::StackName}"},
+                  {"name":"B","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
+                  {"name":"C","value":"${7SystemComponent}"},
+                  {"name":"D","value":"${EnvB01EnvironmentName}"},
+                  {"name":"E","value":"${4DeploymentTemplateParameterFileName}"},
+                  {"name":"F","value":"${4ADeploymentTemplateFileName}"},
+                  {"name":"G","value":"${EnvB13ArgOne}"},
+                  {"name":"H","value":"${EnvB07Vpc}"},
+                  {"name":"I","value":"${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-stack-${AWS::AccountId}"},
+                  {"name":"J","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
+                  {"name":"K","value":"${EnvB10EC2NameTagPrefix}"},
+                  {"name":"L","value":"${EnvB04Ami}"},
+                  {"name":"M","value":"${EnvB05InstanceType}"},
+                  {"name":"N","value":"${EnvB06KeyPairName}"},
+                  {"name":"O","value":"${6PermissionsBoundary}"},
+                  {"name":"P","value":"${EnvB09SecurityGroup}"},
+                  {"name":"Q","value":"${EnvB14SourceContainerPort}"},
+                  {"name":"R","value":"${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${Repository}"}]
+                ProjectName: !GetAtt CodeBuildCfnDeployProject.Outputs.CodeBuildProjectName
+              InputArtifacts:
+                - Name: !Sub '${7SystemComponent}-source-code'
+              RunOrder: 1
+            - Name: !Sub '${ActC01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvB01EnvironmentName}-deployment'
+              Region: !Ref 'AWS::Region'
+             
+              ActionTypeId:
+                Category: !Ref ActC02ActionCategory
+                Owner: !Ref ActC03ActionOwner
+                Version: 1
+                Provider: !Ref ActC04ActionProvider
+              Configuration:
+                EnvironmentVariables: !Sub >-
+                  [{"name":"PipelineStackName","value":"${AWS::StackName}"},
+                  {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
+                  {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
+                  {"name":"ElbName","value":"${EnvB02ELBName}"},
+                  {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"Env","value":"${EnvB01EnvironmentName}"},
+                  {"name":"DeploymentVPC","value":"${EnvB07Vpc}"},
+                  {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-stack-${AWS::AccountId}"},
+                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
+                  {"name":"TestDirectory","value":"${3SmokeTestDirectory}"}]
+                ProjectName: !GetAtt CodeBuildSmokeTestProject.Outputs.CodeBuildProjectName
+              InputArtifacts:
+                - Name: !Sub '${7SystemComponent}-source-code'
+              OutputArtifacts: []
+              RunOrder: 2
+            - Name: !Sub '${ActD01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvB01EnvironmentName}-deployment'
+              Region: !Ref 'AWS::Region'
+             
+              ActionTypeId:
+                Category: !Ref ActD02ActionCategory
+                Owner: !Ref ActD03ActionOwner
+                Version: 1
+                Provider: !Ref ActD04ActionProvider
+              Configuration:
+                EnvironmentVariables: !Sub >-
+                  [{"name":"PipelineStackName","value":"${AWS::StackName}"},
+                  {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
+                  {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
+                  {"name":"ElbName","value":"${EnvB02ELBName}"},
+                  {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"Env","value":"${EnvB01EnvironmentName}"},
+                  {"name":"DeploymentVPC","value":"${EnvB07Vpc}"},
+                  {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-stack-${AWS::AccountId}"},
+                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
+                  {"name":"TestDirectory","value":"${3AFunctionalTestDirectory}"}]
+                ProjectName: !GetAtt CodeBuildFunctionalTestProject.Outputs.CodeBuildProjectName
+              InputArtifacts:
+                - Name: !Sub '${7SystemComponent}-source-code'
+              OutputArtifacts: []
+              RunOrder: 3              
+            - Name: !Sub '${ActE01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvB01EnvironmentName}-elb'
+              Region: !Ref 'AWS::Region'
+
+              ActionTypeId:
+                Category: !Ref ActE02ActionCategory
+                Owner: !Ref ActE03ActionOwner
+                Version: 1
+                Provider: !Ref ActE04ActionProvider
+              Configuration:
+                EnvironmentVariables: !Sub >-
+                  [{"name":"PipelineStackName","value":"${AWS::StackName}"},
+                  {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
+                  {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
+                  {"name":"ElbName","value":"${EnvB02ELBName}"},
+                  {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"Env","value":"${EnvB01EnvironmentName}"},
+                  {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-stack-${AWS::AccountId}"},
+                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
+                  {"name":"CommitNumber","value":"#{${ActA05ActionNamespace}.commit_number}"}]
+                ProjectName: !GetAtt CodeBuildElbSwitchProject.Outputs.CodeBuildProjectName
+              InputArtifacts:
+                - Name: !Sub '${7SystemComponent}-source-code'
+              OutputArtifacts: []
+              RunOrder: 4
+        - Name: !Sub '${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvB01EnvironmentName}-env'
+          Actions:
+            - Name: !Sub 'promote-${EnvB01EnvironmentName}-to-${EnvC01EnvironmentName}'
+              ActionTypeId:
+                Category: Approval
+                Owner: AWS
+                Provider: Manual
+                Version: '1'
+              RunOrder: 1
+              Configuration:
+                CustomData: !Sub >-
+                  Approve
+                  https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Approved&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvB01EnvironmentName}-env&approval_action=promote-${EnvB01EnvironmentName}-to-${EnvC01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}
+                  or Reject
+                  https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Rejected&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvB01EnvironmentName}-env&approval_action=promote-${EnvB01EnvironmentName}-to-${EnvC01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}
+                ExternalEntityLink: !Ref EnvB03Url
+                NotificationArn: !Ref EnvBApprovalSNSTopic
+              OutputArtifacts: []
+              InputArtifacts: []
+              Region: !Ref 'AWS::Region'                   
+        - Name: !Sub '${StgC01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvC01EnvironmentName}-env'
+          Actions:
+            - Name: !Sub '${ActB01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvC01EnvironmentName}-env'
+              Region: !Ref 'AWS::Region'
+            
+              ActionTypeId:
+                Category: !Ref ActB02ActionCategory
+                Owner: !Ref ActB03ActionOwner
+                Version: 1
+                Provider: !Ref ActB04ActionProvider
+              Configuration:
+                EnvironmentVariables: !Sub >-
+                  [{"name":"A","value":"${AWS::StackName}"},
+                  {"name":"B","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
+                  {"name":"C","value":"${7SystemComponent}"},
+                  {"name":"D","value":"${EnvC01EnvironmentName}"},
+                  {"name":"E","value":"${4DeploymentTemplateParameterFileName}"},
+                  {"name":"F","value":"${4ADeploymentTemplateFileName}"},
+                  {"name":"G","value":"${EnvC13ArgOne}"},
+                  {"name":"H","value":"${EnvC07Vpc}"},
+                  {"name":"I","value":"${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-stack-${AWS::AccountId}"},
+                  {"name":"J","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
+                  {"name":"K","value":"${EnvC10EC2NameTagPrefix}"},
+                  {"name":"L","value":"${EnvC04Ami}"},
+                  {"name":"M","value":"${EnvC05InstanceType}"},
+                  {"name":"N","value":"${EnvC06KeyPairName}"},
+                  {"name":"O","value":"${6PermissionsBoundary}"},
+                  {"name":"P","value":"${EnvC09SecurityGroup}"},{"name":"Q","value":"${EnvC14SourceContainerPort}"},
+                  {"name":"R","value":"${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${Repository}"}]
+                ProjectName: !GetAtt CodeBuildCfnDeployProject.Outputs.CodeBuildProjectName
+              InputArtifacts:
+                - Name: !Sub '${7SystemComponent}-source-code'
+              RunOrder: 1
+            - Name: !Sub '${ActC01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvC01EnvironmentName}-deployment'
+              Region: !Ref 'AWS::Region'
+            
+              ActionTypeId:
+                Category: !Ref ActC02ActionCategory
+                Owner: !Ref ActC03ActionOwner
+                Version: 1
+                Provider: !Ref ActC04ActionProvider
+              Configuration:
+                EnvironmentVariables: !Sub >-
+                  [{"name":"PipelineStackName","value":"${AWS::StackName}"},
+                  {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
+                  {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
+                  {"name":"ElbName","value":"${EnvC02ELBName}"},
+                  {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"Env","value":"${EnvC01EnvironmentName}"},
+                  {"name":"DeploymentVPC","value":"${EnvC07Vpc}"},
+                  {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-stack-${AWS::AccountId}"},
+                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
+                  {"name":"TestDirectory","value":"${3SmokeTestDirectory}"}]
+                ProjectName: !GetAtt CodeBuildSmokeTestProject.Outputs.CodeBuildProjectName
+              InputArtifacts:
+                - Name: !Sub '${7SystemComponent}-source-code'
+              OutputArtifacts: []
+              RunOrder: 2
+            - Name: !Sub '${ActE01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvC01EnvironmentName}-elb'
+              Region: !Ref 'AWS::Region'
+ 
+              ActionTypeId:
+                Category: !Ref ActE02ActionCategory
+                Owner: !Ref ActE03ActionOwner
+                Version: 1
+                Provider: !Ref ActE04ActionProvider
+              Configuration:
+                EnvironmentVariables: !Sub >-
+                  [{"name":"PipelineStackName","value":"${AWS::StackName}"},
+                  {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
+                  {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
+                  {"name":"ElbName","value":"${EnvC02ELBName}"},
+                  {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"Env","value":"${EnvC01EnvironmentName}"},
+                  {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-stack-${AWS::AccountId}"},
+                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
+                  {"name":"CommitNumber","value":"#{${ActA05ActionNamespace}.commit_number}"}]
+                ProjectName: !GetAtt CodeBuildElbSwitchProject.Outputs.CodeBuildProjectName
+              InputArtifacts:
+                - Name: !Sub '${7SystemComponent}-source-code'
+              OutputArtifacts: []
+              RunOrder: 3
+        - Name: !Sub '${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvC01EnvironmentName}-env'
+          Actions:
+            - Name: !Sub 'promote-${EnvC01EnvironmentName}-to-${EnvD01EnvironmentName}'
+              ActionTypeId:
+                Category: Approval
+                Owner: AWS
+                Provider: Manual
+                Version: '1'
+              RunOrder: 1
+              Configuration:
+                CustomData: !Sub >-
+                  Approve
+                  https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Approved&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvC01EnvironmentName}-env&approval_action=promote-${EnvC01EnvironmentName}-to-${EnvD01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}
+                  or Reject
+                  https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Rejected&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvC01EnvironmentName}-env&approval_action=promote-${EnvC01EnvironmentName}-to-${EnvD01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}
+                ExternalEntityLink: !Ref EnvC03Url
+                NotificationArn: !Ref EnvCApprovalSNSTopic
+              OutputArtifacts: []
+              InputArtifacts: []
+              Region: !Ref 'AWS::Region'     
+        - Name: !Sub '${StgC01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvD01EnvironmentName}-env'
+          Actions:
+            - Name: !Sub '${ActB01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvD01EnvironmentName}-env'
+              Region: !Ref 'AWS::Region'
+            
+              ActionTypeId:
+                Category: !Ref ActB02ActionCategory
+                Owner: !Ref ActB03ActionOwner
+                Version: 1
+                Provider: !Ref ActB04ActionProvider
+              Configuration:
+                EnvironmentVariables: !Sub >-
+                  [{"name":"A","value":"${AWS::StackName}"},
+                  {"name":"B","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
+                  {"name":"C","value":"${7SystemComponent}"},
+                  {"name":"D","value":"${EnvD01EnvironmentName}"},
+                  {"name":"E","value":"${4DeploymentTemplateParameterFileName}"},
+                  {"name":"F","value":"${4ADeploymentTemplateFileName}"},
+                  {"name":"G","value":"${EnvD13ArgOne}"},
+                  {"name":"H","value":"${EnvD07Vpc}"},
+                  {"name":"I","value":"${AWS::StackName}-${7SystemComponent}-${EnvD01EnvironmentName}-stack-${AWS::AccountId}"},
+                  {"name":"J","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
+                  {"name":"K","value":"${EnvD10EC2NameTagPrefix}"},
+                  {"name":"L","value":"${EnvD04Ami}"},
+                  {"name":"M","value":"${EnvD05InstanceType}"},
+                  {"name":"N","value":"${EnvD06KeyPairName}"},
+                  {"name":"O","value":"${6PermissionsBoundary}"},
+                  {"name":"P","value":"${EnvD09SecurityGroup}"},
+                  {"name":"Q","value":"${EnvD14SourceContainerPort}"},
+                  {"name":"R","value":"${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${Repository}"}]
+                ProjectName: !GetAtt CodeBuildCfnDeployProject.Outputs.CodeBuildProjectName
+              InputArtifacts:
+                - Name: !Sub '${7SystemComponent}-source-code'
+              RunOrder: 1
+            - Name: !Sub '${ActC01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvD01EnvironmentName}-deployment'
+              Region: !Ref 'AWS::Region'
+            
+              ActionTypeId:
+                Category: !Ref ActC02ActionCategory
+                Owner: !Ref ActC03ActionOwner
+                Version: 1
+                Provider: !Ref ActC04ActionProvider
+              Configuration:
+                EnvironmentVariables: !Sub >-
+                  [{"name":"PipelineStackName","value":"${AWS::StackName}"},
+                  {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},{
+                  "name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
+                  {"name":"ElbName","value":"${EnvD02ELBName}"},
+                  {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"Env","value":"${EnvD01EnvironmentName}"},
+                  {"name":"DeploymentVPC","value":"${EnvD07Vpc}"},
+                  {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvD01EnvironmentName}-stack-${AWS::AccountId}"},
+                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
+                  {"name":"TestDirectory","value":"${3SmokeTestDirectory}"}]
+                ProjectName: !GetAtt CodeBuildSmokeTestProject.Outputs.CodeBuildProjectName
+              InputArtifacts:
+                - Name: !Sub '${7SystemComponent}-source-code'
+              OutputArtifacts: []
+              RunOrder: 2
+            - Name: !Sub '${ActE01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvD01EnvironmentName}-elb'
+              Region: !Ref 'AWS::Region'
+
+              ActionTypeId:
+                Category: !Ref ActE02ActionCategory
+                Owner: !Ref ActE03ActionOwner
+                Version: 1
+                Provider: !Ref ActE04ActionProvider
+              Configuration:
+                EnvironmentVariables: !Sub >-
+                  [{"name":"PipelineStackName","value":"${AWS::StackName}"},
+                  {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
+                  {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
+                  {"name":"ElbName","value":"${EnvD02ELBName}"},
+                  {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"Env","value":"${EnvD01EnvironmentName}"},
+                  {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvD01EnvironmentName}-stack-${AWS::AccountId}"},
+                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
+                  {"name":"CommitNumber","value":"#{${ActA05ActionNamespace}.commit_number}"}]
+                ProjectName: !GetAtt CodeBuildElbSwitchProject.Outputs.CodeBuildProjectName
+              InputArtifacts:
+                - Name: !Sub '${7SystemComponent}-source-code'
+              OutputArtifacts: []
+              RunOrder: 3
+    DependsOn:
+      - KMSKey
+      
+  CodeBuildBuildProject:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub 'https://s3.amazonaws.com/${1S3Bucket}/api/pipeline/create-codebuild-project/cloudformation.yaml'
+      Parameters:
+        0SystemName: !Ref 0SystemName
+        1KMSKeyArn: !GetAtt 
+          - KMSKey
+          - Arn
+        2CodeBuildRole: !Ref CodePipelineRole
+        3RepositoryUri: !Sub '${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${Repository}'
+        4CodeBuildContainerImage: 'aws/codebuild/amazonlinux2-x86_64-standard:3.0'
+        5CodeBuildComputeType: BUILD_GENERAL1_SMALL
+        6CodeBuildProjectName: !Sub '${AWS::StackName}-codebuildbuildproject'
+        7SourceType: CODEPIPELINE
+        8ArtifactType: CODEPIPELINE
+        9BuildSpecFile: pac/codebuild-project-specs/build-aac.yaml
+        10PrivateBuildProject: false
+        11VpcId: !Ref EnvA07Vpc
+        12SubnetIds: !Ref EnvA08Subnets
+        13SecurityGroupIds: !Ref EnvA09SecurityGroup
+    DependsOn:
+      - KMSKey        
+  CodeBuildCfnDeployProject:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub 'https://s3.amazonaws.com/${1S3Bucket}/api/pipeline/create-codebuild-project/cloudformation.yaml'
+      Parameters:
+        0SystemName: !Ref 0SystemName
+        1KMSKeyArn: !GetAtt 
+          - KMSKey
+          - Arn
+        2CodeBuildRole: !Ref CodePipelineRole
+        3RepositoryUri: !Sub '${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${Repository}'
+        4CodeBuildContainerImage: 'aws/codebuild/amazonlinux2-x86_64-standard:3.0'
+        5CodeBuildComputeType: BUILD_GENERAL1_SMALL
+        6CodeBuildProjectName: !Sub '${AWS::StackName}-codebuildcfndeployproject'
+        7SourceType: CODEPIPELINE
+        8ArtifactType: CODEPIPELINE
+        9BuildSpecFile: pac/codebuild-project-specs/spin-up-and-deploy-env.yaml
+        10PrivateBuildProject: false
+        11VpcId: !Ref EnvA07Vpc
+        12SubnetIds: !Ref EnvA08Subnets
+        13SecurityGroupIds: !Ref EnvA09SecurityGroup
+    DependsOn:
+      - KMSKey  
+  CodeBuildSmokeTestProject:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub 'https://s3.amazonaws.com/${1S3Bucket}/api/pipeline/create-codebuild-project/cloudformation.yaml'
+      Parameters:
+        0SystemName: !Ref 0SystemName
+        1KMSKeyArn: !GetAtt 
+          - KMSKey
+          - Arn
+        2CodeBuildRole: !Ref CodePipelineRole
+        3RepositoryUri: !Sub '${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${Repository}'
+        4CodeBuildContainerImage: 'aws/codebuild/amazonlinux2-x86_64-standard:3.0'
+        5CodeBuildComputeType: BUILD_GENERAL1_SMALL
+        6CodeBuildProjectName: !Sub '${AWS::StackName}-codebuildsmoketestproject'
+        7SourceType: CODEPIPELINE
+        8ArtifactType: CODEPIPELINE
+        9BuildSpecFile: pac/codebuild-project-specs/smoke-test-env.yaml
+        10PrivateBuildProject: false
+        11VpcId: !Ref EnvA07Vpc
+        12SubnetIds: !Ref EnvA08Subnets
+        13SecurityGroupIds: !Ref EnvA09SecurityGroup
+    DependsOn:
+      - KMSKey   
+  CodeBuildFunctionalTestProject:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub 'https://s3.amazonaws.com/${1S3Bucket}/api/pipeline/create-codebuild-project/cloudformation.yaml'
+      Parameters:
+        0SystemName: !Ref 0SystemName
+        1KMSKeyArn: !GetAtt 
+          - KMSKey
+          - Arn
+        2CodeBuildRole: !Ref CodePipelineRole
+        3RepositoryUri: !Sub '${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${Repository}'
+        4CodeBuildContainerImage: 'aws/codebuild/amazonlinux2-x86_64-standard:3.0'
+        5CodeBuildComputeType: BUILD_GENERAL1_SMALL
+        6CodeBuildProjectName: !Sub '${AWS::StackName}-codebuildfunctionaltestproject'
+        7SourceType: CODEPIPELINE
+        8ArtifactType: CODEPIPELINE
+        9BuildSpecFile: pac/codebuild-project-specs/functional-test-env.yaml
+        10PrivateBuildProject: false
+        11VpcId: !Ref EnvA07Vpc
+        12SubnetIds: !Ref EnvA08Subnets
+        13SecurityGroupIds: !Ref EnvA09SecurityGroup
+    DependsOn:
+      - KMSKey       
+  CodeBuildElbSwitchProject:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub 'https://s3.amazonaws.com/${1S3Bucket}/api/pipeline/create-codebuild-project/cloudformation.yaml'
+      Parameters:
+        0SystemName: !Ref 0SystemName
+        1KMSKeyArn: !GetAtt 
+          - KMSKey
+          - Arn
+        2CodeBuildRole: !Ref CodePipelineRole
+        3RepositoryUri: !Sub '${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${Repository}'
+        4CodeBuildContainerImage: 'aws/codebuild/amazonlinux2-x86_64-standard:3.0'
+        5CodeBuildComputeType: BUILD_GENERAL1_SMALL
+        6CodeBuildProjectName: !Sub '${AWS::StackName}-codebuildelbswitchproject'
+        7SourceType: CODEPIPELINE
+        8ArtifactType: CODEPIPELINE
+        9BuildSpecFile: pac/codebuild-project-specs/switch-elb-to-new-instance-in-service.yaml
+        10PrivateBuildProject: false
+        11VpcId: !Ref EnvA07Vpc
+        12SubnetIds: !Ref EnvA08Subnets
+        13SecurityGroupIds: !Ref EnvA09SecurityGroup
+    DependsOn:
+      - KMSKey 
+  EventRule:
+    Type: 'AWS::Events::Rule'
+    Properties:
+      Description: EventRule
+      EventPattern:
+        source:
+          - aws.codepipeline
+        detail-type:
+          - CodePipeline Pipeline Execution State Change
+          - CodePipeline Action Execution State Change
+          - CodePipeline Stage Execution State Change
+        detail:
+          pipeline:
+            - !Sub '${AWS::StackName}-codepipeline-${AWS::AccountId}'
+      State: ENABLED
+      Targets:
+        - Arn: !Ref NotificationSNSTopic
+          Id: PipelineNotificationTopic
+          InputTransformer:
+            InputTemplate: >-
+              "The pipeline: <pipeline>, stage: <stage> has <state>. For more
+              information
+              https://console.aws.amazon.com/codepipeline/home?region=us-east-1#/view/<pipeline>" 
+            InputPathsMap:
+              pipeline: $.detail.pipeline
+              stage: $.detail.stage
+              state: $.detail.state
+    DependsOn:
+      - NotificationSNSTopic
+  NotificationSNSTopic:
+    Type: 'AWS::SNS::Topic'
+    Properties:
+      Subscription:
+        - Endpoint: !Ref EnvA11NotificationEmailAddress
+          Protocol: email
+  EnvAApprovalSNSTopic:
+    Type: 'AWS::SNS::Topic'
+    Properties:
+      Subscription:
+        - Endpoint: !Ref EnvA12ApprovalEmailAddress
+          Protocol: email
+  EnvBApprovalSNSTopic:
+    Type: 'AWS::SNS::Topic'
+    Properties:
+      Subscription:
+        - Endpoint: !Ref EnvB12ApprovalEmailAddress
+          Protocol: email          
+  EnvCApprovalSNSTopic:
+    Type: 'AWS::SNS::Topic'
+    Properties:
+      Subscription:
+        - Endpoint: !Ref EnvC12ApprovalEmailAddress
+          Protocol: email
+          
+  SNSPolicy:
+    Type: 'AWS::SNS::TopicPolicy'
+    Properties:
+      PolicyDocument: !Sub |-
+        {
+          "Version": "2008-10-17",
+          "Id": "__default_policy_ID",
+          "Statement": [
+            {
+              "Sid": "__default_statement_ID",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": "*"
+              },
+              "Action": [
+                "SNS:GetTopicAttributes",
+                "SNS:SetTopicAttributes",
+                "SNS:AddPermission",
+                "SNS:RemovePermission",
+                "SNS:DeleteTopic",
+                "SNS:Subscribe",
+                "SNS:ListSubscriptionsByTopic",
+                "SNS:Publish",
+                "SNS:Receive"
+              ],
+              "Resource": "*",
+              "Condition": {
+                "StringEquals": {
+                  "AWS:SourceOwner": "966033364941"
+                }
+              }
+            },
+            {
+              "Sid": "event_permission",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": ["events.amazonaws.com","codepipeline.amazonaws.com"]
+              },
+              "Action": "sns:Publish",
+              "Resource": "*"
+            }
+          ]
+        }      
+      Topics:
+        - !Ref NotificationSNSTopic
+        - !Ref EnvAApprovalSNSTopic
+        - !Ref EnvBApprovalSNSTopic
+        - !Ref EnvCApprovalSNSTopic
+    DependsOn:
+      - NotificationSNSTopic
+      - EnvAApprovalSNSTopic
+      - EnvBApprovalSNSTopic
+      - EnvCApprovalSNSTopic
+      - EventRule
+  ApprovalLambda:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: index.handler
+      Role: !GetAtt 
+        - LambdaRole
+        - Arn
+      Runtime: python3.7
+      Description: !Sub Lambda to approve stages in pipelines
+      FunctionName: !Sub '${AWS::StackName}-${AWS::AccountId}-pipelineApprovalLambda'
+      Code:
+        ZipFile: |-
+          import json
+          import logging
+          import re
+          import time
+          import boto3
+
+          logger = logging.getLogger(__name__)
+          logger.setLevel(logging.INFO)
+          MAX_WAIT_FOR_RESPONSE = 10
+          WAIT_INCREMENT = 1
+
+          def handler(event, context):
+            logger.info('REQUEST RECEIVED:\n %s', event)
+            logger.info('REQUEST RECEIVED:\n %s', context)
+            pipeline = event["queryStringParameters"]['pipeline']
+            stage = event["queryStringParameters"]['stage']
+            action = event["queryStringParameters"]['action']
+            approval_action = event["queryStringParameters"]['approval_action']
+            pipelineexecutionid = event["queryStringParameters"]['pipelineexecutionid']
+            client = boto3.client('codepipeline')
+            r = client.get_pipeline_state(name=pipeline)['stageStates']
+            print(r)
+            s = next((x for x in r if x['stageName'] == stage and x['latestExecution']['pipelineExecutionId'] == pipelineexecutionid ), None)
+            print(s)
+            s1 = s['actionStates']
+            print(s1)
+            s2 = next((y for y in s1 if y['actionName'] == approval_action ), None)
+            print(s2)
+            t = s2['latestExecution']['token']
+            print(t)
+            client.put_approval_result(
+                pipelineName=pipeline,
+                stageName=stage,
+                actionName=approval_action,
+                result={
+                    'summary': 'Automatically approved by Lambda.',
+                    'status': action
+                },
+                token=t
+            )
+            logger.info("Status message: %s", client.put_approval_result)
+            if action == 'Approved':
+              return {"statusCode": 200, "body": json.dumps('Thank you for approving the release!!')}
+            elif action == 'Rejected':
+              return {"statusCode": 200, "body": json.dumps('Thank you for rejecting the release!!')}
+    DependsOn:
+      - LambdaRole
+  LambdaRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      PermissionsBoundary: !Ref 6PermissionsBoundary
+      Policies:
+        - PolicyName: lambdas3
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action: 'logs:CreateLogGroup'
+                Resource: !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*'
+              - Effect: Allow
+                Action: '*'
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                Resource:
+                  - !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*'
+  ApprovalLambdaApiGatewayRestApi:
+    Type: 'AWS::ApiGateway::RestApi'
+    Properties:
+      ApiKeySourceType: HEADER
+      Description: An API Gateway to integrate with pipelineApprovalLambda
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+      Name: !Sub '${AWS::StackName}-${AWS::AccountId}-pipelineApprovalLambda-api'
+    DependsOn:
+      - ApprovalLambda
+  ApprovalLambdaApiGatewayResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      ParentId: !GetAtt 
+        - ApprovalLambdaApiGatewayRestApi
+        - RootResourceId
+      PathPart: pipeline-approval
+      RestApiId: !Ref ApprovalLambdaApiGatewayRestApi
+    DependsOn:
+      - ApprovalLambda
+  ApprovalLambdaApiGatewayMethod:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      HttpMethod: GET
+      RequestParameters:
+        method.request.querystring.action: true
+        method.request.querystring.pipeline: true
+        method.request.querystring.pipelineexecutionid: true
+        method.request.querystring.stage: true
+        method.request.querystring.approval_action: true
+      Integration:
+        ConnectionType: INTERNET
+        Credentials: !GetAtt 
+          - ApprovalLambdaApiGatewayIamRole
+          - Arn
+        IntegrationHttpMethod: POST
+        PassthroughBehavior: WHEN_NO_MATCH
+        TimeoutInMillis: 29000
+        Type: AWS_PROXY
+        Uri: !Sub >-
+          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApprovalLambda.Arn}/invocations
+      OperationName: lambda
+      ResourceId: !Ref ApprovalLambdaApiGatewayResource
+      RestApiId: !Ref ApprovalLambdaApiGatewayRestApi
+    DependsOn:
+      - ApprovalLambda
+  ApprovalLambdaApiGatewayModel:
+    Type: 'AWS::ApiGateway::Model'
+    Properties:
+      ContentType: application/json
+      RestApiId: !Ref ApprovalLambdaApiGatewayRestApi
+      Schema: {}
+    DependsOn:
+      - ApprovalLambda
+  ApprovalLambdaApiGatewayStage:
+    Type: 'AWS::ApiGateway::Stage'
+    Properties:
+      DeploymentId: !Ref ApprovalLambdaApiGatewayDeployment
+      Description: Approval Lambda API Stage v0
+      RestApiId: !Ref ApprovalLambdaApiGatewayRestApi
+      StageName: v0
+    DependsOn:
+      - ApprovalLambda
+  ApprovalLambdaApiGatewayDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    Properties:
+      Description: Approval Lambda API Deployment
+      RestApiId: !Ref ApprovalLambdaApiGatewayRestApi
+    DependsOn:
+      - ApprovalLambda
+      - ApprovalLambdaApiGatewayMethod
+  ApprovalLambdaApiGatewayIamRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: ''
+            Effect: Allow
+            Principal:
+              Service:
+                - apigateway.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      PermissionsBoundary: !Ref 6PermissionsBoundary
+      Policies:
+        - PolicyName: LambdaAccess
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action: '*'
+                Resource: '*'
+    DependsOn:
+      - ApprovalLambda
+  ConfigLambdaPermission:
+    Type: 'AWS::Lambda::Permission'
+    DependsOn:
+      - ApprovalLambdaApiGatewayRestApi
+      - ApprovalLambda
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !Ref ApprovalLambda
+      Principal: apigateway.amazonaws.com
+  CleanupEcrLambda:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: index.lambda_handler
+      Role: !GetAtt 
+        - LambdaRole
+        - Arn
+      Runtime: python2.7
+      Description: Test with Cloud Formation
+      FunctionName: !Sub '${AWS::StackName}-cleanup'
+      Code:
+        ZipFile: |-
+          import json
+          import logging
+          import signal
+          import boto3
+          from urllib2 import build_opener, HTTPHandler, Request
+          s3 = boto3.resource('s3')
+          ecr = boto3.client('ecr')
+          LOGGER = logging.getLogger()
+          LOGGER.setLevel(logging.INFO)
+          def lambda_handler(event, context):
+              ecrreponame = event['ResourceProperties']['EcrRepoName']
+              bucketname = event['ResourceProperties']['BucketName']
+              accountid = boto3.client('sts').get_caller_identity()['Account']
+              try:
+                  LOGGER.info('REQUEST RECEIVED:\n %s', event)
+                  LOGGER.info('REQUEST RECEIVED:\n %s', context)
+                  if event['RequestType'] == 'Create':
+                      LOGGER.info('CREATE!')
+                      send_response(event, context, "SUCCESS",
+                                    {"Message": "No Action during Create!"})
+                  elif event['RequestType'] == 'Update':
+                      LOGGER.info('UPDATE!')
+                      send_response(event, context, "SUCCESS",
+                                    {"Message": "No Action during Update!"})
+                  elif event['RequestType'] == 'Delete':
+                      LOGGER.info('DELETE!')
+                      response = ecr.delete_repository(registryId=accountid,repositoryName=ecrreponame,force=True)
+                      bucket = s3.Bucket(bucketname)
+                      bucket.objects.all().delete()
+                      bucket.delete()
+                      send_response(event, context, "SUCCESS",
+                                    {"Message": "Resource deletion successful!"})
+                  else:
+                      LOGGER.info('FAILED!')
+                      send_response(event, context, "FAILED",
+                                    {"Message": "Unexpected event received from CloudFormation"})
+              except: #pylint: disable=W0702
+                  LOGGER.info('FAILED!')
+                  send_response(event, context, "FAILED", {
+                      "Message": "Exception during processing"})
+          def send_response(event, context, response_status, response_data):
+              '''Send a resource manipulation status response to CloudFormation'''
+              response_body = json.dumps({
+                  "Status": response_status,
+                  "Reason": "See the details in CloudWatch Log Stream: " + context.log_stream_name,
+                  "PhysicalResourceId": context.log_stream_name,
+                  "StackId": event['StackId'],
+                  "RequestId": event['RequestId'],
+                  "LogicalResourceId": event['LogicalResourceId'],
+                  "Data": response_data
+              })
+              LOGGER.info('ResponseURL: %s', event['ResponseURL'])
+              LOGGER.info('ResponseBody: %s', response_body)
+              opener = build_opener(HTTPHandler)
+              request = Request(event['ResponseURL'], data=response_body)
+              request.add_header('Content-Type', '')
+              request.add_header('Content-Length', len(response_body))
+              request.get_method = lambda: 'PUT'
+              response = opener.open(request)
+              LOGGER.info("Status code: %s", response.getcode())
+              LOGGER.info("Status message: %s", response.msg)
+              
+      Tags:
+        - Key: Name
+          Value: !Sub 'cft-stack-${AWS::StackName}-cleanupecrlambda'
+        - Key: Purpose
+          Value: This is a key pair to delete ecr created by a CFT
+    DependsOn:
+      - LambdaRole
+  LambdaInvoke:
+    Type: 'Custom::Invoker'
+    Properties:
+      Description: This is the invoker to invoke the S3 and ECR delete function
+      ServiceToken: !Sub >-
+        arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${AWS::StackName}-cleanup
+      EcrRepoName: !Ref Repository
+      BucketName: !Ref S3BucketForPipelineArtifacts
+    DependsOn:
+      - CleanupEcrLambda
+Outputs:
+  CodePipelineUrl:
+    Value: !Sub >-
+      https://console.aws.amazon.com/codepipeline/home?region=${AWS::Region}#/view/${Pipeline}
+    Description: CodePipeline URL

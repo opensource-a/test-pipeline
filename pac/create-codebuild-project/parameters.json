@@ -1,0 +1,58 @@
+[
+  {
+    "ParameterKey": "0SystemName",
+    "ParameterValue": "#SystemName"
+  },
+  {
+    "ParameterKey": "1KMSKeyArn",
+    "ParameterValue": "#KMSKeyArn"
+  },
+  {
+    "ParameterKey": "2CodeBuildRole",
+    "ParameterValue": "#CodeBuildRole"
+  },
+  {
+    "ParameterKey": "3RepositoryUri",
+    "ParameterValue": "#RepositoryUri"
+  },
+  {
+    "ParameterKey": "4CodeBuildContainerImage",
+    "ParameterValue": "#CodeBuildContainerImage"
+  },
+  {
+    "ParameterKey": "5CodeBuildComputeType",
+    "ParameterValue": "#CodeBuildComputeType"
+  },
+  {
+    "ParameterKey": "6CodeBuildProjectName",
+    "ParameterValue": "#CodeBuildProjectName"
+  },
+  {
+    "ParameterKey": "7SourceType",
+    "ParameterValue": "#SourceType"
+  },
+  {
+    "ParameterKey": "8ArtifactType",
+    "ParameterValue": "#ArtifactType"
+  },
+  {
+    "ParameterKey": "9BuildSpecFile",
+    "ParameterValue": "#BuildSpecFile"
+  },
+  {
+    "ParameterKey": "10PrivateBuildProject",
+    "ParameterValue": "#PrivateBuildProject"
+  },
+  {
+    "ParameterKey": "11VpcId",
+    "ParameterValue": "#VpcId"
+  },
+  {
+    "ParameterKey": "12SubnetIds",
+    "ParameterValue": "#SubnetIds"
+  },
+  {
+    "ParameterKey": "13SecurityGroupIds",
+    "ParameterValue": "#SecurityGroupIds"
+  }
+]

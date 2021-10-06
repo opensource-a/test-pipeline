@@ -1,0 +1,386 @@
+[
+  {
+    "ParameterKey": "0SystemName",
+    "ParameterValue": "system"
+  },
+  {
+    "ParameterKey": "1S3Bucket",
+    "ParameterValue": "system.company.com"
+  },
+  {
+    "ParameterKey": "2S3SourceObject",
+    "ParameterValue": "ui/source/angularjs/ui.zip"
+  },
+  {
+    "ParameterKey": "3SmokeTestDirectory",
+    "ParameterValue": "tac/smoke"
+  },
+  {
+    "ParameterKey": "3AFunctionalTestDirectory",
+    "ParameterValue": "tac/functional"
+  },
+  {
+    "ParameterKey": "4ADeploymentTemplateFileName",
+    "ParameterValue": "iac/cloudformation.yaml"
+  },
+  {
+    "ParameterKey": "4DeploymentTemplateParameterFileName",
+    "ParameterValue": "iac/parameters.json"
+  },
+  {
+    "ParameterKey": "5PollForSourceChanges",
+    "ParameterValue": "true"
+  },
+  {
+    "ParameterKey": "6PermissionsBoundary",
+    "ParameterValue": "arn:aws:iam::aws:policy/AdministratorAccess"
+  },
+  {
+    "ParameterKey": "7SystemComponent",
+    "ParameterValue": "UI"
+  },
+  {
+    "ParameterKey": "8CompanyName",
+    "ParameterValue": "company"
+  },
+  {
+    "ParameterKey": "EnvA01EnvironmentName",
+    "ParameterValue": "DEV"
+  },
+  {
+    "ParameterKey": "EnvA02ELBName",
+    "ParameterValue": "dev"
+  },
+  {
+    "ParameterKey": "EnvA03Url",
+    "ParameterValue": "http://dev-847238969.us-east-1.elb.amazonaws.com"
+  },
+  {
+    "ParameterKey": "EnvA04Ami",
+    "ParameterValue": "ami-04d29b6f966df1537"
+  },
+  {
+    "ParameterKey": "EnvA05InstanceType",
+    "ParameterValue": "t2.micro"
+  },
+  {
+    "ParameterKey": "EnvA06KeyPairName",
+    "ParameterValue": "system-pipeline-ui"
+  },
+  {
+    "ParameterKey": "EnvA07Vpc",
+    "ParameterValue": "vpc-97ceceed"
+  },
+  {
+    "ParameterKey": "EnvA08Subnets",
+    "ParameterValue": "subnet-36f80a17,subnet-fda454a2,subnet-1b15e17d,subnet-df3b00e1,subnet-97e463da,subnet-ce05abc0"
+  },
+  {
+    "ParameterKey": "EnvA09SecurityGroup",
+    "ParameterValue": "sg-556c827b"
+  },
+  {
+    "ParameterKey": "EnvA10EC2NameTagPrefix",
+    "ParameterValue": "COMPANY-SYSTEM-SVR"
+  },
+  {
+    "ParameterKey": "EnvA11NotificationEmailAddress",
+    "ParameterValue": "person@company.com"
+  },
+  {
+    "ParameterKey": "EnvA12ApprovalEmailAddress",
+    "ParameterValue": "person@company.com"
+  },
+  {
+    "ParameterKey": "EnvA13ArgOne",
+    "ParameterValue": "http://dev.api.com"
+  },
+  {
+    "ParameterKey": "EnvA14SourceContainerPort",
+    "ParameterValue": "80"
+  },
+  {
+    "ParameterKey": "EnvB01EnvironmentName",
+    "ParameterValue": "TEST"
+  },
+  {
+    "ParameterKey": "EnvB02ELBName",
+    "ParameterValue": "test"
+  },
+  {
+    "ParameterKey": "EnvB03Url",
+    "ParameterValue": "http://test-1194213092.us-east-1.elb.amazonaws.com"
+  },
+  {
+    "ParameterKey": "EnvB04Ami",
+    "ParameterValue": "ami-04d29b6f966df1537"
+  },
+  {
+    "ParameterKey": "EnvB05InstanceType",
+    "ParameterValue": "t2.micro"
+  },
+  {
+    "ParameterKey": "EnvB06KeyPairName",
+    "ParameterValue": "system-pipeline-ui"
+  },
+  {
+    "ParameterKey": "EnvB07Vpc",
+    "ParameterValue": "vpc-97ceceed"
+  },
+  {
+    "ParameterKey": "EnvB08Subnets",
+    "ParameterValue": "subnet-36f80a17,subnet-fda454a2,subnet-1b15e17d,subnet-df3b00e1,subnet-97e463da,subnet-ce05abc0"
+  },
+  {
+    "ParameterKey": "EnvB09SecurityGroup",
+    "ParameterValue": "sg-556c827b"
+  },
+  {
+    "ParameterKey": "EnvB10EC2NameTagPrefix",
+    "ParameterValue": "COMPANY-SYSTEM-SVR"
+  },
+  {
+    "ParameterKey": "EnvB11NotificationEmailAddress",
+    "ParameterValue": "person@company.com"
+  },
+  {
+    "ParameterKey": "EnvB12ApprovalEmailAddress",
+    "ParameterValue": "person@company.com"
+  },
+  {
+    "ParameterKey": "EnvB13ArgOne",
+    "ParameterValue": "http://test.api.com"
+  },
+  {
+    "ParameterKey": "EnvB14SourceContainerPort",
+    "ParameterValue": "80"
+  },
+  {
+    "ParameterKey": "EnvC01EnvironmentName",
+    "ParameterValue": "STAGING"
+  },
+  {
+    "ParameterKey": "EnvC02ELBName",
+    "ParameterValue": "preprod"
+  },
+  {
+    "ParameterKey": "EnvC03Url",
+    "ParameterValue": "http://preprod-28467045.us-east-1.elb.amazonaws.com "
+  },
+  {
+    "ParameterKey": "EnvC04Ami",
+    "ParameterValue": "ami-04d29b6f966df1537"
+  },
+  {
+    "ParameterKey": "EnvC05InstanceType",
+    "ParameterValue": "t2.micro"
+  },
+  {
+    "ParameterKey": "EnvC06KeyPairName",
+    "ParameterValue": "system-pipeline-ui"
+  },
+  {
+    "ParameterKey": "EnvC07Vpc",
+    "ParameterValue": "vpc-97ceceed"
+  },
+  {
+    "ParameterKey": "EnvC08Subnets",
+    "ParameterValue": "subnet-36f80a17,subnet-fda454a2,subnet-1b15e17d,subnet-df3b00e1,subnet-97e463da,subnet-ce05abc0"
+  },
+  {
+    "ParameterKey": "EnvC09SecurityGroup",
+    "ParameterValue": "sg-556c827b"
+  },
+  {
+    "ParameterKey": "EnvC10EC2NameTagPrefix",
+    "ParameterValue": "COMPANY-SYSTEM-SVR"
+  },
+  {
+    "ParameterKey": "EnvC11NotificationEmailAddress",
+    "ParameterValue": "person@company.com"
+  },
+  {
+    "ParameterKey": "EnvC12ApprovalEmailAddress",
+    "ParameterValue": "person@company.com"
+  },
+  {
+    "ParameterKey": "EnvC13ArgOne",
+    "ParameterValue": "http://preprod.api.com"
+  },
+  {
+    "ParameterKey": "EnvC14SourceContainerPort",
+    "ParameterValue": "80"
+  },
+  {
+    "ParameterKey": "EnvD01EnvironmentName",
+    "ParameterValue": "PROD"
+  },
+  {
+    "ParameterKey": "EnvD02ELBName",
+    "ParameterValue": "prod"
+  },
+  {
+    "ParameterKey": "EnvD03Url",
+    "ParameterValue": "http://prod-116510262.us-east-1.elb.amazonaws.com"
+  },
+  {
+    "ParameterKey": "EnvD04Ami",
+    "ParameterValue": "ami-04d29b6f966df1537"
+  },
+  {
+    "ParameterKey": "EnvD05InstanceType",
+    "ParameterValue": "t2.micro"
+  },
+  {
+    "ParameterKey": "EnvD06KeyPairName",
+    "ParameterValue": "system-pipeline-ui"
+  },
+  {
+    "ParameterKey": "EnvD07Vpc",
+    "ParameterValue": "vpc-97ceceed"
+  },
+  {
+    "ParameterKey": "EnvD08Subnets",
+    "ParameterValue": "subnet-36f80a17,subnet-fda454a2,subnet-1b15e17d,subnet-df3b00e1,subnet-97e463da,subnet-ce05abc0"
+  },
+  {
+    "ParameterKey": "EnvD09SecurityGroup",
+    "ParameterValue": "sg-556c827b"
+  },
+  {
+    "ParameterKey": "EnvD10EC2NameTagPrefix",
+    "ParameterValue": "COMPANY-SYSTEM-SVR"
+  },
+  {
+    "ParameterKey": "EnvD11NotificationEmailAddress",
+    "ParameterValue": "person@company.com"
+  },
+  {
+    "ParameterKey": "EnvD12ApprovalEmailAddress",
+    "ParameterValue": "person@company.com"
+  },
+  {
+    "ParameterKey": "EnvD13ArgOne",
+    "ParameterValue": "http://prod.api.com"
+  },
+  {
+    "ParameterKey": "EnvD14SourceContainerPort",
+    "ParameterValue": "80"
+  },
+  {
+    "ParameterKey": "StgA01StageNamePrefix",
+    "ParameterValue": "Source"
+  },
+  {
+    "ParameterKey": "StgB01StageNamePrefix",
+    "ParameterValue": "Build"
+  },
+  {
+    "ParameterKey": "StgC01StageNamePrefix",
+    "ParameterValue": "Deploy"
+  },
+  {
+    "ParameterKey": "StgD01StageNamePrefix",
+    "ParameterValue": "Approve"
+  },
+  {
+    "ParameterKey": "ActA01ActionNamePrefix",
+    "ParameterValue": "build"
+  },
+  {
+    "ParameterKey": "ActA02ActionCategory",
+    "ParameterValue": "Build"
+  },
+  {
+    "ParameterKey": "ActA03ActionOwner",
+    "ParameterValue": "AWS"
+  },
+  {
+    "ParameterKey": "ActA04ActionProvider",
+    "ParameterValue": "CodeBuild"
+  },
+  {
+    "ParameterKey": "ActA05ActionNamespace",
+    "ParameterValue": "CodeBuildBuildProject"
+  },
+  {
+    "ParameterKey": "ActB01ActionNamePrefix",
+    "ParameterValue": "spin-up"
+  },
+  {
+    "ParameterKey": "ActB02ActionCategory",
+    "ParameterValue": "Build"
+  },
+  {
+    "ParameterKey": "ActB03ActionOwner",
+    "ParameterValue": "AWS"
+  },
+  {
+    "ParameterKey": "ActB04ActionProvider",
+    "ParameterValue": "CodeBuild"
+  },
+  {
+    "ParameterKey": "ActB05ActionNamespace",
+    "ParameterValue": "CodeBuildCfnDeployProject"
+  },
+  {
+    "ParameterKey": "ActC01ActionNamePrefix",
+    "ParameterValue": "smoke-test"
+  },
+  {
+    "ParameterKey": "ActC02ActionCategory",
+    "ParameterValue": "Build"
+  },
+  {
+    "ParameterKey": "ActC03ActionOwner",
+    "ParameterValue": "AWS"
+  },
+  {
+    "ParameterKey": "ActC04ActionProvider",
+    "ParameterValue": "CodeBuild"
+  },
+  {
+    "ParameterKey": "ActC05ActionNamespace",
+    "ParameterValue": "CodeBuildSmokeTestProject"
+  },
+  {
+    "ParameterKey": "ActD01ActionNamePrefix",
+    "ParameterValue": "functional-test"
+  },
+  {
+    "ParameterKey": "ActD02ActionCategory",
+    "ParameterValue": "Build"
+  },
+  {
+    "ParameterKey": "ActD03ActionOwner",
+    "ParameterValue": "AWS"
+  },
+  {
+    "ParameterKey": "ActD04ActionProvider",
+    "ParameterValue": "CodeBuild"
+  },
+  {
+    "ParameterKey": "ActD05ActionNamespace",
+    "ParameterValue": "CodeBuildFunctionalTestProject"
+  },
+  {
+    "ParameterKey": "ActE01ActionNamePrefix",
+    "ParameterValue": "switch-elb"
+  },
+  {
+    "ParameterKey": "ActE02ActionCategory",
+    "ParameterValue": "Build"
+  },
+  {
+    "ParameterKey": "ActE03ActionOwner",
+    "ParameterValue": "AWS"
+  },
+  {
+    "ParameterKey": "ActE04ActionProvider",
+    "ParameterValue": "CodeBuild"
+  },
+  {
+    "ParameterKey": "ActE05ActionNamespace",
+    "ParameterValue": "CodeBuildSwitchElbProject"
+  }
+]

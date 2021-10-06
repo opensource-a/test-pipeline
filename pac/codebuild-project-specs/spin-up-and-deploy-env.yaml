@@ -1,0 +1,119 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - yum install -y jq
+  build:
+    commands:
+      - ls
+      - DeploymentSubnets="1,2"
+      - echo $DeploymentSubnets
+      - echo $H
+      - echo $I
+      - aws ec2 describe-subnets --filter Name=vpc-id,Values=$H --query 'Subnets[].SubnetId' --output text
+      - declare -a DeploymentSubnets=($(aws ec2 describe-subnets --filter Name=vpc-id,Values=$H --query 'Subnets[].SubnetId' --output text))
+      - echo $DeploymentSubnets
+      - echo ${#DeploymentSubnets[@]}
+      - rand1=$[$RANDOM % ${#DeploymentSubnets[@]}]
+      - rand2=$[$RANDOM % ${#DeploymentSubnets[@]}]
+      - SubnetBlue=${DeploymentSubnets[$rand1]}
+      - SubnetGreen=${DeploymentSubnets[$rand2]}
+      - echo $SubnetBlue $SubnetGreen
+      - BUILD_NUMBER=$J
+      - echo $BUILD_NUMBER
+      - InstanceInService=$(aws ssm get-parameter --name $A-$C-$D-InstanceInService --query Parameter.Value --output text)
+      - commitInService=$(echo $InstanceInService | jq -rR 'fromjson? | .commit')
+      - pipelineXIdInService=$(echo $InstanceInService | jq -rR 'fromjson? | .pipelineXId')
+      - buildInService=$(echo $InstanceInService | jq -rR 'fromjson? | .build')
+      - instanceIdInService=$(echo $InstanceInService | jq -rR 'fromjson? | .instanceId')
+      - echo $commitInService $pipelineXIdInService $buildInService $instanceIdInService
+      - |
+        if [[ $commitInService == null || $pipelineXIdInService == null || $buildInService == null || $instanceIdInService == null || $commitInService == '' || $pipelineXIdInService == '' || $buildInService == '' || $instanceIdInService == '' ]]; then
+          echo "No proper instance in service from parameter store, checking if a cft exists for this environemnt"
+          buildInService=0
+          instancesInCft=$(aws cloudformation list-stack-resources --stack-name $I --query "StackResourceSummaries[?ResourceType=='AWS::EC2::Instance'].PhysicalResourceId" --output text)
+          echo $instancesInCft
+          if [[ $instancesInCft != null ]]; then
+            for id in $instancesInCft; do 
+              echo $id
+              buildId=$(aws ec2 describe-instances --instance-id $id --query "Reservations[].Instances[].Tags[?Key=='build'].Value" --output text)
+              if [[ $buildId -gt $buildInService ]]; then 
+                buildInService=$buildId
+                instanceInServiceColor=$(aws ec2 describe-instances --instance-id $id --query "Reservations[].Instances[].Tags[?Key=='color'].Value" --output text)
+                subnetIdInService=$(aws ec2 describe-instances --instance-id $id --query "Reservations[].Instances[].SubnetId" --output text) 
+              else 
+                echo $buildInService $instanceInServiceColor
+              fi
+            done
+          fi
+          if [[ $instanceInServiceColor == '' ]]; then
+            instanceInServiceColor=green
+            subnetIdInService=$SubnetGreen
+          else 
+            echo "Found highest build in service in deployment stack" 
+          fi
+        else
+          echo "Executing Else since valid parameter store values found"
+          instanceInServiceColor=$(aws ec2 describe-instances --instance-id $instanceIdInService --query "Reservations[].Instances[].Tags[?Key=='color'].Value" --output text)
+          subnetIdInService=$(aws ec2 describe-instances --instance-id $instanceIdInService --query "Reservations[].Instances[].SubnetId" --output text) 
+        fi
+      - echo $instanceInServiceColor
+      - echo $buildInService 
+      - echo $subnetIdInService 
+      - cp $E injected-parameters.json
+      - |
+        if [[ $instanceInServiceColor == 'green' ]]; 
+        then
+          echo "Executing Then";
+          sed -i  "s/#BlueBuildNumber/$BUILD_NUMBER/g" injected-parameters.json;
+          sed -i  "s/#GreenBuildNumber/$buildInService/g" injected-parameters.json
+          sed -i  "s/#PipelineName/$B/g" injected-parameters.json;
+          sed -i  "s/#Env/$D/g" injected-parameters.json;
+          sed -i  "s/#AmiId/$L/g" injected-parameters.json;
+          sed -i  "s/#SourcePortNumber/$Q/g" injected-parameters.json;
+          sed -i  "s/#InstanceType/$M/g" injected-parameters.json;
+          sed -i  "s/#KeyPairName/$N/g" injected-parameters.json;
+          sed -i  "s/#SecurityGroup/$P/g" injected-parameters.json;
+          sed -i  "s/#NameTagPrefix/$K/g" injected-parameters.json;
+          sed -i  "s~#PermissionsBoundary~$O~g" injected-parameters.json;
+          sed -i  "s/#SystemComponent/$C/g" injected-parameters.json;
+          sed -i  "s/#SystemName/$SystemName/g" injected-parameters.json;
+          sed -i  "s~#RepositoryUri~$R~g" injected-parameters.json;
+          sed -i  "s~#ArgOne~$G~g" injected-parameters.json;
+          sed -i  "s~#SubnetBlue~$SubnetBlue~g" injected-parameters.json;
+          sed -i  "s~#SubnetGreen~$subnetIdInService ~g" injected-parameters.json;
+        else
+          echo "Executing Else";
+          sed -i  "s/#GreenBuildNumber/$BUILD_NUMBER/g" injected-parameters.json;
+          sed -i  "s/#BlueBuildNumber/$buildInService/g" injected-parameters.json;
+          sed -i  "s/#PipelineName/$B/g" injected-parameters.json;
+          sed -i  "s/#Env/$D/g" injected-parameters.json;
+          sed -i  "s/#AmiId/$L/g" injected-parameters.json;
+          sed -i  "s/#SourcePortNumber/$Q/g" injected-parameters.json;
+          sed -i  "s/#InstanceType/$M/g" injected-parameters.json;
+          sed -i  "s/#KeyPairName/$N/g" injected-parameters.json;
+          sed -i  "s/#SecurityGroup/$P/g" injected-parameters.json;
+          sed -i  "s/#NameTagPrefix/$K/g" injected-parameters.json;
+          sed -i  "s~#PermissionsBoundary~$O~g" injected-parameters.json;
+          sed -i  "s/#SystemComponent/$C/g" injected-parameters.json;
+          sed -i  "s/#SystemName/$SystemName/g" injected-parameters.json;
+          sed -i  "s~#RepositoryUri~$R~g" injected-parameters.json;
+          sed -i  "s~#ArgOne~$G~g" injected-parameters.json;
+          sed -i  "s~#SubnetBlue~$subnetIdInService~g" injected-parameters.json;
+          sed -i  "s~#SubnetGreen~$SubnetGreen~g" injected-parameters.json;                     
+        fi
+      - cat injected-parameters.json; 
+      - cat $F;
+      - |
+        if ! aws cloudformation describe-stacks --stack-name $I ; then
+          echo -e "\nStack does not exist, creating ..."
+          aws cloudformation create-stack --stack-name $I --template-body file://$F --parameters file://injected-parameters.json --capabilities CAPABILITY_NAMED_IAM
+          echo "Waiting for stack to be created ..."
+          aws cloudformation wait stack-create-complete --stack-name $I 
+        else
+          echo -e "\nStack exists, attempting update ..."
+          aws cloudformation update-stack --stack-name $I --template-body file://$F --parameters file://injected-parameters.json --capabilities CAPABILITY_NAMED_IAM
+          echo "Waiting for stack to be updated ..."
+          aws cloudformation wait stack-update-complete --stack-name $I
+        fi 

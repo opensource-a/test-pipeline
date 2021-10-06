@@ -1,0 +1,59 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      - yum install -y jq     
+  build:
+    commands:
+      - ls
+      - cp $TestDirectory/smoke-test-0001.sh smoke-test.sh
+      - InstanceInService=$(aws ssm get-parameter --name $PipelineStackName-$SystemComponent-$Env-InstanceInService --query Parameter.Value --output text)
+      - instanceIdInService=$(echo $InstanceInService | jq -rR 'fromjson? | .instanceId')
+      - echo $instanceIdInService
+      - |
+        if [[ $instanceIdInService == null || $instanceIdInService == '' ]]; then
+          echo "No proper instance in service from parameter store, checking if a cft exists for this environemnt"
+          buildInService=0
+          instancesInCft=$(aws cloudformation list-stack-resources --stack-name $DeploymentStackName --query "StackResourceSummaries[?ResourceType=='AWS::EC2::Instance'].PhysicalResourceId" --output text)
+          echo $instancesInCft
+          if [[ $instancesInCft != null ]]; then
+            for id in $instancesInCft; do 
+              echo $id
+              buildId=$(aws ec2 describe-instances --instance-id $id --query "Reservations[].Instances[].Tags[?Key=='build'].Value" --output text)
+              if [[ $buildId -gt $buildInService ]]; then
+                buildInService=$buildId
+                futureInstanceIdInService=$id 
+              else 
+                echo $buildInService $futureInstanceIdInService
+              fi
+            done
+          fi
+          if [[ $futureInstanceIdInService == '' ]]; then
+            echo "No Deployment found to smoke test"
+            exit 1
+          else 
+            echo "Found highest build in service in deployment stack" 
+          fi
+        else
+          echo "Executing Else since valid parameter store values found"
+          futureInstanceIdInService=$(aws cloudformation list-stack-resources --stack-name $DeploymentStackName --query "StackResourceSummaries[?(ResourceType=='AWS::EC2::Instance'&&PhysicalResourceId!='$instanceIdInService')].PhysicalResourceId" --output text)
+        fi
+      - echo $futureInstanceIdInService
+      - |
+        echo -e "Checking if deployment infrastructure setup was successful"
+        aws ec2 wait instance-status-ok --instance-ids $futureInstanceIdInService;
+      - |
+        echo -e "Checking if deployment installation was successful"
+        export SMOKEIP=$(aws ec2 describe-instances --instance-ids $futureInstanceIdInService --query Reservations[].Instances[].PublicIpAddress --output text); 
+        echo "IP of Instance to test $futureInstanceIdInService is $SMOKEIP";
+        status=0;
+        status1=$(curl -I http://$SMOKEIP 2>/dev/null  | head -n 1 | cut -d' ' -f2);
+        echo $status1;
+        timeout 300 bash -c 'while [[ $status -ne 200 ]]; do sleep 5; status=$(curl -I http://$SMOKEIP 2> /dev/null  | head -n 1 | cut -d$" " -f2); echo $status; done' || { echo -e "Deployment installation timed out unsuccessfully"; exit 1; }
+        echo -e "Deployment installation succeeded"
+      - | 
+        echo -e "Checking if deployment configuration on $SMOKEIP was successful";
+        chmod +x smoke-test.sh;
+        curl "http://$SMOKEIP";
+        . $PWD/smoke-test.sh; smoke_url_ok "http://$SMOKEIP"; smoke_assert_body "$PipelineExecutionId"; smoke_report;
+        echo -e "Deployment configuration succeeded"
