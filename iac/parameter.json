@@ -117,7 +117,7 @@
    },
    {
       "ParameterKey": "pLandscape",
-      "ParameterValue": "DEV"
+      "ParameterValue": "#Landscape"
    },
    {
       "ParameterKey": "pInstanceMaxSize",
