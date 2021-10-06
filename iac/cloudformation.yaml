@@ -180,8 +180,6 @@ Resources:
       RoleName: !Join 
         - '-'
         - - !Ref 'AWS::StackName'
-          - !Ref pApplicationGroup
-          - !Ref pApplicationSubGroup
           - !Ref pLandscape
           - EC2Role
       Path: /
@@ -252,8 +250,6 @@ Resources:
       InstanceProfileName: !Join 
         - '-'
         - - !Ref 'AWS::StackName'
-          - !Ref pApplicationGroup
-          - !Ref pApplicationSubGroup
           - !Ref pLandscape
           - EC2Role
       Roles:
@@ -401,8 +397,6 @@ Resources:
       GroupName: !Join 
         - '-'
         - - !Ref 'AWS::StackName'
-          - !Ref pApplicationGroup
-          - !Ref pApplicationSubGroup
           - !Ref pLandscape
           - sg
       GroupDescription: Port access rules for the Elastic LoadBalancer
