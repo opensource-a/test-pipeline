@@ -13,13 +13,13 @@ phases:
       - BUILD_NUMBER=$BuildNumber
       - echo $BUILD_NUMBER
       - cp $E injected-parameters.json
-      - Env=$(aws secretsmanager get-secret-value --secret-id $PipelineStackName-$SystemComponent-$Env-Env-Parameters --query SecretString --output text | jq -rR 'fromjson? | .EnvName')
-      - Ami=$(aws secretsmanager get-secret-value --secret-id $PipelineStackName-$SystemComponent-$Env-Env-Parameters --query SecretString --output text | jq -rR 'fromjson? | .Ami')
-      - InstanceType=$(aws secretsmanager get-secret-value --secret-id $PipelineStackName-$SystemComponent-$Env-Env-Parameters --query SecretString --output text | jq -rR 'fromjson? | .InstanceType')
-      - KeyPairName=$(aws secretsmanager get-secret-value --secret-id $PipelineStackName-$SystemComponent-$Env-Env-Parameters --query SecretString --output text | jq -rR 'fromjson? | .KeyPairName')
-      - Vpc=$(aws secretsmanager get-secret-value --secret-id $PipelineStackName-$SystemComponent-$Env-Env-Parameters --query SecretString --output text | jq -rR 'fromjson? | .Vpc')
-      - Subnets=$(aws secretsmanager get-secret-value --secret-id $PipelineStackName-$SystemComponent-$Env-Env-Parameters --query SecretString --output text | jq -rR 'fromjson? | .Subnets')
-      - SecurityGroup=$(aws secretsmanager get-secret-value --secret-id $PipelineStackName-$SystemComponent-$Env-Env-Parameters --query SecretString --output text | jq -rR 'fromjson? | .SecurityGroup')      
+      - Env=$(aws secretsmanager get-secret-value --secret-id $EnvironmentSecret --query SecretString --output text | jq -rR 'fromjson? | .EnvName')
+      - Ami=$(aws secretsmanager get-secret-value --secret-id $EnvironmentSecret --query SecretString --output text | jq -rR 'fromjson? | .Ami')
+      - InstanceType=$(aws secretsmanager get-secret-value --secret-id $EnvironmentSecret --query SecretString --output text | jq -rR 'fromjson? | .InstanceType')
+      - KeyPairName=$(aws secretsmanager get-secret-value --secret-id $EnvironmentSecret --query SecretString --output text | jq -rR 'fromjson? | .KeyPairName')
+      - Vpc=$(aws secretsmanager get-secret-value --secret-id $EnvironmentSecret --query SecretString --output text | jq -rR 'fromjson? | .Vpc')
+      - Subnets=$(aws secretsmanager get-secret-value --secret-id $EnvironmentSecret --query SecretString --output text | jq -rR 'fromjson? | .Subnets')
+      - SecurityGroup=$(aws secretsmanager get-secret-value --secret-id $EnvironmentSecret --query SecretString --output text | jq -rR 'fromjson? | .SecurityGroup')      
       - |
         sed -i  "s/#Env/$Env/g" injected-parameters.json;
         sed -i  "s/#Company/$CompanyName/g" injected-parameters.json;
