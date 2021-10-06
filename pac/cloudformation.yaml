@@ -545,10 +545,10 @@ Resources:
           Actions:
             - Name: !Sub '${ActB01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvA01EnvironmentName}-env'
               Region: !Ref 'AWS::Region'
-             
+              Namespace: !Sub '${ActB05ActionNamespace}-${EnvA01EnvironmentName}'             
               ActionTypeId:
                 Category: !Ref ActB02ActionCategory
-                Owner: !Ref ActB03ActionOwner
+                Owner: !Ref ActB03ActionOwner                
                 Version: 1
                 Provider: !Ref ActB04ActionProvider
               Configuration:
@@ -592,30 +592,6 @@ Resources:
                 - Name: !Sub '${7SystemComponent}-source-code'
               OutputArtifacts: []
               RunOrder: 2
-            - Name: !Sub '${ActE01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvA01EnvironmentName}-elb'
-              Region: !Ref 'AWS::Region'
-
-              ActionTypeId:
-                Category: !Ref ActE02ActionCategory
-                Owner: !Ref ActE03ActionOwner
-                Version: 1
-                Provider: !Ref ActE04ActionProvider
-              Configuration:
-                EnvironmentVariables: !Sub >-
-                  [{"name":"PipelineStackName","value":"${AWS::StackName}"},
-                  {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
-                  {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
-                  {"name":"ElbName","value":"${EnvA02ELBName}"},
-                  {"name":"SystemComponent","value":"${7SystemComponent}"},
-                  {"name":"Env","value":"${EnvA01EnvironmentName}"},
-                  {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvA01EnvironmentName}-stack-${AWS::AccountId}"},
-                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
-                  {"name":"CommitNumber","value":"#{${ActA05ActionNamespace}.commit_number}"}]
-                ProjectName: !GetAtt CodeBuildElbSwitchProject.Outputs.CodeBuildProjectName
-              InputArtifacts:
-                - Name: !Sub '${7SystemComponent}-source-code'
-              OutputArtifacts: []
-              RunOrder: 3
         - Name: !Sub '${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvA01EnvironmentName}-env'
           Actions:
             - Name: !Sub 'promote-${EnvA01EnvironmentName}-to-${EnvB01EnvironmentName}'
@@ -640,7 +616,7 @@ Resources:
           Actions:
             - Name: !Sub '${ActB01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvB01EnvironmentName}-env'
               Region: !Ref 'AWS::Region'
-            
+              Namespace: !Sub '${ActB05ActionNamespace}-${EnvB01EnvironmentName}'             
               ActionTypeId:
                 Category: !Ref ActB02ActionCategory
                 Owner: !Ref ActB03ActionOwner
@@ -712,30 +688,6 @@ Resources:
                 - Name: !Sub '${7SystemComponent}-source-code'
               OutputArtifacts: []
               RunOrder: 3              
-            - Name: !Sub '${ActE01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvB01EnvironmentName}-elb'
-              Region: !Ref 'AWS::Region'
-
-              ActionTypeId:
-                Category: !Ref ActE02ActionCategory
-                Owner: !Ref ActE03ActionOwner
-                Version: 1
-                Provider: !Ref ActE04ActionProvider
-              Configuration:
-                EnvironmentVariables: !Sub >-
-                  [{"name":"PipelineStackName","value":"${AWS::StackName}"},
-                  {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
-                  {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
-                  {"name":"ElbName","value":"${EnvB02ELBName}"},
-                  {"name":"SystemComponent","value":"${7SystemComponent}"},
-                  {"name":"Env","value":"${EnvB01EnvironmentName}"},
-                  {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-stack-${AWS::AccountId}"},
-                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
-                  {"name":"CommitNumber","value":"#{${ActA05ActionNamespace}.commit_number}"}]
-                ProjectName: !GetAtt CodeBuildElbSwitchProject.Outputs.CodeBuildProjectName
-              InputArtifacts:
-                - Name: !Sub '${7SystemComponent}-source-code'
-              OutputArtifacts: []
-              RunOrder: 4
         - Name: !Sub '${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvB01EnvironmentName}-env'
           Actions:
             - Name: !Sub 'promote-${EnvB01EnvironmentName}-to-${EnvC01EnvironmentName}'
@@ -760,7 +712,7 @@ Resources:
           Actions:
             - Name: !Sub '${ActB01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvC01EnvironmentName}-env'
               Region: !Ref 'AWS::Region'
-            
+              Namespace: !Sub '${ActB05ActionNamespace}-${EnvC01EnvironmentName}'             
               ActionTypeId:
                 Category: !Ref ActB02ActionCategory
                 Owner: !Ref ActB03ActionOwner
@@ -807,30 +759,6 @@ Resources:
                 - Name: !Sub '${7SystemComponent}-source-code'
               OutputArtifacts: []
               RunOrder: 2
-            - Name: !Sub '${ActE01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvC01EnvironmentName}-elb'
-              Region: !Ref 'AWS::Region'
- 
-              ActionTypeId:
-                Category: !Ref ActE02ActionCategory
-                Owner: !Ref ActE03ActionOwner
-                Version: 1
-                Provider: !Ref ActE04ActionProvider
-              Configuration:
-                EnvironmentVariables: !Sub >-
-                  [{"name":"PipelineStackName","value":"${AWS::StackName}"},
-                  {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
-                  {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
-                  {"name":"ElbName","value":"${EnvC02ELBName}"},
-                  {"name":"SystemComponent","value":"${7SystemComponent}"},
-                  {"name":"Env","value":"${EnvC01EnvironmentName}"},
-                  {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-stack-${AWS::AccountId}"},
-                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
-                  {"name":"CommitNumber","value":"#{${ActA05ActionNamespace}.commit_number}"}]
-                ProjectName: !GetAtt CodeBuildElbSwitchProject.Outputs.CodeBuildProjectName
-              InputArtifacts:
-                - Name: !Sub '${7SystemComponent}-source-code'
-              OutputArtifacts: []
-              RunOrder: 3
         - Name: !Sub '${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvC01EnvironmentName}-env'
           Actions:
             - Name: !Sub 'promote-${EnvC01EnvironmentName}-to-${EnvD01EnvironmentName}'
@@ -855,7 +783,7 @@ Resources:
           Actions:
             - Name: !Sub '${ActB01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvD01EnvironmentName}-env'
               Region: !Ref 'AWS::Region'
-            
+              Namespace: !Sub '${ActB05ActionNamespace}-${EnvD01EnvironmentName}'             
               ActionTypeId:
                 Category: !Ref ActB02ActionCategory
                 Owner: !Ref ActB03ActionOwner
@@ -902,30 +830,6 @@ Resources:
                 - Name: !Sub '${7SystemComponent}-source-code'
               OutputArtifacts: []
               RunOrder: 2
-            - Name: !Sub '${ActE01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvD01EnvironmentName}-elb'
-              Region: !Ref 'AWS::Region'
-
-              ActionTypeId:
-                Category: !Ref ActE02ActionCategory
-                Owner: !Ref ActE03ActionOwner
-                Version: 1
-                Provider: !Ref ActE04ActionProvider
-              Configuration:
-                EnvironmentVariables: !Sub >-
-                  [{"name":"PipelineStackName","value":"${AWS::StackName}"},
-                  {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
-                  {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
-                  {"name":"ElbName","value":"${EnvD02ELBName}"},
-                  {"name":"SystemComponent","value":"${7SystemComponent}"},
-                  {"name":"Env","value":"${EnvD01EnvironmentName}"},
-                  {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvD01EnvironmentName}-stack-${AWS::AccountId}"},
-                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
-                  {"name":"CommitNumber","value":"#{${ActA05ActionNamespace}.commit_number}"}]
-                ProjectName: !GetAtt CodeBuildElbSwitchProject.Outputs.CodeBuildProjectName
-              InputArtifacts:
-                - Name: !Sub '${7SystemComponent}-source-code'
-              OutputArtifacts: []
-              RunOrder: 3
     DependsOn:
       - KMSKey
       
@@ -1021,29 +925,6 @@ Resources:
         13SecurityGroupIds: !Ref EnvA09SecurityGroup
     DependsOn:
       - KMSKey       
-  CodeBuildElbSwitchProject:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: !Sub 'https://s3.amazonaws.com/${1S3Bucket}/ui/pipeline/create-codebuild-project/cloudformation.yaml'
-      Parameters:
-        0SystemName: !Ref 0SystemName
-        1KMSKeyArn: !GetAtt 
-          - KMSKey
-          - Arn
-        2CodeBuildRole: !Ref CodePipelineRole
-        3RepositoryUri: !Sub '${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${Repository}'
-        4CodeBuildContainerImage: 'aws/codebuild/amazonlinux2-x86_64-standard:3.0'
-        5CodeBuildComputeType: BUILD_GENERAL1_SMALL
-        6CodeBuildProjectName: !Sub '${AWS::StackName}-codebuildelbswitchproject'
-        7SourceType: CODEPIPELINE
-        8ArtifactType: CODEPIPELINE
-        9BuildSpecFile: pac/codebuild-project-specs/switch-elb-to-new-instance-in-service.yaml
-        10PrivateBuildProject: false
-        11VpcId: !Ref EnvA07Vpc
-        12SubnetIds: !Ref EnvA08Subnets
-        13SecurityGroupIds: !Ref EnvA09SecurityGroup
-    DependsOn:
-      - KMSKey 
   EventRule:
     Type: 'AWS::Events::Rule'
     Properties:
