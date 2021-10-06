@@ -25,7 +25,7 @@
    },
    {
       "ParameterKey": "pCompanyName",
-      "ParameterValue": "company"
+      "ParameterValue": "#Company"
    },
    {
       "ParameterKey": "pSubnetId",
@@ -69,7 +69,7 @@
    },
    {
       "ParameterKey": "pEC2TagName",
-      "ParameterValue": "solution"
+      "ParameterValue": "#Solution"
    },
    {
       "ParameterKey": "pEC2KeyName",
@@ -77,7 +77,7 @@
    },
    {
       "ParameterKey": "pSolutionName",
-      "ParameterValue": "solution"
+      "ParameterValue": "#Solution"
    },
    {
       "ParameterKey": "pWBSE",
@@ -89,7 +89,7 @@
    },
    {
       "ParameterKey": "pApplicationName",
-      "ParameterValue": "application"
+      "ParameterValue": "#Solution"
    },
    {
       "ParameterKey": "pClusterNodeDesired",
@@ -109,7 +109,7 @@
    },
    {
       "ParameterKey": "pSolutionS3BucketName",
-      "ParameterValue": "solution-name"
+      "ParameterValue": "#Solution"
    },
    {
       "ParameterKey": "pPatchGroup",
@@ -125,7 +125,7 @@
    },
    {
       "ParameterKey": "pApplicationSubGroup",
-      "ParameterValue": "Solution"
+      "ParameterValue": "#Solution"
    },
    {
       "ParameterKey": "pAMIId",
@@ -133,6 +133,6 @@
    },
    {
       "ParameterKey": "pHostName",
-      "ParameterValue": "solution"
+      "ParameterValue": "#Solution"
    }
 ]
