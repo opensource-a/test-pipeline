@@ -19,48 +19,12 @@ phases:
       - mv chromedriver /usr/bin/chromedriver   
   build:
     commands:
-      - ls
       - pwd
       - cd $TestDirectory
-      - InstanceInService=$(aws ssm get-parameter --name $PipelineStackName-$SystemComponent-$Env-InstanceInService --query Parameter.Value --output text)
-      - instanceIdInService=$(echo $InstanceInService | jq -rR 'fromjson? | .instanceId')
-      - echo $instanceIdInService
-      - |
-        if [[ $instanceIdInService == null || $instanceIdInService == '' ]]; then
-          echo "No proper instance in service from parameter store, checking if a cft exists for this environemnt"
-          buildInService=0
-          instancesInCft=$(aws cloudformation list-stack-resources --stack-name $DeploymentStackName --query "StackResourceSummaries[?ResourceType=='AWS::EC2::Instance'].PhysicalResourceId" --output text)
-          echo $instancesInCft
-          if [[ $instancesInCft != null ]]; then
-            for id in $instancesInCft; do 
-              echo $id
-              buildId=$(aws ec2 describe-instances --instance-id $id --query "Reservations[].Instances[].Tags[?Key=='build'].Value" --output text)
-              if [[ $buildId -gt $buildInService ]]; then
-                buildInService=$buildId
-                futureInstanceIdInService=$id 
-              else 
-                echo $buildInService $futureInstanceIdInService
-              fi
-            done
-          fi
-          if [[ $futureInstanceIdInService == '' ]]; then
-            echo "No Deployment found to functional test"
-            exit 1
-          else 
-            echo "Found highest build in service in deployment stack" 
-          fi
-        else
-          echo "Executing Else since valid parameter store values found"
-          futureInstanceIdInService=$(aws cloudformation list-stack-resources --stack-name $DeploymentStackName --query "StackResourceSummaries[?(ResourceType=='AWS::EC2::Instance'&&PhysicalResourceId!='$instanceIdInService')].PhysicalResourceId" --output text)
-        fi
-      - echo $futureInstanceIdInService
-      - |
-        echo -e "Checking if deployment infrastructure setup was successful"
-        aws ec2 wait instance-status-ok --instance-ids $futureInstanceIdInService;
+      - TestIp=$(aws cloudformation describe-stacks --stack-name $DeploymentStackName --query "Stacks[0].Outputs[?OutputKey=='oALBDNS'].OutputValue" --output text)
       - |
         echo -e "Checking if deployment installation was successful"
-        export TestIp=$(aws ec2 describe-instances --instance-ids $futureInstanceIdInService --query Reservations[].Instances[].PublicIpAddress --output text); 
-        echo "IP of Instance to test $futureInstanceIdInService is $TestIp";
+        echo "DNS to test is $TestIp";
         selenium-side-runner --output-directory . --base-url http://$TestIp -c "browserName=chrome goog:chromeOptions.args=[disable-infobars, headless, no-sandbox]" --debug --timeout 15000 *.side
         ls
         cat *.json
