@@ -607,7 +607,6 @@ Resources:
                   https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Approved&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvA01EnvironmentName}-env&approval_action=promote-${EnvA01EnvironmentName}-to-${EnvB01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}
                   or Reject
                   https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Rejected&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvA01EnvironmentName}-env&approval_action=promote-${EnvA01EnvironmentName}-to-${EnvB01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}
-                ExternalEntityLink: !Ref EnvA03Url
                 NotificationArn: !Ref EnvAApprovalSNSTopic
               OutputArtifacts: []
               InputArtifacts: []
@@ -703,7 +702,6 @@ Resources:
                   https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Approved&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvB01EnvironmentName}-env&approval_action=promote-${EnvB01EnvironmentName}-to-${EnvC01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}
                   or Reject
                   https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Rejected&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvB01EnvironmentName}-env&approval_action=promote-${EnvB01EnvironmentName}-to-${EnvC01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}
-                ExternalEntityLink: !Ref EnvB03Url
                 NotificationArn: !Ref EnvBApprovalSNSTopic
               OutputArtifacts: []
               InputArtifacts: []
@@ -774,7 +772,6 @@ Resources:
                   https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Approved&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvC01EnvironmentName}-env&approval_action=promote-${EnvC01EnvironmentName}-to-${EnvD01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}
                   or Reject
                   https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Rejected&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvC01EnvironmentName}-env&approval_action=promote-${EnvC01EnvironmentName}-to-${EnvD01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}
-                ExternalEntityLink: !Ref EnvC03Url
                 NotificationArn: !Ref EnvCApprovalSNSTopic
               OutputArtifacts: []
               InputArtifacts: []
