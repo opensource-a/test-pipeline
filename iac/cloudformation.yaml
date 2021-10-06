@@ -441,15 +441,15 @@ Resources:
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
-          CidrIp: 10.0.0.0/8
+          CidrIp: 0.0.0.0/0
         - FromPort: 80
           ToPort: 80
           IpProtocol: tcp
-          CidrIp: 10.0.0.0/8
+          CidrIp: 0.0.0.0/0
         - FromPort: 443
           ToPort: 443
           IpProtocol: tcp
-          CidrIp: 10.0.0.0/8
+          CidrIp: 0.0.0.0/0
 
   rALB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
@@ -459,7 +459,7 @@ Resources:
       SecurityGroups:
         - !Ref pELBSecurityGroupID
         - !GetAtt rELBSecurityGroup.GroupId
-      Scheme: internal
+      Scheme: internet-facing
       Subnets: !Ref pELBSubnetId
       Tags:
           - Key: CostCenter
