@@ -752,7 +752,11 @@ Resources:
                   {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-stack-${AWS::AccountId}"},
                   {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
                   {"name":"SenderEmailAddress","value":"${9NotificationSenderEmailAddress}"},
-                  {"name":"NextEnv","value":"${EnvC01EnvironmentName}"}]
+                  {"name":"NextEnv","value":"${EnvC01EnvironmentName}"},
+                  {"name":"ApprovalApiName","value":"${ApprovalLambdaApiGatewayRestApi}"},
+                  {"name":"ApprovalApiStg","value":"${ApprovalLambdaApiGatewayStage}"},
+                  {"name":"ApprovalStg","value":"${StgD01StageNamePrefix}"},
+                  {"name":"SystemName","value":"${0SystemName}"}]
                 ProjectName: !GetAtt CodeBuildNotifyToApproveProject.Outputs.CodeBuildProjectName
               InputArtifacts:
                 - Name: !Sub '${7SystemComponent}-source-code'
@@ -846,7 +850,11 @@ Resources:
                   {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-stack-${AWS::AccountId}"},
                   {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
                   {"name":"SenderEmailAddress","value":"${9NotificationSenderEmailAddress}"},
-                  {"name":"NextEnv","value":"${EnvD01EnvironmentName}"}]
+                  {"name":"NextEnv","value":"${EnvD01EnvironmentName}"},
+                  {"name":"ApprovalApiName","value":"${ApprovalLambdaApiGatewayRestApi}"},
+                  {"name":"ApprovalApiStg","value":"${ApprovalLambdaApiGatewayStage}"},
+                  {"name":"ApprovalStg","value":"${StgD01StageNamePrefix}"},
+                  {"name":"SystemName","value":"${0SystemName}"}]
                 ProjectName: !GetAtt CodeBuildNotifyToApproveProject.Outputs.CodeBuildProjectName
               InputArtifacts:
                 - Name: !Sub '${7SystemComponent}-source-code'
