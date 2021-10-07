@@ -1,0 +1,16 @@
+{
+  "Subject": {
+    "Data": "CALL TO ACTION: A deployment needs to be approved",
+    "Charset": "UTF-8"
+  },
+  "Body": {
+    "Text": {
+      "Data": "Dear #To,\n\nPipeline #PipelineName execution #PipelineXID, has deployed a new version of #SystemComponent to #Env.\n\nYou may access this deployment at #TestUrl \n\nTo approve this release moving into the #NextEnv, click \n\n#ApproveUrl \n\nTo reject, that is stop this release from moving into the #NextEnv, click \n\n#RejectUrl \n\nThank you,\n\nAWS CodePipeline",
+      "Charset": "UTF-8"
+    },
+    "Html": {
+      "Data": "<p>Dear #To,</a>&nbsp;</p><p>Pipeline #PipelineName execution #PipelineXID, has deployed a new version of #SystemComponent to #Env.&nbsp;</p><p>You may access this deployment at this link <a href=\"#TestUrl\">#TestUrl</a></p><p>To approve this release moving into the #NextEnv, click here.</p><form action=\"#ApproveUrl\"><input type=\"submit\" style=\"background-color: red; color: white; width: 150px; height: 40px;\" value=\"APPROVE\" /></form><p></p><p>To reject, that is stop this release from moving into the #NextEnv, click here.</p><form action=\"#RejectUrl\"><input type=\"submit\" style=\"background-color: green; color: white; width: 150px; height: 40px;\" value=\"REJECT\" /></form><p></p><p></p><p>Thank you,</p><p>AWS CodePipeline</p>",
+      "Charset": "UTF-8"
+    }
+  }
+}
