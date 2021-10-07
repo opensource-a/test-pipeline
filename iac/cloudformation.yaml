@@ -394,11 +394,6 @@ Resources:
   rELBSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
-      GroupName: !Join 
-        - '-'
-        - - !Ref 'AWS::StackName'
-          - !Ref pLandscape
-          - sg
       GroupDescription: Port access rules for the Elastic LoadBalancer
       VpcId: !Ref pVPCId
       SecurityGroupIngress:
