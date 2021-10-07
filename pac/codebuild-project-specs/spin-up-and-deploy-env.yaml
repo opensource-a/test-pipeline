@@ -36,6 +36,7 @@ phases:
         sed -i  "s~#RepositoryUri~$R~g" injected-parameters.json;
         sed -i  "s~#ArgOne~$G~g" injected-parameters.json;
         sed -i  "s~#SubnetId~$Subnets~g" injected-parameters.json;
+        sed -i  "s~#BuildNumber~$BUILD_NUMBER~g" injected-parameters.json;
 
       - cat injected-parameters.json; 
       - cat $F;
