@@ -18,8 +18,8 @@ phases:
       - echo $DeploymentStackName
       - TestUrl=$(aws cloudformation describe-stacks --stack-name $DeploymentStackName --query "Stacks[0].Outputs[?OutputKey=='oALBDNS'].OutputValue" --output text)
       - echo $TestUrl
-      - ApproveUrl=https://$ApprovalApiName.execute-api.$AWS_DEFAULT_REGION.amazonaws.com/$ApprovalApiStg/pipeline-approval?action=Approved&pipeline=$PipelineName&stage=$ApprovalStg-$SystemName-$SystemComponent-$Env-env&approval_action=promote-$Env-to-$NextEnv&pipelineexecutionid=$PipelineExecutionId
-      - RejectUrl=https://$ApprovalApiName.execute-api.$AWS_DEFAULT_REGION.amazonaws.com/$ApprovalApiStg/pipeline-approval?action=Rejected&pipeline=$PipelineName&stage=$ApprovalStg-$SystemName-$SystemComponent-$Env-env&approval_action=promote-$Env-to-$NextEnv&pipelineexecutionid=$PipelineExecutionId
+      - ApproveUrl="https://$ApprovalApiName.execute-api.$AWS_DEFAULT_REGION.amazonaws.com/$ApprovalApiStg/pipeline-approval?action=Approved&pipeline=$PipelineName&stage=$ApprovalStg-$SystemName-$SystemComponent-$Env-env&approval_action=promote-$Env-to-$NextEnv&pipelineexecutionid=$PipelineExecutionId"
+      - RejectUrl="https://$ApprovalApiName.execute-api.$AWS_DEFAULT_REGION.amazonaws.com/$ApprovalApiStg/pipeline-approval?action=Rejected&pipeline=$PipelineName&stage=$ApprovalStg-$SystemName-$SystemComponent-$Env-env&approval_action=promote-$Env-to-$NextEnv&pipelineexecutionid=$PipelineExecutionId"
       - echo $ApproveUrl
       - echo $RejectUrl
       - ApprovalEmailAddress=$(aws secretsmanager get-secret-value --secret-id $EnvironmentSecret --query SecretString --output text | jq -rR 'fromjson? | .ApprovalEmailAddress')
