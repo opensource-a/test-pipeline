@@ -39,6 +39,9 @@ Parameters:
   8CompanyName:
     Type: String
     Description: Name of the company    
+  9NotificationSenderEmailAddress:
+    Type: String
+    Description: Email address to send notifications from       
   EnvA01EnvironmentName:
     Type: String
     Description: EnvA Environment Name
@@ -301,7 +304,22 @@ Parameters:
     Description: ActE Action Provider    
   ActE05ActionNamespace:
     Type: String
-    Description: ActE Action Namespace for Action Result variables         
+    Description: ActE Action Namespace for Action Result variables
+  ActF01ActionNamePrefix:
+    Type: String
+    Description: ActF Action Name Prefix  
+  ActF02ActionCategory:
+    Type: String
+    Description: ActF Action Category 
+  ActF03ActionOwner:
+    Type: String
+    Description: ActF Action Owner     
+  ActF04ActionProvider:
+    Type: String
+    Description: ActF Action Provider    
+  ActF05ActionNamespace:
+    Type: String
+    Description: ActF Action Namespace for Action Result variables       
 Resources:
   EnvAParameterStore:
     Type: 'AWS::SSM::Parameter'
@@ -592,6 +610,33 @@ Resources:
                 - Name: !Sub '${7SystemComponent}-source-code'
               OutputArtifacts: []
               RunOrder: 2
+            - Name: !Sub '${ActF01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvA01EnvironmentName}-deployment'
+              Region: !Ref 'AWS::Region'
+            
+              ActionTypeId:
+                Category: !Ref ActF02ActionCategory
+                Owner: !Ref ActF03ActionOwner
+                Version: 1
+                Provider: !Ref ActF04ActionProvider
+              Configuration:
+                EnvironmentVariables: !Sub >-
+                  [{"name":"PipelineStackName","value":"${AWS::StackName}"},
+                  {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
+                  {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
+                  {"name":"EnvironmentSecret","value":"${AWS::StackName}-${7SystemComponent}-${EnvA01EnvironmentName}-Env-Parameters"}
+                  {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"Env","value":"${EnvA01EnvironmentName}"},
+                  {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvA01EnvironmentName}-stack-${AWS::AccountId}"},
+                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
+                  {"name":"SenderEmailAddress","value":"${9NotificationSenderEmailAddress}"},
+                  {"name":"NextEnv","value":"${EnvB01EnvironmentName}"},
+                  {"name":"ApproveUrl","value":"https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Approved&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvA01EnvironmentName}-env&approval_action=promote-${EnvA01EnvironmentName}-to-${EnvB01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}"},
+                  {"name":"RejectUrl","value":"https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Rejected&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvA01EnvironmentName}-env&approval_action=promote-${EnvA01EnvironmentName}-to-${EnvB01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}"}]
+                ProjectName: !GetAtt CodeBuildNotifyToApproveProject.Outputs.CodeBuildProjectName
+              InputArtifacts:
+                - Name: !Sub '${7SystemComponent}-source-code'
+              OutputArtifacts: []
+              RunOrder: 3              
         - Name: !Sub '${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvA01EnvironmentName}-env'
           Actions:
             - Name: !Sub 'promote-${EnvA01EnvironmentName}-to-${EnvB01EnvironmentName}'
@@ -607,7 +652,6 @@ Resources:
                   https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Approved&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvA01EnvironmentName}-env&approval_action=promote-${EnvA01EnvironmentName}-to-${EnvB01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}
                   or Reject
                   https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Rejected&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvA01EnvironmentName}-env&approval_action=promote-${EnvA01EnvironmentName}-to-${EnvB01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}
-                NotificationArn: !Ref EnvAApprovalSNSTopic
               OutputArtifacts: []
               InputArtifacts: []
               Region: !Ref 'AWS::Region'              
@@ -686,7 +730,34 @@ Resources:
               InputArtifacts:
                 - Name: !Sub '${7SystemComponent}-source-code'
               OutputArtifacts: []
-              RunOrder: 3              
+              RunOrder: 3           
+            - Name: !Sub '${ActF01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvB01EnvironmentName}-deployment'
+              Region: !Ref 'AWS::Region'
+            
+              ActionTypeId:
+                Category: !Ref ActF02ActionCategory
+                Owner: !Ref ActF03ActionOwner
+                Version: 1
+                Provider: !Ref ActF04ActionProvider
+              Configuration:
+                EnvironmentVariables: !Sub >-
+                  [{"name":"PipelineStackName","value":"${AWS::StackName}"},
+                  {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
+                  {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
+                  {"name":"EnvironmentSecret","value":"${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-Env-Parameters"}
+                  {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"Env","value":"${EnvB01EnvironmentName}"},
+                  {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-stack-${AWS::AccountId}"},
+                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
+                  {"name":"SenderEmailAddress","value":"${9NotificationSenderEmailAddress}"},
+                  {"name":"NextEnv","value":"${EnvC01EnvironmentName}"},
+                  {"name":"ApproveUrl","value":"https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Approved&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvB01EnvironmentName}-env&approval_action=promote-${EnvB01EnvironmentName}-to-${EnvC01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}"},
+                  {"name":"RejectUrl","value":"https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Rejected&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvB01EnvironmentName}-env&approval_action=promote-${EnvB01EnvironmentName}-to-${EnvC01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}"}]
+                ProjectName: !GetAtt CodeBuildNotifyToApproveProject.Outputs.CodeBuildProjectName
+              InputArtifacts:
+                - Name: !Sub '${7SystemComponent}-source-code'
+              OutputArtifacts: []
+              RunOrder: 4              
         - Name: !Sub '${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvB01EnvironmentName}-env'
           Actions:
             - Name: !Sub 'promote-${EnvB01EnvironmentName}-to-${EnvC01EnvironmentName}'
@@ -702,7 +773,6 @@ Resources:
                   https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Approved&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvB01EnvironmentName}-env&approval_action=promote-${EnvB01EnvironmentName}-to-${EnvC01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}
                   or Reject
                   https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Rejected&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvB01EnvironmentName}-env&approval_action=promote-${EnvB01EnvironmentName}-to-${EnvC01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}
-                NotificationArn: !Ref EnvBApprovalSNSTopic
               OutputArtifacts: []
               InputArtifacts: []
               Region: !Ref 'AWS::Region'                   
@@ -757,6 +827,33 @@ Resources:
                 - Name: !Sub '${7SystemComponent}-source-code'
               OutputArtifacts: []
               RunOrder: 2
+            - Name: !Sub '${ActF01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvC01EnvironmentName}-deployment'
+              Region: !Ref 'AWS::Region'
+            
+              ActionTypeId:
+                Category: !Ref ActF02ActionCategory
+                Owner: !Ref ActF03ActionOwner
+                Version: 1
+                Provider: !Ref ActF04ActionProvider
+              Configuration:
+                EnvironmentVariables: !Sub >-
+                  [{"name":"PipelineStackName","value":"${AWS::StackName}"},
+                  {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
+                  {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
+                  {"name":"EnvironmentSecret","value":"${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-Env-Parameters"}
+                  {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"Env","value":"${EnvC01EnvironmentName}"},
+                  {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-stack-${AWS::AccountId}"},
+                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
+                  {"name":"SenderEmailAddress","value":"${9NotificationSenderEmailAddress}"},
+                  {"name":"NextEnv","value":"${EnvD01EnvironmentName}"},
+                  {"name":"ApproveUrl","value":"https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Approved&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvC01EnvironmentName}-env&approval_action=promote-${EnvC01EnvironmentName}-to-${EnvD01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}"},
+                  {"name":"RejectUrl","value":"https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Rejected&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvC01EnvironmentName}-env&approval_action=promote-${EnvC01EnvironmentName}-to-${EnvD01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}"}]
+                ProjectName: !GetAtt CodeBuildNotifyToApproveProject.Outputs.CodeBuildProjectName
+              InputArtifacts:
+                - Name: !Sub '${7SystemComponent}-source-code'
+              OutputArtifacts: []
+              RunOrder: 3                 
         - Name: !Sub '${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvC01EnvironmentName}-env'
           Actions:
             - Name: !Sub 'promote-${EnvC01EnvironmentName}-to-${EnvD01EnvironmentName}'
@@ -922,6 +1019,29 @@ Resources:
         13SecurityGroupIds: !Ref EnvA09SecurityGroup
     DependsOn:
       - KMSKey       
+  CodeBuildNotifyToApproveProject:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub 'https://s3.amazonaws.com/${1S3Bucket}/ui/pipeline/create-codebuild-project/cloudformation.yaml'
+      Parameters:
+        0SystemName: !Ref 0SystemName
+        1KMSKeyArn: !GetAtt 
+          - KMSKey
+          - Arn
+        2CodeBuildRole: !Ref CodePipelineRole
+        3RepositoryUri: !Sub '${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${Repository}'
+        4CodeBuildContainerImage: 'aws/codebuild/amazonlinux2-x86_64-standard:3.0'
+        5CodeBuildComputeType: BUILD_GENERAL1_SMALL
+        6CodeBuildProjectName: !Sub '${AWS::StackName}-codebuildnotifytoapproveproject'
+        7SourceType: CODEPIPELINE
+        8ArtifactType: CODEPIPELINE
+        9BuildSpecFile: pac/codebuild-project-specs/notify-to-approve.yaml
+        10PrivateBuildProject: false
+        11VpcId: !Ref EnvA07Vpc
+        12SubnetIds: !Ref EnvA08Subnets
+        13SecurityGroupIds: !Ref EnvA09SecurityGroup
+    DependsOn:
+      - KMSKey        
   EventRule:
     Type: 'AWS::Events::Rule'
     Properties:
