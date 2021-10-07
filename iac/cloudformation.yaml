@@ -164,7 +164,11 @@ Parameters:
     Type: CommaDelimitedList      
   pELBSecurityGroupID: 
     Description: ELBSecurityGroupId
-    Type: String    
+    Type: String   
+  pBuildNumber: 
+    Description: BuildNumber
+    Type: String     
+    
 Conditions:
   NonProd: !Or [!Equals [!Ref pLandscape, DEV], !Equals [!Ref pLandscape, TEST], !Equals [!Ref pLandscape, STAGE]]
   Prod:
@@ -284,6 +288,9 @@ Resources:
         - Key: Landscape
           Value: !Ref pLandscape
           PropagateAtLaunch: true
+        - Key: BuildNumber
+          Value: !Ref pBuildNumber
+          PropagateAtLaunch: true          
         - Key: ApplicationGroup
           Value: !Ref pApplicationGroup
           PropagateAtLaunch: true
