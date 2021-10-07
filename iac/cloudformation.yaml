@@ -400,6 +400,7 @@ Resources:
           - !Ref pLandscape
           - sg
       GroupDescription: Port access rules for the Elastic LoadBalancer
+      VpcId: !Ref pVPCId
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22
