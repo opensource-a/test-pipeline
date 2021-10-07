@@ -44,6 +44,10 @@
     "ParameterValue": "company"
   },
   {
+    "ParameterKey": "9NotificationSenderEmailAddress",
+    "ParameterValue": "sjojo@zeisys.com"
+  },
+  {
     "ParameterKey": "EnvA01EnvironmentName",
     "ParameterValue": "DEV"
   },
@@ -89,7 +93,7 @@
   },
   {
     "ParameterKey": "EnvA12ApprovalEmailAddress",
-    "ParameterValue": "person@company.com"
+    "ParameterValue": "sjojo@zeisys.com"
   },
   {
     "ParameterKey": "EnvA13ArgOne",
@@ -145,7 +149,7 @@
   },
   {
     "ParameterKey": "EnvB12ApprovalEmailAddress",
-    "ParameterValue": "person@company.com"
+    "ParameterValue": "sjojo@zeisys.com"
   },
   {
     "ParameterKey": "EnvB13ArgOne",
@@ -201,7 +205,7 @@
   },
   {
     "ParameterKey": "EnvC12ApprovalEmailAddress",
-    "ParameterValue": "person@company.com"
+    "ParameterValue": "sjojo@zeisys.com"
   },
   {
     "ParameterKey": "EnvC13ArgOne",
@@ -257,7 +261,7 @@
   },
   {
     "ParameterKey": "EnvD12ApprovalEmailAddress",
-    "ParameterValue": "person@company.com"
+    "ParameterValue": "sjojo@zeisys.com"
   },
   {
     "ParameterKey": "EnvD13ArgOne",
@@ -382,5 +386,25 @@
   {
     "ParameterKey": "ActE05ActionNamespace",
     "ParameterValue": "CodeBuildSwitchElbProject"
+  },
+  {
+    "ParameterKey": "ActF01ActionNamePrefix",
+    "ParameterValue": "notify-to-approve"
+  },
+  {
+    "ParameterKey": "ActF02ActionCategory",
+    "ParameterValue": "Build"
+  },
+  {
+    "ParameterKey": "ActF03ActionOwner",
+    "ParameterValue": "AWS"
+  },
+  {
+    "ParameterKey": "ActF04ActionProvider",
+    "ParameterValue": "CodeBuild"
+  },
+  {
+    "ParameterKey": "ActF05ActionNamespace",
+    "ParameterValue": "CodeBuildNotifyToApproveProject"
   }
 ]
