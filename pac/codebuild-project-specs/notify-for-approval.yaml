@@ -1,0 +1,38 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - yum install -y jq
+  build:
+    commands:
+      - ls
+      - cp pac/ses-templates/approval-message-template.json approval-message.json
+      - cp pac/ses-templates/destination-template.json destination.json
+      - echo $PipelineExecutionId
+      - echo $SenderEmailAddress
+      - echo $PipelineName
+      - echo $SystemComponent
+      - echo $Env
+      - echo $NextEnv
+      - echo $DeploymentStackName
+      - TestUrl=$(aws cloudformation describe-stacks --stack-name $DeploymentStackName --query "Stacks[0].Outputs[?OutputKey=='oALBDNS'].OutputValue" --output text)
+      - echo $TestUrl
+      - echo $ApproveUrl
+      - echo $RejectUrl
+      - ApprovalEmailAddress=$(aws secretsmanager get-secret-value --secret-id $EnvironmentSecret --query SecretString --output text | jq -rR 'fromjson? | .ApprovalEmailAddress')
+      - echo $ApprovalEmailAddress
+      - |
+        sed -i  "s~#PipelineXID~$PipelineExecutionId~g" approval-message.json;
+        sed -i  "s~#To~$ApprovalEmailAddress~g" approval-message.json;
+        sed -i  "s~#PipelineName~$PipelineName~g" approval-message.json;
+        sed -i  "s~#SystemComponent~$SystemComponent~g" approval-message.json;
+        sed -i  "s~#Env~$Env~g" approval-message.json;
+        sed -i  "s~#TestUrl~$TestUrl~g" approval-message.json;
+        sed -i  "s~#NextEnv~$NextEnv~g" approval-message.json;
+        sed -i  "s~#ApproveUrl~$ApproveUrl~g" approval-message.json;
+        sed -i  "s~#RejectUrl~$RejectUrl~g" approval-message.json;
+        sed -i  "s~#To~$ApprovalEmailAddress~g" destination.json;
+      - cat approval-message.json; 
+      - cat destination.json;
+      - aws ses send-email --from $SenderEmailAddress --destination file://destination.json --message file://approval-message.json
