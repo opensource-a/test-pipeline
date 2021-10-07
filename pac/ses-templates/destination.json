@@ -1,5 +1,5 @@
 {
-  "ToAddresses": [],
+  "ToAddresses": ["#To"],
   "CcAddresses": [],
   "BccAddresses": []
 }
