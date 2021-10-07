@@ -623,7 +623,7 @@ Resources:
                   [{"name":"PipelineStackName","value":"${AWS::StackName}"},
                   {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
                   {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
-                  {"name":"EnvironmentSecret","value":"${AWS::StackName}-${7SystemComponent}-${EnvA01EnvironmentName}-Env-Parameters"}
+                  {"name":"EnvironmentSecret","value":"${AWS::StackName}-${7SystemComponent}-${EnvA01EnvironmentName}-Env-Parameters"},
                   {"name":"SystemComponent","value":"${7SystemComponent}"},
                   {"name":"Env","value":"${EnvA01EnvironmentName}"},
                   {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvA01EnvironmentName}-stack-${AWS::AccountId}"},
@@ -746,7 +746,7 @@ Resources:
                   [{"name":"PipelineStackName","value":"${AWS::StackName}"},
                   {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
                   {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
-                  {"name":"EnvironmentSecret","value":"${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-Env-Parameters"}
+                  {"name":"EnvironmentSecret","value":"${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-Env-Parameters"},
                   {"name":"SystemComponent","value":"${7SystemComponent}"},
                   {"name":"Env","value":"${EnvB01EnvironmentName}"},
                   {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-stack-${AWS::AccountId}"},
@@ -840,7 +840,7 @@ Resources:
                   [{"name":"PipelineStackName","value":"${AWS::StackName}"},
                   {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
                   {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
-                  {"name":"EnvironmentSecret","value":"${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-Env-Parameters"}
+                  {"name":"EnvironmentSecret","value":"${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-Env-Parameters"},
                   {"name":"SystemComponent","value":"${7SystemComponent}"},
                   {"name":"Env","value":"${EnvC01EnvironmentName}"},
                   {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-stack-${AWS::AccountId}"},
