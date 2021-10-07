@@ -1,0 +1,35 @@
+{
+  "id": "20998d76-3d2c-48f2-9ba2-6d0bfc319c94",
+  "version": "2.0",
+  "name": "clustertest",
+  "url": "http://test-p-ralb-1gmfz8q27mcew-2087041559.us-east-1.elb.amazonaws.com",
+  "tests": [{
+    "id": "7df0e2c9-457b-4aaa-b719-da34616d55aa",
+    "name": "PageLoad",
+    "commands": [{
+      "id": "0a741190-1b78-445a-ab4f-a5ece1db5969",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "91ffa693-722f-4dbe-9777-85f9cf8ac80b",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1440x835",
+      "targets": [],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "1b261528-1cab-4417-9f58-f23e3622eb6b",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["7df0e2c9-457b-4aaa-b719-da34616d55aa"]
+  }],
+  "urls": ["http://test-p-ralb-1gmfz8q27mcew-2087041559.us-east-1.elb.amazonaws.com/"],
+  "plugins": []
+}
