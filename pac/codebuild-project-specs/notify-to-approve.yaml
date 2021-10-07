@@ -30,7 +30,7 @@ phases:
         sed -i  "s~#PipelineName~$PipelineName~g" approval-message.json;
         sed -i  "s~#SystemComponent~$SystemComponent~g" approval-message.json;
         sed -i  "s~#Env~$Env~g" approval-message.json;
-        sed -i  "s~#TestUrl~$TestUrl~g" approval-message.json;
+        sed -i  "s~#TestUrl~http://$TestUrl~g" approval-message.json;
         sed -i  "s~#NextEnv~$NextEnv~g" approval-message.json;
         sed -i  "s~#ApproveUrl~$ApproveUrl~g" approval-message.json;
         sed -i  "s~#RejectUrl~$RejectUrl~g" approval-message.json;
