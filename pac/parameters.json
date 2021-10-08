@@ -48,6 +48,10 @@
     "ParameterValue": "sjojo@zeisys.com"
   },
   {
+    "ParameterKey": "10SecretsKey",
+    "ParameterValue": "arn:aws:kms:us-east-1:367644944967:key/mrk-0c3e558cf35f4c78affd6c71d9336604"
+  },
+  {
     "ParameterKey": "EnvA01EnvironmentName",
     "ParameterValue": "DEV"
   },
