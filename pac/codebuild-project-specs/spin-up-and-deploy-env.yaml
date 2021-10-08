@@ -19,7 +19,11 @@ phases:
       - KeyPairName=$(aws secretsmanager get-secret-value --secret-id $EnvironmentSecret --query SecretString --output text | jq -rR 'fromjson? | .KeyPairName')
       - Vpc=$(aws secretsmanager get-secret-value --secret-id $EnvironmentSecret --query SecretString --output text | jq -rR 'fromjson? | .Vpc')
       - Subnets=$(aws secretsmanager get-secret-value --secret-id $EnvironmentSecret --query SecretString --output text | jq -rR 'fromjson? | .Subnets')
-      - SecurityGroup=$(aws secretsmanager get-secret-value --secret-id $EnvironmentSecret --query SecretString --output text | jq -rR 'fromjson? | .SecurityGroup')      
+      - SecurityGroup=$(aws secretsmanager get-secret-value --secret-id $EnvironmentSecret --query SecretString --output text | jq -rR 'fromjson? | .SecurityGroup')
+      - OS=$(aws ec2 describe-images --image-ids $Ami --query Images[].Name --output text)
+      - MinNodes=$(aws secretsmanager get-secret-value --secret-id $EnvironmentSecret --query SecretString --output text | jq -rR 'fromjson? | .ArgOne')
+      - DesiredNodes=$(aws secretsmanager get-secret-value --secret-id $EnvironmentSecret --query SecretString --output text | jq -rR 'fromjson? | .ArgTwo')
+      - MaxNodes=$(aws secretsmanager get-secret-value --secret-id $EnvironmentSecret --query SecretString --output text | jq -rR 'fromjson? | .ArgThree')
       - |
         sed -i  "s/#Env/$Env/g" injected-parameters.json;
         sed -i  "s/#Company/$CompanyName/g" injected-parameters.json;
@@ -37,6 +41,10 @@ phases:
         sed -i  "s~#ArgOne~$G~g" injected-parameters.json;
         sed -i  "s~#SubnetId~$Subnets~g" injected-parameters.json;
         sed -i  "s~#BuildNumber~$BUILD_NUMBER~g" injected-parameters.json;
+        sed -i  "s~#OperatingSystem~$OS~g" injected-parameters.json;
+        sed -i  "s~#MinNodes~$MinNodes~g" injected-parameters.json;
+        sed -i  "s~#DesiredNodes~$DesiredNodes~g" injected-parameters.json;
+        sed -i  "s~#MaxNodes~$MaxNodes~g" injected-parameters.json;
 
       - cat injected-parameters.json; 
       - cat $F;
