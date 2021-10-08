@@ -878,7 +878,6 @@ Resources:
                   https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Approved&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvC01EnvironmentName}-env&approval_action=promote-${EnvC01EnvironmentName}-to-${EnvD01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}
                   or Reject
                   https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Rejected&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvC01EnvironmentName}-env&approval_action=promote-${EnvC01EnvironmentName}-to-${EnvD01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}
-                NotificationArn: !Ref EnvCApprovalSNSTopic
               OutputArtifacts: []
               InputArtifacts: []
               Region: !Ref 'AWS::Region'     
@@ -1086,25 +1085,7 @@ Resources:
       Subscription:
         - Endpoint: !Ref EnvA11NotificationEmailAddress
           Protocol: email
-  EnvAApprovalSNSTopic:
-    Type: 'AWS::SNS::Topic'
-    Properties:
-      Subscription:
-        - Endpoint: !Ref EnvA12ApprovalEmailAddress
-          Protocol: email
-  EnvBApprovalSNSTopic:
-    Type: 'AWS::SNS::Topic'
-    Properties:
-      Subscription:
-        - Endpoint: !Ref EnvB12ApprovalEmailAddress
-          Protocol: email          
-  EnvCApprovalSNSTopic:
-    Type: 'AWS::SNS::Topic'
-    Properties:
-      Subscription:
-        - Endpoint: !Ref EnvC12ApprovalEmailAddress
-          Protocol: email
-          
+
   SNSPolicy:
     Type: 'AWS::SNS::TopicPolicy'
     Properties:
@@ -1150,14 +1131,9 @@ Resources:
         }      
       Topics:
         - !Ref NotificationSNSTopic
-        - !Ref EnvAApprovalSNSTopic
-        - !Ref EnvBApprovalSNSTopic
-        - !Ref EnvCApprovalSNSTopic
+
     DependsOn:
       - NotificationSNSTopic
-      - EnvAApprovalSNSTopic
-      - EnvBApprovalSNSTopic
-      - EnvCApprovalSNSTopic
       - EventRule
   ApprovalLambda:
     Type: 'AWS::Lambda::Function'
