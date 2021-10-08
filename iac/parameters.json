@@ -20,10 +20,6 @@
       "ParameterValue": "cloud"
    },
    {
-      "ParameterKey": "pAvailabilityZone",
-      "ParameterValue": "us-east-1a"
-   },
-   {
       "ParameterKey": "pCompanyName",
       "ParameterValue": "#Company"
    },
@@ -34,10 +30,6 @@
    {
       "ParameterKey": "pApplicationGroup",
       "ParameterValue": "ApplicationGroup"
-   },
-   {
-      "ParameterKey": "pUnixUser",
-      "ParameterValue": "testdevuser"
    },
    {
       "ParameterKey": "pEc2SDFEBSVolumeSize",
@@ -52,10 +44,6 @@
       "ParameterValue": "1111"
    },
    {
-      "ParameterKey": "pCriticality",
-      "ParameterValue": "C3"
-   },
-   {
       "ParameterKey": "pEc2SDBEBSVolumeSize",
       "ParameterValue": "0"
    },
@@ -66,10 +54,6 @@
    {
       "ParameterKey": "pInstanceType",
       "ParameterValue": "#InstanceType"
-   },
-   {
-      "ParameterKey": "pEC2TagName",
-      "ParameterValue": "#Solution"
    },
    {
       "ParameterKey": "pEC2KeyName",
@@ -130,10 +114,6 @@
    {
       "ParameterKey": "pAMIId",
       "ParameterValue": "#AmiId"
-   },
-   {
-      "ParameterKey": "pHostName",
-      "ParameterValue": "#Solution"
    },
    {
       "ParameterKey": "pBuildNumber",
