@@ -101,11 +101,19 @@
   },
   {
     "ParameterKey": "EnvA13ArgOne",
-    "ParameterValue": "http://dev.api.com"
+    "ParameterValue": "1"
   },
   {
     "ParameterKey": "EnvA14SourceContainerPort",
     "ParameterValue": "80"
+  },
+  {
+    "ParameterKey": "EnvA15ArgTwo",
+    "ParameterValue": "2"
+  },
+  {
+    "ParameterKey": "EnvA16ArgThree",
+    "ParameterValue": "10"
   },
   {
     "ParameterKey": "EnvB01EnvironmentName",
@@ -157,11 +165,19 @@
   },
   {
     "ParameterKey": "EnvB13ArgOne",
-    "ParameterValue": "http://test.api.com"
+    "ParameterValue": "1"
   },
   {
     "ParameterKey": "EnvB14SourceContainerPort",
     "ParameterValue": "80"
+  },
+  {
+    "ParameterKey": "EnvB15ArgTwo",
+    "ParameterValue": "2"
+  },
+  {
+    "ParameterKey": "EnvB16ArgThree",
+    "ParameterValue": "10"
   },
   {
     "ParameterKey": "EnvC01EnvironmentName",
@@ -213,11 +229,19 @@
   },
   {
     "ParameterKey": "EnvC13ArgOne",
-    "ParameterValue": "http://preprod.api.com"
+    "ParameterValue": "1"
   },
   {
     "ParameterKey": "EnvC14SourceContainerPort",
     "ParameterValue": "80"
+  },
+  {
+    "ParameterKey": "EnvC15ArgTwo",
+    "ParameterValue": "2"
+  },
+  {
+    "ParameterKey": "EnvC16ArgThree",
+    "ParameterValue": "10"
   },
   {
     "ParameterKey": "EnvD01EnvironmentName",
@@ -269,11 +293,19 @@
   },
   {
     "ParameterKey": "EnvD13ArgOne",
-    "ParameterValue": "http://prod.api.com"
+    "ParameterValue": "1"
   },
   {
     "ParameterKey": "EnvD14SourceContainerPort",
     "ParameterValue": "80"
+  },
+  {
+    "ParameterKey": "EnvD15ArgTwo",
+    "ParameterValue": "2"
+  },
+  {
+    "ParameterKey": "EnvD16ArgThree",
+    "ParameterValue": "10"
   },
   {
     "ParameterKey": "StgA01StageNamePrefix",
