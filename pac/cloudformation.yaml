@@ -85,10 +85,16 @@ Parameters:
     Description: Who should receive approval emails for EnvA?
   EnvA13ArgOne:
     Type: String
-    Description: Staging (non-prod) Argument One for System Component
+    Description: Argument One for Environment
   EnvA14SourceContainerPort:
     Type: String
     Description: EnvA System Component Default container image port
+  EnvA15ArgTwo:
+    Type: String
+    Description: Argument Two for Environment 
+  EnvA16ArgThree:
+    Type: String
+    Description: Argument Three for Environment    
   EnvB01EnvironmentName:
     Type: String
     Description: EnvB Environment Name
@@ -129,10 +135,16 @@ Parameters:
     Description: Who should receive approval emails for EnvB?
   EnvB13ArgOne:
     Type: String
-    Description: Staging (non-prod) Argument One for System Component
+    Description: Argument One for Environment
   EnvB14SourceContainerPort:
     Type: String
-    Description: EnvA System Component Default container image port
+    Description: EnvB System Component Default container image port
+  EnvB15ArgTwo:
+    Type: String
+    Description: Argument Two for Environment 
+  EnvB16ArgThree:
+    Type: String
+    Description: Argument Three for Environment  
   EnvC01EnvironmentName:
     Type: String
     Description: EnvC Environment Name
@@ -173,10 +185,16 @@ Parameters:
     Description: Who should receive approval emails for EnvC?
   EnvC13ArgOne:
     Type: String
-    Description: Staging (non-prod) Argument One for System Component
+    Description: Argument One for Environment
   EnvC14SourceContainerPort:
     Type: String
     Description: EnvC System Component Default container image port
+  EnvC15ArgTwo:
+    Type: String
+    Description: Argument Two for Environment 
+  EnvC16ArgThree:
+    Type: String
+    Description: Argument Three for Environment  
   EnvD01EnvironmentName:
     Type: String
     Description: EnvD Environment Name
@@ -217,10 +235,16 @@ Parameters:
     Description: Who should receive approval emails for EnvD?
   EnvD13ArgOne:
     Type: String
-    Description: Staging (non-prod) Argument One for System Component
+    Description: Argument One for Environment
   EnvD14SourceContainerPort:
     Type: String
     Description: EnvD System Component Default container image port
+  EnvD15ArgTwo:
+    Type: String
+    Description: Argument Two for Environment 
+  EnvD16ArgThree:
+    Type: String
+    Description: Argument Three for Environment  
   StgA01StageNamePrefix:
     Type: String
     Description: StgA Stage Name Prefix
@@ -460,7 +484,8 @@ Resources:
         "Vpc":"${EnvA07Vpc}","Subnets":"${EnvA08Subnets}",
         "SecurityGroup":"${EnvA09SecurityGroup}","EC2NameTagPrefix":"${EnvA10EC2NameTagPrefix}",
         "NotificationEmailAddress":"${EnvA11NotificationEmailAddress}","ApprovalEmailAddress":"${EnvA12ApprovalEmailAddress}",
-        "ArgOne":"${EnvA13ArgOne}","SourceContainerPort":"${EnvA14SourceContainerPort}"}
+        "ArgOne":"${EnvA13ArgOne}","SourceContainerPort":"${EnvA14SourceContainerPort}",
+        "ArgTwo":"${EnvA15ArgTwo}","ArgThree":"${EnvA16ArgThree}"}
     DependsOn:
       - KMSKey        
   EnvBSecret:
@@ -476,7 +501,8 @@ Resources:
         "Vpc":"${EnvB07Vpc}","Subnets":"${EnvB08Subnets}",
         "SecurityGroup":"${EnvB09SecurityGroup}","EC2NameTagPrefix":"${EnvB10EC2NameTagPrefix}",
         "NotificationEmailAddress":"${EnvB11NotificationEmailAddress}","ApprovalEmailAddress":"${EnvB12ApprovalEmailAddress}",
-        "ArgOne":"${EnvB13ArgOne}","SourceContainerPort":"${EnvB14SourceContainerPort}"}
+        "ArgOne":"${EnvB13ArgOne}","SourceContainerPort":"${EnvB14SourceContainerPort}",
+        "ArgTwo":"${EnvB15ArgTwo}","ArgThree":"${EnvB16ArgThree}"}
     DependsOn:
       - KMSKey        
   EnvCSecret:
@@ -492,7 +518,8 @@ Resources:
         "Vpc":"${EnvC07Vpc}","Subnets":"${EnvC08Subnets}",
         "SecurityGroup":"${EnvC09SecurityGroup}","EC2NameTagPrefix":"${EnvC10EC2NameTagPrefix}",
         "NotificationEmailAddress":"${EnvC11NotificationEmailAddress}","ApprovalEmailAddress":"${EnvC12ApprovalEmailAddress}",
-        "ArgOne":"${EnvC13ArgOne}","SourceContainerPort":"${EnvC14SourceContainerPort}"}
+        "ArgOne":"${EnvC13ArgOne}","SourceContainerPort":"${EnvC14SourceContainerPort}",
+        "ArgTwo":"${EnvC15ArgTwo}","ArgThree":"${EnvC16ArgThree}"}
     DependsOn:
       - KMSKey        
   EnvDSecret:
@@ -508,7 +535,8 @@ Resources:
         "Vpc":"${EnvD07Vpc}","Subnets":"${EnvD08Subnets}",
         "SecurityGroup":"${EnvD09SecurityGroup}","EC2NameTagPrefix":"${EnvD10EC2NameTagPrefix}",
         "NotificationEmailAddress":"${EnvD11NotificationEmailAddress}","ApprovalEmailAddress":"${EnvD12ApprovalEmailAddress}",
-        "ArgOne":"${EnvD13ArgOne}","SourceContainerPort":"${EnvD14SourceContainerPort}"}
+        "ArgOne":"${EnvD13ArgOne}","SourceContainerPort":"${EnvD14SourceContainerPort}",
+        "ArgTwo":"${EnvD15ArgTwo}","ArgThree":"${EnvD16ArgThree}"}
     DependsOn:
       - KMSKey
   Pipeline:
