@@ -9,7 +9,7 @@
       "Charset": "UTF-8"
     },
     "Html": {
-      "Data": "<p>Dear #To,</a>&nbsp;</p><p>Pipeline #PipelineName execution #PipelineXID, has deployed a new version of #SystemComponent to #Env.&nbsp;</p><p>You may access this deployment at this link <a href=\"#TestUrl\">#TestUrl</a></p><p>To approve this release moving into the #NextEnv, click here.</p><form action=\"#ApproveUrl\"><input type=\"submit\" style=\"background-color: red; color: white; width: 150px; height: 40px;\" value=\"APPROVE\" /></form><p></p><p>To reject, that is stop this release from moving into the #NextEnv, click here.</p><form action=\"#RejectUrl\"><input type=\"submit\" style=\"background-color: green; color: white; width: 150px; height: 40px;\" value=\"REJECT\" /></form><p></p><p></p><p>Thank you,</p><p>AWS CodePipeline</p>",
+      "Data": "<p>Dear #To,</a>&nbsp;</p><p>Pipeline #PipelineName execution #PipelineXID, has deployed a new version of #SystemComponent to #Env.&nbsp;</p><p>You may access this deployment at this link <a href=\"#TestUrl\">#TestUrl</a></p><p>To approve this release moving into the #NextEnv, <a href=\"#ApproveUrl\">click here</a>.</p><form action=\"#ApproveUrl\"><input type=\"submit\" style=\"background-color: red; color: white; width: 150px; height: 40px;\" value=\"APPROVE\" /></form><p></p><p>To reject, that is stop this release from moving into the #NextEnv, <a href=\"#RejectUrl\">click here</a>.</p><form action=\"#RejectUrl\"><input type=\"submit\" style=\"background-color: green; color: white; width: 150px; height: 40px;\" value=\"REJECT\" /></form><p></p><p></p><p>Thank you,</p><p>AWS CodePipeline</p>",
       "Charset": "UTF-8"
     }
   }
