@@ -41,7 +41,10 @@ Parameters:
     Description: Name of the company    
   9NotificationSenderEmailAddress:
     Type: String
-    Description: Email address to send notifications from       
+    Description: Email address to send notifications from
+  10SecretsKey:
+    Type: String
+    Description: ARN of key used to encrypt secrets   
   EnvA01EnvironmentName:
     Type: String
     Description: EnvA Environment Name
@@ -448,7 +451,7 @@ Resources:
     Type: 'AWS::SecretsManager::Secret'
     Properties:
       Name: !Sub '${AWS::StackName}-${7SystemComponent}-${EnvA01EnvironmentName}-Env-Parameters'
-      KmsKeyId: !Ref KMSKey
+      KmsKeyId: !Ref 10SecretsKey
       Description: This secret has the parameters that are exclusive to the environment
       SecretString: !Sub >- 
         {"EnvName":"${EnvA01EnvironmentName}","ELBName":"${EnvA02ELBName}",
@@ -464,7 +467,7 @@ Resources:
     Type: 'AWS::SecretsManager::Secret'
     Properties:
       Name: !Sub '${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-Env-Parameters'
-      KmsKeyId: !Ref KMSKey
+      KmsKeyId: !Ref 10SecretsKey
       Description: This secret has the parameters that are exclusive to the environment
       SecretString: !Sub >-
         {"EnvName":"${EnvB01EnvironmentName}","ELBName":"${EnvB02ELBName}",
@@ -480,7 +483,7 @@ Resources:
     Type: 'AWS::SecretsManager::Secret'
     Properties:
       Name: !Sub '${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-Env-Parameters'
-      KmsKeyId: !Ref KMSKey
+      KmsKeyId: !Ref 10SecretsKey
       Description: This secret has the parameters that are exclusive to the environment
       SecretString: !Sub >-
         {"EnvName":"${EnvC01EnvironmentName}","ELBName":"${EnvC02ELBName}",
@@ -496,7 +499,7 @@ Resources:
     Type: 'AWS::SecretsManager::Secret'
     Properties:
       Name: !Sub '${AWS::StackName}-${7SystemComponent}-${EnvD01EnvironmentName}-Env-Parameters'
-      KmsKeyId: !Ref KMSKey
+      KmsKeyId: !Ref 10SecretsKey
       Description: This secret has the parameters that are exclusive to the environment
       SecretString: !Sub >-
         {"EnvName":"${EnvD01EnvironmentName}","ELBName":"${EnvD02ELBName}",
@@ -875,7 +878,6 @@ Resources:
                   https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Approved&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvC01EnvironmentName}-env&approval_action=promote-${EnvC01EnvironmentName}-to-${EnvD01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}
                   or Reject
                   https://${ApprovalLambdaApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApprovalLambdaApiGatewayStage}/pipeline-approval?action=Rejected&pipeline=${AWS::StackName}-codepipeline-${AWS::AccountId}&stage=${StgD01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvC01EnvironmentName}-env&approval_action=promote-${EnvC01EnvironmentName}-to-${EnvD01EnvironmentName}&pipelineexecutionid=#{codepipeline.PipelineExecutionId}
-                NotificationArn: !Ref EnvCApprovalSNSTopic
               OutputArtifacts: []
               InputArtifacts: []
               Region: !Ref 'AWS::Region'     
@@ -1083,25 +1085,7 @@ Resources:
       Subscription:
         - Endpoint: !Ref EnvA11NotificationEmailAddress
           Protocol: email
-  EnvAApprovalSNSTopic:
-    Type: 'AWS::SNS::Topic'
-    Properties:
-      Subscription:
-        - Endpoint: !Ref EnvA12ApprovalEmailAddress
-          Protocol: email
-  EnvBApprovalSNSTopic:
-    Type: 'AWS::SNS::Topic'
-    Properties:
-      Subscription:
-        - Endpoint: !Ref EnvB12ApprovalEmailAddress
-          Protocol: email          
-  EnvCApprovalSNSTopic:
-    Type: 'AWS::SNS::Topic'
-    Properties:
-      Subscription:
-        - Endpoint: !Ref EnvC12ApprovalEmailAddress
-          Protocol: email
-          
+
   SNSPolicy:
     Type: 'AWS::SNS::TopicPolicy'
     Properties:
@@ -1147,14 +1131,9 @@ Resources:
         }      
       Topics:
         - !Ref NotificationSNSTopic
-        - !Ref EnvAApprovalSNSTopic
-        - !Ref EnvBApprovalSNSTopic
-        - !Ref EnvCApprovalSNSTopic
+
     DependsOn:
       - NotificationSNSTopic
-      - EnvAApprovalSNSTopic
-      - EnvBApprovalSNSTopic
-      - EnvCApprovalSNSTopic
       - EventRule
   ApprovalLambda:
     Type: 'AWS::Lambda::Function'
@@ -1450,3 +1429,6 @@ Outputs:
     Value: !Sub >-
       https://console.aws.amazon.com/codepipeline/home?region=${AWS::Region}#/view/${Pipeline}
     Description: CodePipeline URL
+  CodePipelineRoleArn:
+    Value: !GetAtt CodePipelineRole.Arn
+    Description: CodePipeline Role Arn

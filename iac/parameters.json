@@ -93,7 +93,7 @@
    },
    {
       "ParameterKey": "pClusterNodeDesired",
-      "ParameterValue": "5"
+      "ParameterValue": "1"
    },
    {
       "ParameterKey": "pITDR",
