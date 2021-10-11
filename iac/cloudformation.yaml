@@ -304,11 +304,17 @@ Resources:
         'Fn::Base64': !Sub 
           - >
             #!/bin/bash
+            
             yum update -y
+            
             yum install -y httpd
+            
             service httpd start
+            
             chkconfig httpd on
+            
             cd /var/www/html
+            
             echo "<html><h1>Hello! Welcome to the ${pLandscape}
             environment...</h1></html>" > index.html
           - newRoleArn: !Ref rIAMInstanceProfile
