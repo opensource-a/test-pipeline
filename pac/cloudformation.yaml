@@ -348,43 +348,11 @@ Parameters:
     Type: String
     Description: ActF Action Namespace for Action Result variables       
 Resources:
-  EnvAParameterStore:
-    Type: 'AWS::SSM::Parameter'
-    Properties:
-      Name: !Sub >-
-        ${AWS::StackName}-${7SystemComponent}-${EnvA01EnvironmentName}-InstanceInService
-      Tier: Standard
-      Type: StringList
-      Value: 'null'
-  EnvBParameterStore:
-    Type: 'AWS::SSM::Parameter'
-    Properties:
-      Name: !Sub >-
-        ${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-InstanceInService
-      Tier: Standard
-      Type: StringList
-      Value: 'null'
-  EnvCParameterStore:
-    Type: 'AWS::SSM::Parameter'
-    Properties:
-      Name: !Sub >-
-        ${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-InstanceInService
-      Tier: Standard
-      Type: StringList
-      Value: 'null'
-  EnvDParameterStore:
-    Type: 'AWS::SSM::Parameter'
-    Properties:
-      Name: !Sub >-
-        ${AWS::StackName}-${7SystemComponent}-${EnvD01EnvironmentName}-InstanceInService
-      Tier: Standard
-      Type: StringList
-      Value: 'null'
   CodePipelineRole:
     Type: 'AWS::IAM::Role'
     Properties:
       RoleName: !Sub '${AWS::StackName}-codepipeline-role-${AWS::AccountId}'
-      PermissionsBoundary: !Ref 6PermissionsBoundary
+      PermissionsBoundary: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:6PermissionsBoundary}}'
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -474,71 +442,119 @@ Resources:
   EnvASecret:
     Type: 'AWS::SecretsManager::Secret'
     Properties:
-      Name: !Sub '${AWS::StackName}-${7SystemComponent}-${EnvA01EnvironmentName}-Env-Parameters'
-      KmsKeyId: !Ref 10SecretsKey
+      Name: !Sub 
+            - '${AWS::StackName}-${7SystemComponent}-${EnvA01EnvironmentName}-Env-Parameters'
+            - 7SystemComponent: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:7SystemComponent}}'
+              EnvA01EnvironmentName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA01EnvironmentName}}'
+      KmsKeyId: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:10SecretsKey}}'
       Description: This secret has the parameters that are exclusive to the environment
-      SecretString: !Sub >- 
-        {"EnvName":"${EnvA01EnvironmentName}","ELBName":"${EnvA02ELBName}",
-        "Url":"${EnvA03Url}","Ami":"${EnvA04Ami}",
-        "InstanceType":"${EnvA05InstanceType}","KeyPairName":"${EnvA06KeyPairName}",
-        "Vpc":"${EnvA07Vpc}","Subnets":"${EnvA08Subnets}",
-        "SecurityGroup":"${EnvA09SecurityGroup}","EC2NameTagPrefix":"${EnvA10EC2NameTagPrefix}",
-        "NotificationEmailAddress":"${EnvA11NotificationEmailAddress}","ApprovalEmailAddress":"${EnvA12ApprovalEmailAddress}",
-        "ArgOne":"${EnvA13ArgOne}","SourceContainerPort":"${EnvA14SourceContainerPort}",
-        "ArgTwo":"${EnvA15ArgTwo}","ArgThree":"${EnvA16ArgThree}"}
+      SecretString: !Sub 
+                    - '{"EnvName":"${EnvA01EnvironmentName}","ELBName":"${EnvA02ELBName}","Url":"${EnvA03Url}","Ami":"${EnvA04Ami}","InstanceType":"${EnvA05InstanceType}","KeyPairName":"${EnvA06KeyPairName}","Vpc":"${EnvA07Vpc}","Subnets":"${EnvA08Subnets}","SecurityGroup":"${EnvA09SecurityGroup}","EC2NameTagPrefix":"${EnvA10EC2NameTagPrefix}","NotificationEmailAddress":"${EnvA11NotificationEmailAddress}","ApprovalEmailAddress":"${EnvA12ApprovalEmailAddress}","ArgOne":"${EnvA13ArgOne}","SourceContainerPort":"${EnvA14SourceContainerPort}","ArgTwo":"${EnvA15ArgTwo}","ArgThree":"${EnvA16ArgThree}"}'
+                    - EnvA01EnvironmentName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA01EnvironmentName}}'
+                      EnvA02ELBName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA02ELBName}}'
+                      EnvA03Url: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA03Url}}'
+                      EnvA04Ami: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA04Ami}}'
+                      EnvA05InstanceType: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA05InstanceType}}'
+                      EnvA06KeyPairName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA06KeyPairName}}'
+                      EnvA07Vpc: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA07Vpc}}'
+                      EnvA08Subnets: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA08Subnets}}'
+                      EnvA09SecurityGroup: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA09SecurityGroup}}'
+                      EnvA10EC2NameTagPrefix: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA10EC2NameTagPrefix}}'
+                      EnvA11NotificationEmailAddress: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA11NotificationEmailAddress}}'
+                      EnvA12ApprovalEmailAddress: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA12ApprovalEmailAddress}}'
+                      EnvA13ArgOne: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA13ArgOne}}'
+                      EnvA14SourceContainerPort: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA14SourceContainerPort}}'
+                      EnvA15ArgTwo: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA15ArgTwo}}'
+                      EnvA16ArgThree: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA16ArgThree}}'
     DependsOn:
       - KMSKey        
   EnvBSecret:
     Type: 'AWS::SecretsManager::Secret'
     Properties:
-      Name: !Sub '${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-Env-Parameters'
-      KmsKeyId: !Ref 10SecretsKey
+      Name: !Sub 
+            - '${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-Env-Parameters'
+            - 7SystemComponent: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:7SystemComponent}}'
+              EnvB01EnvironmentName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvB01EnvironmentName}}'
+      KmsKeyId: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:10SecretsKey}}'
       Description: This secret has the parameters that are exclusive to the environment
-      SecretString: !Sub >-
-        {"EnvName":"${EnvB01EnvironmentName}","ELBName":"${EnvB02ELBName}",
-        "Url":"${EnvB03Url}","Ami":"${EnvB04Ami}",
-        "InstanceType":"${EnvB05InstanceType}","KeyPairName":"${EnvB06KeyPairName}",
-        "Vpc":"${EnvB07Vpc}","Subnets":"${EnvB08Subnets}",
-        "SecurityGroup":"${EnvB09SecurityGroup}","EC2NameTagPrefix":"${EnvB10EC2NameTagPrefix}",
-        "NotificationEmailAddress":"${EnvB11NotificationEmailAddress}","ApprovalEmailAddress":"${EnvB12ApprovalEmailAddress}",
-        "ArgOne":"${EnvB13ArgOne}","SourceContainerPort":"${EnvB14SourceContainerPort}",
-        "ArgTwo":"${EnvB15ArgTwo}","ArgThree":"${EnvB16ArgThree}"}
+      SecretString: !Sub 
+                    - '{"EnvName":"${EnvB01EnvironmentName}","ELBName":"${EnvB02ELBName}","Url":"${EnvB03Url}","Ami":"${EnvB04Ami}","InstanceType":"${EnvB05InstanceType}","KeyPairName":"${EnvB06KeyPairName}","Vpc":"${EnvB07Vpc}","Subnets":"${EnvB08Subnets}","SecurityGroup":"${EnvB09SecurityGroup}","EC2NameTagPrefix":"${EnvB10EC2NameTagPrefix}","NotificationEmailAddress":"${EnvB11NotificationEmailAddress}","ApprovalEmailAddress":"${EnvB12ApprovalEmailAddress}","ArgOne":"${EnvB13ArgOne}","SourceContainerPort":"${EnvB14SourceContainerPort}","ArgTwo":"${EnvB15ArgTwo}","ArgThree":"${EnvB16ArgThree}"}'
+                    - EnvB01EnvironmentName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvB01EnvironmentName}}'
+                      EnvB02ELBName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvB02ELBName}}'
+                      EnvB03Url: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvB03Url}}'
+                      EnvB04Ami: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvB04Ami}}'
+                      EnvB05InstanceType: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvB05InstanceType}}'
+                      EnvB06KeyPairName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvB06KeyPairName}}'
+                      EnvB07Vpc: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvB07Vpc}}'
+                      EnvB08Subnets: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvB08Subnets}}'
+                      EnvB09SecurityGroup: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvB09SecurityGroup}}'
+                      EnvB10EC2NameTagPrefix: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvB10EC2NameTagPrefix}}'
+                      EnvB11NotificationEmailAddress: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvB11NotificationEmailAddress}}'
+                      EnvB12ApprovalEmailAddress: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvB12ApprovalEmailAddress}}'
+                      EnvB13ArgOne: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvB13ArgOne}}'
+                      EnvB14SourceContainerPort: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvB14SourceContainerPort}}'
+                      EnvB15ArgTwo: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvB15ArgTwo}}'
+                      EnvB16ArgThree: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvB16ArgThree}}'
     DependsOn:
-      - KMSKey        
+      - KMSKey    
   EnvCSecret:
     Type: 'AWS::SecretsManager::Secret'
     Properties:
-      Name: !Sub '${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-Env-Parameters'
-      KmsKeyId: !Ref 10SecretsKey
+      Name: !Sub 
+            - '${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-Env-Parameters'
+            - 7SystemComponent: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:7SystemComponent}}'
+              EnvC01EnvironmentName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvC01EnvironmentName}}'
+      KmsKeyId: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:10SecretsKey}}'
       Description: This secret has the parameters that are exclusive to the environment
-      SecretString: !Sub >-
-        {"EnvName":"${EnvC01EnvironmentName}","ELBName":"${EnvC02ELBName}",
-        "Url":"${EnvC03Url}","Ami":"${EnvC04Ami}",
-        "InstanceType":"${EnvC05InstanceType}","KeyPairName":"${EnvC06KeyPairName}",
-        "Vpc":"${EnvC07Vpc}","Subnets":"${EnvC08Subnets}",
-        "SecurityGroup":"${EnvC09SecurityGroup}","EC2NameTagPrefix":"${EnvC10EC2NameTagPrefix}",
-        "NotificationEmailAddress":"${EnvC11NotificationEmailAddress}","ApprovalEmailAddress":"${EnvC12ApprovalEmailAddress}",
-        "ArgOne":"${EnvC13ArgOne}","SourceContainerPort":"${EnvC14SourceContainerPort}",
-        "ArgTwo":"${EnvC15ArgTwo}","ArgThree":"${EnvC16ArgThree}"}
+      SecretString: !Sub 
+                    - '{"EnvName":"${EnvC01EnvironmentName}","ELBName":"${EnvC02ELBName}","Url":"${EnvC03Url}","Ami":"${EnvC04Ami}","InstanceType":"${EnvC05InstanceType}","KeyPairName":"${EnvC06KeyPairName}","Vpc":"${EnvC07Vpc}","Subnets":"${EnvC08Subnets}","SecurityGroup":"${EnvC09SecurityGroup}","EC2NameTagPrefix":"${EnvC10EC2NameTagPrefix}","NotificationEmailAddress":"${EnvC11NotificationEmailAddress}","ApprovalEmailAddress":"${EnvC12ApprovalEmailAddress}","ArgOne":"${EnvC13ArgOne}","SourceContainerPort":"${EnvC14SourceContainerPort}","ArgTwo":"${EnvC15ArgTwo}","ArgThree":"${EnvC16ArgThree}"}'
+                    - EnvC01EnvironmentName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvC01EnvironmentName}}'
+                      EnvC02ELBName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvC02ELBName}}'
+                      EnvC03Url: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvC03Url}}'
+                      EnvC04Ami: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvC04Ami}}'
+                      EnvC05InstanceType: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvC05InstanceType}}'
+                      EnvC06KeyPairName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvC06KeyPairName}}'
+                      EnvC07Vpc: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvC07Vpc}}'
+                      EnvC08Subnets: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvC08Subnets}}'
+                      EnvC09SecurityGroup: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvC09SecurityGroup}}'
+                      EnvC10EC2NameTagPrefix: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvC10EC2NameTagPrefix}}'
+                      EnvC11NotificationEmailAddress: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvC11NotificationEmailAddress}}'
+                      EnvC12ApprovalEmailAddress: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvC12ApprovalEmailAddress}}'
+                      EnvC13ArgOne: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvC13ArgOne}}'
+                      EnvC14SourceContainerPort: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvC14SourceContainerPort}}'
+                      EnvC15ArgTwo: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvC15ArgTwo}}'
+                      EnvC16ArgThree: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvC16ArgThree}}'
     DependsOn:
-      - KMSKey        
+      - KMSKey       
   EnvDSecret:
     Type: 'AWS::SecretsManager::Secret'
     Properties:
-      Name: !Sub '${AWS::StackName}-${7SystemComponent}-${EnvD01EnvironmentName}-Env-Parameters'
-      KmsKeyId: !Ref 10SecretsKey
+      Name: !Sub 
+            - '${AWS::StackName}-${7SystemComponent}-${EnvD01EnvironmentName}-Env-Parameters'
+            - 7SystemComponent: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:7SystemComponent}}'
+              EnvD01EnvironmentName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvD01EnvironmentName}}'
+      KmsKeyId: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:10SecretsKey}}'
       Description: This secret has the parameters that are exclusive to the environment
-      SecretString: !Sub >-
-        {"EnvName":"${EnvD01EnvironmentName}","ELBName":"${EnvD02ELBName}",
-        "Url":"${EnvD03Url}","Ami":"${EnvD04Ami}",
-        "InstanceType":"${EnvD05InstanceType}","KeyPairName":"${EnvD06KeyPairName}",
-        "Vpc":"${EnvD07Vpc}","Subnets":"${EnvD08Subnets}",
-        "SecurityGroup":"${EnvD09SecurityGroup}","EC2NameTagPrefix":"${EnvD10EC2NameTagPrefix}",
-        "NotificationEmailAddress":"${EnvD11NotificationEmailAddress}","ApprovalEmailAddress":"${EnvD12ApprovalEmailAddress}",
-        "ArgOne":"${EnvD13ArgOne}","SourceContainerPort":"${EnvD14SourceContainerPort}",
-        "ArgTwo":"${EnvD15ArgTwo}","ArgThree":"${EnvD16ArgThree}"}
+      SecretString: !Sub 
+                    - '{"EnvName":"${EnvD01EnvironmentName}","ELBName":"${EnvD02ELBName}","Url":"${EnvD03Url}","Ami":"${EnvD04Ami}","InstanceType":"${EnvD05InstanceType}","KeyPairName":"${EnvD06KeyPairName}","Vpc":"${EnvD07Vpc}","Subnets":"${EnvD08Subnets}","SecurityGroup":"${EnvD09SecurityGroup}","EC2NameTagPrefix":"${EnvD10EC2NameTagPrefix}","NotificationEmailAddress":"${EnvD11NotificationEmailAddress}","ApprovalEmailAddress":"${EnvD12ApprovalEmailAddress}","ArgOne":"${EnvD13ArgOne}","SourceContainerPort":"${EnvD14SourceContainerPort}","ArgTwo":"${EnvD15ArgTwo}","ArgThree":"${EnvD16ArgThree}"}'
+                    - EnvD01EnvironmentName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvD01EnvironmentName}}'
+                      EnvD02ELBName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvD02ELBName}}'
+                      EnvD03Url: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvD03Url}}'
+                      EnvD04Ami: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvD04Ami}}'
+                      EnvD05InstanceType: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvD05InstanceType}}'
+                      EnvD06KeyPairName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvD06KeyPairName}}'
+                      EnvD07Vpc: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvD07Vpc}}'
+                      EnvD08Subnets: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvD08Subnets}}'
+                      EnvD09SecurityGroup: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvD09SecurityGroup}}'
+                      EnvD10EC2NameTagPrefix: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvD10EC2NameTagPrefix}}'
+                      EnvD11NotificationEmailAddress: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvD11NotificationEmailAddress}}'
+                      EnvD12ApprovalEmailAddress: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvD12ApprovalEmailAddress}}'
+                      EnvD13ArgOne: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvD13ArgOne}}'
+                      EnvD14SourceContainerPort: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvD14SourceContainerPort}}'
+                      EnvD15ArgTwo: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvD15ArgTwo}}'
+                      EnvD16ArgThree: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvD16ArgThree}}'
     DependsOn:
-      - KMSKey
+      - KMSKey   
   Pipeline:
     Type: 'AWS::CodePipeline::Pipeline'
     Properties:
