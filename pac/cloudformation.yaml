@@ -1005,57 +1005,73 @@ Resources:
               OutputArtifacts: []
               InputArtifacts: []
               Region: !Ref 'AWS::Region'    
-        - Name: !Sub '${StgC01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvD01EnvironmentName}-env'
+        - Name: !Sub 
+                - '${StgC01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvD01EnvironmentName}-env'
+                - StgC01StageNamePrefix: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:StgC01StageNamePrefix}}'
+                  0SystemName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:0SystemName}}'
+                  7SystemComponent: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:7SystemComponent}}'
+                  EnvD01EnvironmentName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvD01EnvironmentName}}'
           Actions:
-            - Name: !Sub '${ActB01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvD01EnvironmentName}-env'
+            - Name: !Sub 
+                    - '${ActB01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvD01EnvironmentName}-env'
+                    - ActB01ActionNamePrefix: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:ActB01ActionNamePrefix}}'
+                      0SystemName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:0SystemName}}'
+                      7SystemComponent: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:7SystemComponent}}'
+                      EnvD01EnvironmentName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvD01EnvironmentName}}'
               Region: !Ref 'AWS::Region'
-              Namespace: !Sub '${ActB05ActionNamespace}-${EnvD01EnvironmentName}'             
+              Namespace: !Sub 
+                         - '${ActB05ActionNamespace}-${EnvD01EnvironmentName}'
+                         - ActB05ActionNamespace: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:ActB05ActionNamespace}}'
+                           EnvD01EnvironmentName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvD01EnvironmentName}}'
               ActionTypeId:
-                Category: !Ref ActB02ActionCategory
-                Owner: !Ref ActB03ActionOwner
+                Category: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:ActB02ActionCategory}}'
+                Owner: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:ActB03ActionOwner}}'
                 Version: 1
-                Provider: !Ref ActB04ActionProvider
+                Provider: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:ActB04ActionProvider}}'
               Configuration:
-                EnvironmentVariables: !Sub >-
-                  [{"name":"PipelineStackName","value":"${AWS::StackName}"},
-                  {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
-                  {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
-                  {"name":"EnvironmentSecret","value":"${AWS::StackName}-${7SystemComponent}-${EnvD01EnvironmentName}-Env-Parameters"},
-                  {"name":"E","value":"${4DeploymentTemplateParameterFileName}"},
-                  {"name":"F","value":"${4ADeploymentTemplateFileName}"},
-                  {"name":"SystemComponent","value":"${7SystemComponent}"},
-                  {"name":"Env","value":"${EnvD01EnvironmentName}"},
-                  {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvD01EnvironmentName}-stack-${AWS::AccountId}"},
-                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"}]
+                EnvironmentVariables: !Sub 
+                                      - '[{"name":"PipelineStackName","value":"${AWS::StackName}"},{"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},{"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},{"name":"EnvironmentSecret","value":"${AWS::StackName}-${7SystemComponent}-${EnvD01EnvironmentName}-Env-Parameters"},{"name":"E","value":"${4DeploymentTemplateParameterFileName}"},{"name":"F","value":"${4ADeploymentTemplateFileName}"},{"name":"SystemComponent","value":"${7SystemComponent}"},{"name":"Env","value":"${EnvD01EnvironmentName}"},{"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvD01EnvironmentName}-stack-${AWS::AccountId}"},{"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"}]'
+                                      - 7SystemComponent: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:7SystemComponent}}'
+                                        EnvD01EnvironmentName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvD01EnvironmentName}}'
+                                        4DeploymentTemplateParameterFileName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:4DeploymentTemplateParameterFileName}}'
+                                        4ADeploymentTemplateFileName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:4ADeploymentTemplateFileName}}'
+                                        ActA05ActionNamespace: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:ActA05ActionNamespace}}'
                 ProjectName: !GetAtt CodeBuildCfnDeployProject.Outputs.CodeBuildProjectName
               InputArtifacts:
-                - Name: !Sub '${7SystemComponent}-source-code'
+                - Name: !Sub 
+                        - '${7SystemComponent}-source-code'
+                        - 7SystemComponent: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:7SystemComponent}}'
               RunOrder: 1
-            - Name: !Sub '${ActC01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvD01EnvironmentName}-deployment'
+            - Name: !Sub 
+                    - '${ActC01ActionNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvD01EnvironmentName}-deployment'
+                    - ActC01ActionNamePrefix: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:ActC01ActionNamePrefix}}'
+                      0SystemName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:0SystemName}}'
+                      7SystemComponent: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:7SystemComponent}}'
+                      EnvD01EnvironmentName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvD01EnvironmentName}}'
               Region: !Ref 'AWS::Region'
             
               ActionTypeId:
-                Category: !Ref ActC02ActionCategory
-                Owner: !Ref ActC03ActionOwner
+                Category: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:ActC02ActionCategory}}'
+                Owner: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:ActC03ActionOwner}}'
                 Version: 1
-                Provider: !Ref ActC04ActionProvider
+                Provider: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:ActC04ActionProvider}}'
               Configuration:
-                EnvironmentVariables: !Sub >-
-                  [{"name":"PipelineStackName","value":"${AWS::StackName}"},
-                  {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},{
-                  "name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
-                  {"name":"ElbName","value":"${EnvD02ELBName}"},
-                  {"name":"SystemComponent","value":"${7SystemComponent}"},
-                  {"name":"Env","value":"${EnvD01EnvironmentName}"},
-                  {"name":"DeploymentVPC","value":"${EnvD07Vpc}"},
-                  {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvD01EnvironmentName}-stack-${AWS::AccountId}"},
-                  {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
-                  {"name":"TestDirectory","value":"${3SmokeTestDirectory}"}]
+                EnvironmentVariables: !Sub 
+                                      - '[{"name":"PipelineStackName","value":"${AWS::StackName}"},{"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},{"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},{"name":"ElbName","value":"${EnvD02ELBName}"},{"name":"SystemComponent","value":"${7SystemComponent}"},{"name":"Env","value":"${EnvD01EnvironmentName}"},{"name":"DeploymentVPC","value":"${EnvD07Vpc}"},{"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvD01EnvironmentName}-stack-${AWS::AccountId}"},{"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},{"name":"TestDirectory","value":"${3SmokeTestDirectory}"}]'
+                                      - EnvD02ELBName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvD02ELBName}}'
+                                        7SystemComponent: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:7SystemComponent}}'
+                                        EnvD01EnvironmentName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvD01EnvironmentName}}'
+                                        EnvD07Vpc: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvD07Vpc}}'
+                                        ActA05ActionNamespace: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:ActA05ActionNamespace}}'
+                                        3SmokeTestDirectory: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:3SmokeTestDirectory}}'
                 ProjectName: !GetAtt CodeBuildSmokeTestProject.Outputs.CodeBuildProjectName
               InputArtifacts:
-                - Name: !Sub '${7SystemComponent}-source-code'
+                - Name: !Sub 
+                        - '${7SystemComponent}-source-code'
+                        - 7SystemComponent: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:7SystemComponent}}'
               OutputArtifacts: []
               RunOrder: 2
+
     DependsOn:
       - KMSKey
       
