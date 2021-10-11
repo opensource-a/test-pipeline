@@ -1,4 +1,4 @@
-s3Bucket: test.company.com
+s3Bucket: test.company1.com
 pipelineFilesPath: ui/pipeline
-stackName: ui-pipeline-101
+stackName: pipeline-101
 secretsKeyArn: arn:aws:kms:us-east-1:367644944967:key/mrk-0c3e558cf35f4c78affd6c71d9336604

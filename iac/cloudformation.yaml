@@ -17,13 +17,9 @@ Parameters:
   pApplicationGroup:
     Description: Company Application Group used in EC2 tags - Mandatory Parameter
     Type: String
-    MinLength: 3
-    MaxLength: 60
-    ConstraintDescription: Applicaiton Groups of the EC2 instance.
   pPatchGroup:
     Description: Patch Group
     Type: String
-    ConstraintDescription: This must be valid Patch Group
   pLandscape:
     Description: Application Landscape - Mandatory Parameter
     Type: String
@@ -45,16 +41,6 @@ Parameters:
     Description: The volume size, in gibibytes (GiB). Additional EBS Volume. Update the size
     Type: String
     ConstraintDescription: This must be valid number
-  pAvailabilityZone:
-    Type: String
-    Description: Availability zone where we need this EC2 to be placed
-    AllowedValues:
-      - us-east-1a
-      - us-east-1b
-      - us-east-1c
-      - us-east-1d
-      - us-east-1e
-    ConstraintDescription: AWS Availability zone where EC2 instance will be created.
   pCostCenter:
     Type: String
     Description: CostCenter
@@ -64,35 +50,11 @@ Parameters:
   pITDR:
     Type: String
     Description: ITDR number.
-  pCriticality:
-    Type: String
-    AllowedValues:
-      - C1
-      - C2
-      - C3
-      - C4
-    Description: Application Criticality
 
   pAMIId:
     Description: Base AMI ID
     Type: String
-    MinLength: 3
-    MaxLength: 60
-    ConstraintDescription: Base AMI ID
-  pHostName:
-    Description: FQDN Hostname of EC2 instance - Mandatory Parameter
-    Type: String
-    MinLength: 3
-    MaxLength: 60
-    ConstraintDescription: Host name can not be empty
 
-  pEC2TagName:
-    Description: EC2 Name Tag - Mandatory Parameter
-    Type: String
-    MinLength: 3
-    MaxLength: 60
-    ConstraintDescription: Name Tag. Can not be empty
-  ###########
   pOperatingSystem:
     Description: Operating System Tag
     Type: String
@@ -115,21 +77,9 @@ Parameters:
       - No
       - Yes
 
-
-  ###########################
   pInstanceType:
     Description: EC2 instance type
     Type: String
-    AllowedValues: [t2.micro,t3.nano,t3.micro,t3.small,t3.medium,t3.large,t3.xlarge,t3.2xlarge,
-      t3a.nano,t3a.micro,t3a.small,t3a.medium,t3a.large,t3a.xlarge,t3a.2xlarge,
-      m5.large,m5.xlarge,m5.2xlarge,m5.4xlarge,m5.8xlarge,
-      m5a.large,m5a.xlarge,m5a.2xlarge,m5a.4xlarge,m5a.8xlarge,
-      c5.large,c5.xlarge,c5.2xlarge,c5.4xlarge,c5.9xlarge,
-      c5a.large,c5a.xlarge,c5a.2xlarge,c5a.4xlarge,c5a.8xlarge,
-      r5.large,r5.xlarge,r5.2xlarge,r5.4xlarge,r5.8xlarge,
-      r5a.large,r5a.xlarge,r5a.2xlarge,r5a.4xlarge,r5a.8xlarge]
-    ConstraintDescription: Must be a valid EC2 instance type.
-
   pInstanceMaxSize:
     Description: Autoscaling Max Size
     Type: Number
@@ -141,9 +91,6 @@ Parameters:
   pClusterNodeDesired:
     Description: Desired number of nodes in the cluster.
     Type: Number
-  pUnixUser:
-    Description: Desired number of nodes in the cluster.
-    Type: String
   pSolutionS3BucketName:
     Description: Artifact bucket for applications in solution
     Type: String
@@ -200,33 +147,6 @@ Resources:
           PolicyDocument:
             Version: 2012-10-17
             Statement:
-              - Effect: Allow
-                Action:
-                  - 'ssm:GetParameters'
-                  - 'ssm:GetParameter'
-                  - 'ssm:GetParametersByPath'
-                Resource:
-                  - !Sub >-
-                    arn:${AWS::Partition}:ssm:*:*:parameter/${pCompanyName}/${pApplicationGroup}/${pLandscape}/*
-              - Effect: Allow
-                Action:
-                  - 'ssm:DescribeParameters'
-                Resource: '*'
-              - Effect: Allow
-                Action:
-                  - 'ec2:AttachVolume'
-                  - 'ec2:DetachVolume'
-                  - 'ec2:CreateVolume'
-                  - 'ec2:CreateTags'
-                  - 'ec2:Describe*'
-                Resource: '*'
-              - Effect: Allow
-                Action:
-                  - 'secretsmanager:GetSecretValue'
-                  - 'secretsmanager:DescribeSecret'
-                Resource:
-                  - !Sub >-
-                    arn:${AWS::Partition}:secretsmanager:*:*:secret:/${pCompanyName}/${pApplicationGroup}/${pLandscape}/*
               - Sid: AllowSharedServicesS3Access
                 Effect: Allow
                 Action:
@@ -384,17 +304,17 @@ Resources:
         'Fn::Base64': !Sub 
           - >
             #!/bin/bash
-
+            
             yum update -y
-
+            
             yum install -y httpd
-
+            
             service httpd start
-
+            
             chkconfig httpd on
-
+            
             cd /var/www/html
-
+            
             echo "<html><h1>Hello! Welcome to the ${pLandscape}
             environment...</h1></html>" > index.html
           - newRoleArn: !Ref rIAMInstanceProfile
