@@ -5,7 +5,7 @@
   },
   {
     "ParameterKey": "1S3Bucket",
-    "ParameterValue": "test.company.com"
+    "ParameterValue": "test.company1.com"
   },
   {
     "ParameterKey": "2S3SourceObject",
@@ -73,19 +73,19 @@
   },
   {
     "ParameterKey": "EnvA06KeyPairName",
-    "ParameterValue": "test"
+    "ParameterValue": "pipeline-test"
   },
   {
     "ParameterKey": "EnvA07Vpc",
-    "ParameterValue": "vpc-97ceceed"
+    "ParameterValue": "vpc-9c3d3ae6"
   },
   {
     "ParameterKey": "EnvA08Subnets",
-    "ParameterValue": "subnet-36f80a17,subnet-fda454a2,subnet-1b15e17d,subnet-df3b00e1,subnet-97e463da,subnet-ce05abc0"
+    "ParameterValue": "subnet-08f64c45,subnet-19516f27,subnet-bb238eb5,subnet-d74eba88,subnet-25837204,subnet-252ec543"
   },
   {
     "ParameterKey": "EnvA09SecurityGroup",
-    "ParameterValue": "sg-556c827b"
+    "ParameterValue": "sg-0b3fac24"
   },
   {
     "ParameterKey": "EnvA10EC2NameTagPrefix",
@@ -137,19 +137,19 @@
   },
   {
     "ParameterKey": "EnvB06KeyPairName",
-    "ParameterValue": "test"
+    "ParameterValue": "pipeline-test"
   },
   {
     "ParameterKey": "EnvB07Vpc",
-    "ParameterValue": "vpc-97ceceed"
+    "ParameterValue": "vpc-9c3d3ae6"
   },
   {
     "ParameterKey": "EnvB08Subnets",
-    "ParameterValue": "subnet-36f80a17,subnet-fda454a2,subnet-1b15e17d,subnet-df3b00e1,subnet-97e463da,subnet-ce05abc0"
+    "ParameterValue": "subnet-08f64c45,subnet-19516f27,subnet-bb238eb5,subnet-d74eba88,subnet-25837204,subnet-252ec543"
   },
   {
     "ParameterKey": "EnvB09SecurityGroup",
-    "ParameterValue": "sg-556c827b"
+    "ParameterValue": "sg-0b3fac24"
   },
   {
     "ParameterKey": "EnvB10EC2NameTagPrefix",
@@ -201,19 +201,19 @@
   },
   {
     "ParameterKey": "EnvC06KeyPairName",
-    "ParameterValue": "test"
+    "ParameterValue": "pipeline-test"
   },
   {
     "ParameterKey": "EnvC07Vpc",
-    "ParameterValue": "vpc-97ceceed"
+    "ParameterValue": "vpc-9c3d3ae6"
   },
   {
     "ParameterKey": "EnvC08Subnets",
-    "ParameterValue": "subnet-36f80a17,subnet-fda454a2,subnet-1b15e17d,subnet-df3b00e1,subnet-97e463da,subnet-ce05abc0"
+    "ParameterValue": "subnet-08f64c45,subnet-19516f27,subnet-bb238eb5,subnet-d74eba88,subnet-25837204,subnet-252ec543"
   },
   {
     "ParameterKey": "EnvC09SecurityGroup",
-    "ParameterValue": "sg-556c827b"
+    "ParameterValue": "sg-0b3fac24"
   },
   {
     "ParameterKey": "EnvC10EC2NameTagPrefix",
@@ -265,19 +265,19 @@
   },
   {
     "ParameterKey": "EnvD06KeyPairName",
-    "ParameterValue": "test"
+    "ParameterValue": "pipeline-test"
   },
   {
     "ParameterKey": "EnvD07Vpc",
-    "ParameterValue": "vpc-97ceceed"
+    "ParameterValue": "vpc-9c3d3ae6"
   },
   {
     "ParameterKey": "EnvD08Subnets",
-    "ParameterValue": "subnet-36f80a17,subnet-fda454a2,subnet-1b15e17d,subnet-df3b00e1,subnet-97e463da,subnet-ce05abc0"
+    "ParameterValue": "subnet-08f64c45,subnet-19516f27,subnet-bb238eb5,subnet-d74eba88,subnet-25837204,subnet-252ec543"
   },
   {
     "ParameterKey": "EnvD09SecurityGroup",
-    "ParameterValue": "sg-556c827b"
+    "ParameterValue": "sg-0b3fac24"
   },
   {
     "ParameterKey": "EnvD10EC2NameTagPrefix",
