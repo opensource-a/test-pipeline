@@ -563,7 +563,7 @@ Resources:
         - CodePipelineRole
         - Arn
       ArtifactStore:
-        Location: !Ref S3BucketForPipelineArtifacts
+        Location: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:S3BucketForPipelineArtifacts}}'
         Type: S3
         EncryptionKey:
           Id: !GetAtt 
@@ -571,9 +571,17 @@ Resources:
             - Arn
           Type: KMS
       Stages:
-        - Name: !Sub '${StgA01StageNamePrefix}-${0SystemName}-${7SystemComponent}'
+        - Name: !Sub 
+                - '${StgA01StageNamePrefix}-${0SystemName}-${7SystemComponent}'
+                - StgA01StageNamePrefix: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:StgA01StageNamePrefix}}'
+                  0SystemName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:0SystemName}}'
+                  7SystemComponent: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:7SystemComponent}}'
           Actions:
-            - Name: !Sub 'get-${StgA01StageNamePrefix}-${0SystemName}-${7SystemComponent}'
+            - Name: !Sub 
+                    - 'get-${StgA01StageNamePrefix}-${0SystemName}-${7SystemComponent}'
+                    - StgA01StageNamePrefix: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:StgA01StageNamePrefix}}'
+                      0SystemName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:0SystemName}}'
+                      7SystemComponent: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:7SystemComponent}}'
               Region: !Ref 'AWS::Region'
               ActionTypeId:
                 Category: Source
@@ -581,30 +589,44 @@ Resources:
                 Provider: S3
                 Version: '1'
               Configuration:
-                S3Bucket: !Ref 1S3Bucket
-                PollForSourceChanges: !Ref 5PollForSourceChanges
-                S3ObjectKey: !Sub '${2S3SourceObject}'
+                S3Bucket: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:1S3Bucket}}'
+                PollForSourceChanges: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:5PollForSourceChanges}}'
+                S3ObjectKey: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:2S3SourceObject}}'
               OutputArtifacts:
-                - Name: !Sub '${7SystemComponent}-source-code'
+                - Name: !Sub 
+                        - '${7SystemComponent}-source-code'
+                        - 7SystemComponent: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:7SystemComponent}}'
               RunOrder: 1
-        - Name: !Sub '${StgB01StageNamePrefix}-${0SystemName}-${7SystemComponent}'
+        - Name: !Sub 
+                - '${StgB01StageNamePrefix}-${0SystemName}-${7SystemComponent}'
+                - StgB01StageNamePrefix: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:StgB01StageNamePrefix}}'
+                  0SystemName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:0SystemName}}'
+                  7SystemComponent: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:7SystemComponent}}'
           Actions:
-            - Name: !Sub '${ActA01ActionNamePrefix}-${0SystemName}-${7SystemComponent}'
+            - Name: !Sub 
+                    - '${ActA01ActionNamePrefix}-${0SystemName}-${7SystemComponent}'
+                    - ActA01ActionNamePrefix: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:ActA01ActionNamePrefix}}'
+                      0SystemName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:0SystemName}}'
+                      7SystemComponent: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:7SystemComponent}}'
               Region: !Ref 'AWS::Region'
-              Namespace: !Ref ActA05ActionNamespace
+              Namespace: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:ActA05ActionNamespace}}'
               ActionTypeId:
-                Category: !Ref ActA02ActionCategory
-                Owner: !Ref ActA03ActionOwner
+                Category: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:ActA02ActionCategory}}'
+                Owner: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:ActA03ActionOwner}}'
                 Version: 1
-                Provider: !Ref ActA04ActionProvider
+                Provider: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:ActA04ActionProvider}}'
               Configuration:
                 EnvironmentVariables: >-
                   [{"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"}]
                 ProjectName: !GetAtt CodeBuildBuildProject.Outputs.CodeBuildProjectName
               InputArtifacts:
-                - Name: !Sub '${7SystemComponent}-source-code'
+                - Name: !Sub 
+                        - '${7SystemComponent}-source-code'
+                        - 7SystemComponent: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:7SystemComponent}}'
               OutputArtifacts:
-                - Name: !Sub '${7SystemComponent}-build-artifacts'
+                - Name: !Sub 
+                        - '${7SystemComponent}-build-artifacts'
+                        - 7SystemComponent: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:7SystemComponent}}'
               RunOrder: 1
         - Name: !Sub '${StgC01StageNamePrefix}-${0SystemName}-${7SystemComponent}-${EnvA01EnvironmentName}-env'
           Actions:
