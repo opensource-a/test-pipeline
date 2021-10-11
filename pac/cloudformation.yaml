@@ -1078,9 +1078,11 @@ Resources:
   CodeBuildBuildProject:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub 'https://s3.amazonaws.com/${1S3Bucket}/ui/pipeline/create-codebuild-project/cloudformation.yaml'
+      TemplateURL: !Sub 
+                   - 'https://s3.amazonaws.com/${1S3Bucket}/ui/pipeline/create-codebuild-project/cloudformation.yaml'
+                   - 1S3Bucket: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:1S3Bucket}}'
       Parameters:
-        0SystemName: !Ref 0SystemName
+        0SystemName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:0SystemName}}'
         1KMSKeyArn: !GetAtt 
           - KMSKey
           - Arn
@@ -1093,17 +1095,19 @@ Resources:
         8ArtifactType: CODEPIPELINE
         9BuildSpecFile: pac/codebuild-project-specs/build-aac.yaml
         10PrivateBuildProject: false
-        11VpcId: !Ref EnvA07Vpc
-        12SubnetIds: !Ref EnvA08Subnets
-        13SecurityGroupIds: !Ref EnvA09SecurityGroup
+        11VpcId: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA07Vpc}}'
+        12SubnetIds: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA08Subnets}}'
+        13SecurityGroupIds: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA09SecurityGroup}}'
     DependsOn:
       - KMSKey        
   CodeBuildCfnDeployProject:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub 'https://s3.amazonaws.com/${1S3Bucket}/ui/pipeline/create-codebuild-project/cloudformation.yaml'
+      TemplateURL: !Sub 
+                   - 'https://s3.amazonaws.com/${1S3Bucket}/ui/pipeline/create-codebuild-project/cloudformation.yaml'
+                   - 1S3Bucket: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:1S3Bucket}}'
       Parameters:
-        0SystemName: !Ref 0SystemName
+        0SystemName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:0SystemName}}'
         1KMSKeyArn: !GetAtt 
           - KMSKey
           - Arn
@@ -1116,17 +1120,19 @@ Resources:
         8ArtifactType: CODEPIPELINE
         9BuildSpecFile: pac/codebuild-project-specs/spin-up-and-deploy-env.yaml
         10PrivateBuildProject: false
-        11VpcId: !Ref EnvA07Vpc
-        12SubnetIds: !Ref EnvA08Subnets
-        13SecurityGroupIds: !Ref EnvA09SecurityGroup
+        11VpcId: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA07Vpc}}'
+        12SubnetIds: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA08Subnets}}'
+        13SecurityGroupIds: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA09SecurityGroup}}'
     DependsOn:
       - KMSKey  
   CodeBuildSmokeTestProject:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub 'https://s3.amazonaws.com/${1S3Bucket}/ui/pipeline/create-codebuild-project/cloudformation.yaml'
+      TemplateURL: !Sub 
+                   - 'https://s3.amazonaws.com/${1S3Bucket}/ui/pipeline/create-codebuild-project/cloudformation.yaml'
+                   - 1S3Bucket: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:1S3Bucket}}'
       Parameters:
-        0SystemName: !Ref 0SystemName
+        0SystemName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:0SystemName}}'
         1KMSKeyArn: !GetAtt 
           - KMSKey
           - Arn
@@ -1139,17 +1145,19 @@ Resources:
         8ArtifactType: CODEPIPELINE
         9BuildSpecFile: pac/codebuild-project-specs/smoke-test-env.yaml
         10PrivateBuildProject: false
-        11VpcId: !Ref EnvA07Vpc
-        12SubnetIds: !Ref EnvA08Subnets
-        13SecurityGroupIds: !Ref EnvA09SecurityGroup
+        11VpcId: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA07Vpc}}'
+        12SubnetIds: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA08Subnets}}'
+        13SecurityGroupIds: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA09SecurityGroup}}'
     DependsOn:
       - KMSKey   
   CodeBuildFunctionalTestProject:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub 'https://s3.amazonaws.com/${1S3Bucket}/ui/pipeline/create-codebuild-project/cloudformation.yaml'
+      TemplateURL: !Sub 
+                   - 'https://s3.amazonaws.com/${1S3Bucket}/ui/pipeline/create-codebuild-project/cloudformation.yaml'
+                   - 1S3Bucket: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:1S3Bucket}}'
       Parameters:
-        0SystemName: !Ref 0SystemName
+        0SystemName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:0SystemName}}'
         1KMSKeyArn: !GetAtt 
           - KMSKey
           - Arn
@@ -1162,17 +1170,19 @@ Resources:
         8ArtifactType: CODEPIPELINE
         9BuildSpecFile: pac/codebuild-project-specs/functional-test-env.yaml
         10PrivateBuildProject: false
-        11VpcId: !Ref EnvA07Vpc
-        12SubnetIds: !Ref EnvA08Subnets
-        13SecurityGroupIds: !Ref EnvA09SecurityGroup
+        11VpcId: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA07Vpc}}'
+        12SubnetIds: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA08Subnets}}'
+        13SecurityGroupIds: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA09SecurityGroup}}'
     DependsOn:
       - KMSKey       
   CodeBuildNotifyToApproveProject:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub 'https://s3.amazonaws.com/${1S3Bucket}/ui/pipeline/create-codebuild-project/cloudformation.yaml'
+      TemplateURL: !Sub 
+                   - 'https://s3.amazonaws.com/${1S3Bucket}/ui/pipeline/create-codebuild-project/cloudformation.yaml'
+                   - 1S3Bucket: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:1S3Bucket}}'
       Parameters:
-        0SystemName: !Ref 0SystemName
+        0SystemName: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:0SystemName}}'
         1KMSKeyArn: !GetAtt 
           - KMSKey
           - Arn
@@ -1185,9 +1195,9 @@ Resources:
         8ArtifactType: CODEPIPELINE
         9BuildSpecFile: pac/codebuild-project-specs/notify-to-approve.yaml
         10PrivateBuildProject: false
-        11VpcId: !Ref EnvA07Vpc
-        12SubnetIds: !Ref EnvA08Subnets
-        13SecurityGroupIds: !Ref EnvA09SecurityGroup
+        11VpcId: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA07Vpc}}'
+        12SubnetIds: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA08Subnets}}'
+        13SecurityGroupIds: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA09SecurityGroup}}'
     DependsOn:
       - KMSKey        
   EventRule:
@@ -1223,7 +1233,7 @@ Resources:
     Type: 'AWS::SNS::Topic'
     Properties:
       Subscription:
-        - Endpoint: !Ref EnvA11NotificationEmailAddress
+        - Endpoint: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:EnvA11NotificationEmailAddress}}'
           Protocol: email
 
   SNSPolicy:
@@ -1347,7 +1357,7 @@ Resources:
             Action:
               - 'sts:AssumeRole'
       Path: /
-      PermissionsBoundary: !Ref 6PermissionsBoundary
+      PermissionsBoundary: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:6PermissionsBoundary}}'
       Policies:
         - PolicyName: lambdas3
           PolicyDocument:
@@ -1453,7 +1463,7 @@ Resources:
             Action:
               - 'sts:AssumeRole'
       Path: /
-      PermissionsBoundary: !Ref 6PermissionsBoundary
+      PermissionsBoundary: !Sub '{{resolve:secretsmanager:${AWS::StackName}:SecretString:6PermissionsBoundary}}'
       Policies:
         - PolicyName: LambdaAccess
           PolicyDocument:
