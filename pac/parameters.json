@@ -101,7 +101,7 @@
   },
   {
     "ParameterKey": "EnvA13ArgOne",
-    "ParameterValue": "1"
+    "ParameterValue": "mulesoft-preprod"
   },
   {
     "ParameterKey": "EnvA14SourceContainerPort",
@@ -165,7 +165,7 @@
   },
   {
     "ParameterKey": "EnvB13ArgOne",
-    "ParameterValue": "1"
+    "ParameterValue": "mulesoft-preprod"
   },
   {
     "ParameterKey": "EnvB14SourceContainerPort",
@@ -229,7 +229,7 @@
   },
   {
     "ParameterKey": "EnvC13ArgOne",
-    "ParameterValue": "1"
+    "ParameterValue": "mulesoft-preprod"
   },
   {
     "ParameterKey": "EnvC14SourceContainerPort",
@@ -293,7 +293,7 @@
   },
   {
     "ParameterKey": "EnvD13ArgOne",
-    "ParameterValue": "1"
+    "ParameterValue": "mulesoft-preprod"
   },
   {
     "ParameterKey": "EnvD14SourceContainerPort",
@@ -345,7 +345,7 @@
   },
   {
     "ParameterKey": "ActB01ActionNamePrefix",
-    "ParameterValue": "spin-up"
+    "ParameterValue": "deploy-to-mulesoft"
   },
   {
     "ParameterKey": "ActB02ActionCategory",
@@ -361,7 +361,7 @@
   },
   {
     "ParameterKey": "ActB05ActionNamespace",
-    "ParameterValue": "CodeBuildCfnDeployProject"
+    "ParameterValue": "CodeBuildDeployToMulesoftProject"
   },
   {
     "ParameterKey": "ActC01ActionNamePrefix",
