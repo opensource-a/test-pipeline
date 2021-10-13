@@ -293,7 +293,7 @@
   },
   {
     "ParameterKey": "EnvD13ArgOne",
-    "ParameterValue": "mulesoft-preprod"
+    "ParameterValue": "mulesoft-prod"
   },
   {
     "ParameterKey": "EnvD14SourceContainerPort",
