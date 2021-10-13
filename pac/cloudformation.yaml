@@ -612,7 +612,7 @@ Resources:
                   {"name":"Env","value":"${EnvA01EnvironmentName}"},
                   {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvA01EnvironmentName}-stack-${AWS::AccountId}"},
                   {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"}]
-                ProjectName: !GetAtt CodeBuildCfnDeployProject.Outputs.CodeBuildProjectName
+                ProjectName: !GetAtt CodeBuildDeployToMulesoftProject.Outputs.CodeBuildProjectName
               InputArtifacts:
                 - Name: !Sub '${7SystemComponent}-source-code'
               RunOrder: 1
@@ -710,7 +710,7 @@ Resources:
                   {"name":"Env","value":"${EnvB01EnvironmentName}"},
                   {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-stack-${AWS::AccountId}"},
                   {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"}]
-                ProjectName: !GetAtt CodeBuildCfnDeployProject.Outputs.CodeBuildProjectName
+                ProjectName: !GetAtt CodeBuildDeployToMulesoftProject.Outputs.CodeBuildProjectName
               InputArtifacts:
                 - Name: !Sub '${7SystemComponent}-source-code'
               RunOrder: 1
@@ -833,7 +833,7 @@ Resources:
                   {"name":"Env","value":"${EnvC01EnvironmentName}"},
                   {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-stack-${AWS::AccountId}"},
                   {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"}]
-                ProjectName: !GetAtt CodeBuildCfnDeployProject.Outputs.CodeBuildProjectName
+                ProjectName: !GetAtt CodeBuildDeployToMulesoftProject.Outputs.CodeBuildProjectName
               InputArtifacts:
                 - Name: !Sub '${7SystemComponent}-source-code'
               RunOrder: 1
@@ -931,7 +931,7 @@ Resources:
                   {"name":"Env","value":"${EnvD01EnvironmentName}"},
                   {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvD01EnvironmentName}-stack-${AWS::AccountId}"},
                   {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"}]
-                ProjectName: !GetAtt CodeBuildCfnDeployProject.Outputs.CodeBuildProjectName
+                ProjectName: !GetAtt CodeBuildDeployToMulesoftProject.Outputs.CodeBuildProjectName
               InputArtifacts:
                 - Name: !Sub '${7SystemComponent}-source-code'
               RunOrder: 1
@@ -1049,6 +1049,29 @@ Resources:
         7SourceType: CODEPIPELINE
         8ArtifactType: CODEPIPELINE
         9BuildSpecFile: pac/codebuild-project-specs/functional-test-env.yaml
+        10PrivateBuildProject: false
+        11VpcId: !Ref EnvA07Vpc
+        12SubnetIds: !Ref EnvA08Subnets
+        13SecurityGroupIds: !Ref EnvA09SecurityGroup
+    DependsOn:
+      - KMSKey
+  CodeBuildDeployToMulesoftProject:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub 'https://s3.amazonaws.com/${1S3Bucket}/ui/pipeline/create-codebuild-project/cloudformation.yaml'
+      Parameters:
+        0SystemName: !Ref 0SystemName
+        1KMSKeyArn: !GetAtt 
+          - KMSKey
+          - Arn
+        2CodeBuildRole: !Ref CodePipelineRole
+        3RepositoryUri: !Sub '${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${Repository}'
+        4CodeBuildContainerImage: 'aws/codebuild/amazonlinux2-x86_64-standard:3.0'
+        5CodeBuildComputeType: BUILD_GENERAL1_SMALL
+        6CodeBuildProjectName: !Sub '${AWS::StackName}-codebuilddeploytomulesoftproject'
+        7SourceType: CODEPIPELINE
+        8ArtifactType: CODEPIPELINE
+        9BuildSpecFile: pac/codebuild-project-specs/deploy-to-mulesoft.yaml
         10PrivateBuildProject: false
         11VpcId: !Ref EnvA07Vpc
         12SubnetIds: !Ref EnvA08Subnets
