@@ -854,7 +854,7 @@ Resources:
                   {"name":"PipelineName","value":"${AWS::StackName}-codepipeline-${AWS::AccountId}"},
                   {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
                   {"name":"ElbName","value":"${EnvC02ELBName}"},
-                  {"name":"EnvironmentSecret","value":"${AWS::StackName}-${7SystemComponent}-${EnvAC1EnvironmentName}-Env-Parameters"},
+                  {"name":"EnvironmentSecret","value":"${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-Env-Parameters"},
                   {"name":"SystemComponent","value":"${7SystemComponent}"},
                   {"name":"Env","value":"${EnvC01EnvironmentName}"},
                   {"name":"DeploymentVPC","value":"${EnvC07Vpc}"},
