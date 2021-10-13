@@ -609,6 +609,8 @@ Resources:
                   {"name":"E","value":"${4DeploymentTemplateParameterFileName}"},
                   {"name":"F","value":"${4ADeploymentTemplateFileName}"},
                   {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"SystemName","value":"${0SystemName}"},
+                  {"name":"CompanyName","value":"${8CompanyName}"},
                   {"name":"Env","value":"${EnvA01EnvironmentName}"},
                   {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvA01EnvironmentName}-stack-${AWS::AccountId}"},
                   {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"}]
@@ -632,6 +634,8 @@ Resources:
                   {"name":"EnvironmentSecret","value":"${AWS::StackName}-${7SystemComponent}-${EnvA01EnvironmentName}-Env-Parameters"},
                   {"name":"ElbName","value":"${EnvA02ELBName}"},
                   {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"SystemName","value":"${0SystemName}"},
+                  {"name":"CompanyName","value":"${8CompanyName}"},
                   {"name":"Env","value":"${EnvA01EnvironmentName}"},
                   {"name":"DeploymentVPC","value":"${EnvA07Vpc}"},
                   {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvA01EnvironmentName}-stack-${AWS::AccountId}"},
@@ -657,6 +661,7 @@ Resources:
                   {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
                   {"name":"EnvironmentSecret","value":"${AWS::StackName}-${7SystemComponent}-${EnvA01EnvironmentName}-Env-Parameters"},
                   {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"CompanyName","value":"${8CompanyName}"},
                   {"name":"Env","value":"${EnvA01EnvironmentName}"},
                   {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvA01EnvironmentName}-stack-${AWS::AccountId}"},
                   {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
@@ -708,6 +713,8 @@ Resources:
                   {"name":"E","value":"${4DeploymentTemplateParameterFileName}"},
                   {"name":"F","value":"${4ADeploymentTemplateFileName}"},
                   {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"SystemName","value":"${0SystemName}"},
+                  {"name":"CompanyName","value":"${8CompanyName}"},
                   {"name":"Env","value":"${EnvB01EnvironmentName}"},
                   {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-stack-${AWS::AccountId}"},
                   {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"}]
@@ -731,6 +738,8 @@ Resources:
                   {"name":"EnvironmentSecret","value":"${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-Env-Parameters"},
                   {"name":"ElbName","value":"${EnvB02ELBName}"},
                   {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"SystemName","value":"${0SystemName}"},
+                  {"name":"CompanyName","value":"${8CompanyName}"},
                   {"name":"Env","value":"${EnvB01EnvironmentName}"},
                   {"name":"DeploymentVPC","value":"${EnvB07Vpc}"},
                   {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-stack-${AWS::AccountId}"},
@@ -757,6 +766,8 @@ Resources:
                   {"name":"EnvironmentSecret","value":"${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-Env-Parameters"},
                   {"name":"ElbName","value":"${EnvB02ELBName}"},
                   {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"SystemName","value":"${0SystemName}"},
+                  {"name":"CompanyName","value":"${8CompanyName}"},
                   {"name":"Env","value":"${EnvB01EnvironmentName}"},
                   {"name":"DeploymentVPC","value":"${EnvB07Vpc}"},
                   {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-stack-${AWS::AccountId}"},
@@ -782,6 +793,8 @@ Resources:
                   {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
                   {"name":"EnvironmentSecret","value":"${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-Env-Parameters"},
                   {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"SystemName","value":"${0SystemName}"},
+                  {"name":"CompanyName","value":"${8CompanyName}"},
                   {"name":"Env","value":"${EnvB01EnvironmentName}"},
                   {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvB01EnvironmentName}-stack-${AWS::AccountId}"},
                   {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
@@ -789,8 +802,7 @@ Resources:
                   {"name":"NextEnv","value":"${EnvC01EnvironmentName}"},
                   {"name":"ApprovalApiName","value":"${ApprovalLambdaApiGatewayRestApi}"},
                   {"name":"ApprovalApiStg","value":"${ApprovalLambdaApiGatewayStage}"},
-                  {"name":"ApprovalStg","value":"${StgD01StageNamePrefix}"},
-                  {"name":"SystemName","value":"${0SystemName}"}]
+                  {"name":"ApprovalStg","value":"${StgD01StageNamePrefix}"}]
                 ProjectName: !GetAtt CodeBuildNotifyToApproveProject.Outputs.CodeBuildProjectName
               InputArtifacts:
                 - Name: !Sub '${7SystemComponent}-source-code'
@@ -833,6 +845,8 @@ Resources:
                   {"name":"E","value":"${4DeploymentTemplateParameterFileName}"},
                   {"name":"F","value":"${4ADeploymentTemplateFileName}"},
                   {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"SystemName","value":"${0SystemName}"},
+                  {"name":"CompanyName","value":"${8CompanyName}"},
                   {"name":"Env","value":"${EnvC01EnvironmentName}"},
                   {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-stack-${AWS::AccountId}"},
                   {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"}]
@@ -856,6 +870,8 @@ Resources:
                   {"name":"ElbName","value":"${EnvC02ELBName}"},
                   {"name":"EnvironmentSecret","value":"${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-Env-Parameters"},
                   {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"SystemName","value":"${0SystemName}"},
+                  {"name":"CompanyName","value":"${8CompanyName}"},
                   {"name":"Env","value":"${EnvC01EnvironmentName}"},
                   {"name":"DeploymentVPC","value":"${EnvC07Vpc}"},
                   {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-stack-${AWS::AccountId}"},
@@ -881,6 +897,8 @@ Resources:
                   {"name":"PipelineExecutionId","value":"#{codepipeline.PipelineExecutionId}"},
                   {"name":"EnvironmentSecret","value":"${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-Env-Parameters"},
                   {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"SystemName","value":"${0SystemName}"},
+                  {"name":"CompanyName","value":"${8CompanyName}"},
                   {"name":"Env","value":"${EnvC01EnvironmentName}"},
                   {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvC01EnvironmentName}-stack-${AWS::AccountId}"},
                   {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"},
@@ -888,8 +906,7 @@ Resources:
                   {"name":"NextEnv","value":"${EnvD01EnvironmentName}"},
                   {"name":"ApprovalApiName","value":"${ApprovalLambdaApiGatewayRestApi}"},
                   {"name":"ApprovalApiStg","value":"${ApprovalLambdaApiGatewayStage}"},
-                  {"name":"ApprovalStg","value":"${StgD01StageNamePrefix}"},
-                  {"name":"SystemName","value":"${0SystemName}"}]
+                  {"name":"ApprovalStg","value":"${StgD01StageNamePrefix}"}]
                 ProjectName: !GetAtt CodeBuildNotifyToApproveProject.Outputs.CodeBuildProjectName
               InputArtifacts:
                 - Name: !Sub '${7SystemComponent}-source-code'
@@ -932,6 +949,8 @@ Resources:
                   {"name":"E","value":"${4DeploymentTemplateParameterFileName}"},
                   {"name":"F","value":"${4ADeploymentTemplateFileName}"},
                   {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"SystemName","value":"${0SystemName}"},
+                  {"name":"CompanyName","value":"${8CompanyName}"},
                   {"name":"Env","value":"${EnvD01EnvironmentName}"},
                   {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvD01EnvironmentName}-stack-${AWS::AccountId}"},
                   {"name":"BuildNumber","value":"#{${ActA05ActionNamespace}.CODEBUILD_BUILD_NUMBER}"}]
@@ -955,6 +974,8 @@ Resources:
                   {"name":"EnvironmentSecret","value":"${AWS::StackName}-${7SystemComponent}-${EnvD01EnvironmentName}-Env-Parameters"},
                   {"name":"ElbName","value":"${EnvD02ELBName}"},
                   {"name":"SystemComponent","value":"${7SystemComponent}"},
+                  {"name":"SystemName","value":"${0SystemName}"},
+                  {"name":"CompanyName","value":"${8CompanyName}"},
                   {"name":"Env","value":"${EnvD01EnvironmentName}"},
                   {"name":"DeploymentVPC","value":"${EnvD07Vpc}"},
                   {"name":"DeploymentStackName","value":"${AWS::StackName}-${7SystemComponent}-${EnvD01EnvironmentName}-stack-${AWS::AccountId}"},
