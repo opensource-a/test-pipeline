@@ -22,7 +22,7 @@ phases:
       - echo $Env
       - echo $NextEnv
       - echo $DeploymentStackName
-      - TestUrl=$(anypoint-cli runtime-mgr cloudhub-application describe-json  --environment=Sandbox $CompanyName-$SystemName-$SystemComponent | jq -r .fullDomain)/helloWorld
+      - TestUrl=$(anypoint-cli runtime-mgr cloudhub-application describe-json  --environment=$Env $CompanyName-$SystemName-$SystemComponent-$Env | jq -r .fullDomain)/helloWorld
       - echo $TestUrl
       - ApproveUrl="https://$ApprovalApiName.execute-api.$AWS_DEFAULT_REGION.amazonaws.com/$ApprovalApiStg/pipeline-approval?action=Approved\&pipeline=$PipelineName\&stage=$ApprovalStg-$SystemName-$SystemComponent-$Env-env\&approval_action=promote-$Env-to-$NextEnv\&pipelineexecutionid=$PipelineExecutionId"
       - RejectUrl="https://$ApprovalApiName.execute-api.$AWS_DEFAULT_REGION.amazonaws.com/$ApprovalApiStg/pipeline-approval?action=Rejected\&pipeline=$PipelineName\&stage=$ApprovalStg-$SystemName-$SystemComponent-$Env-env\&approval_action=promote-$Env-to-$NextEnv\&pipelineexecutionid=$PipelineExecutionId"
