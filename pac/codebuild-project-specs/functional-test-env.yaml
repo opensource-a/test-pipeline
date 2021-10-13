@@ -28,7 +28,7 @@ phases:
       - export ANYPOINT_PASSWORD=$anypoint_password
       - ls
       - cd $TestDirectory
-      - TestIp=$(anypoint-cli runtime-mgr cloudhub-application describe-json  --environment=Sandbox $CompanyName-$SystemName-$SystemComponent | jq -r .fullDomain)/helloWorld
+      - TestIp=$(anypoint-cli runtime-mgr cloudhub-application describe-json  --environment=$Env $CompanyName-$SystemName-$SystemComponent-$Env | jq -r .fullDomain)/helloWorld
       - |
         echo -e "Checking if deployment installation was successful"
         echo "DNS to test is $TestIp";
