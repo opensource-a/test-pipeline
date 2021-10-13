@@ -16,10 +16,10 @@ phases:
       - cd aac 
       - ls
       - |
-        if ! anypoint-cli runtime-mgr cloudhub-application describe-json  --environment="Sandbox" "$CompanyName-$SystemName-$SystemComponent" ; then
+        if ! anypoint-cli runtime-mgr cloudhub-application describe-json  --environment="$Env" "$CompanyName-$SystemName-$SystemComponent-$Env" ; then
           echo -e "\nApp does not exist, creating ..."
-          anypoint-cli runtime-mgr cloudhub-application deploy --runtime=4.4.0 --workers=1 --workerSize=0.2 --region=us-east-1 --property=http.port:8081 --property=https.port:8082 --environment="Sandbox" "$CompanyName-$SystemName-$SystemComponent" "HelloWorld.jar"
+          anypoint-cli runtime-mgr cloudhub-application deploy --runtime=4.4.0 --workers=1 --workerSize=0.2 --region=us-east-1 --property=http.port:8081 --property=https.port:8082 --environment="$Env" "$CompanyName-$SystemName-$SystemComponent-$Env" "HelloWorld.jar"
         else
           echo -e "\nApp exists, attempting update ..."
-          anypoint-cli runtime-mgr cloudhub-application modify --runtime=4.4.0 --workers=1 --workerSize=0.2 --region=us-east-1 --property=http.port:8081 --property=https.port:8082 --environment="Sandbox" "$CompanyName-$SystemName-$SystemComponent" "HelloWorld.jar"
+          anypoint-cli runtime-mgr cloudhub-application modify --runtime=4.4.0 --workers=1 --workerSize=0.2 --region=us-east-1 --property=http.port:8081 --property=https.port:8082 --environment="$Env" "$CompanyName-$SystemName-$SystemComponent-$Env" "HelloWorld.jar"
         fi 
