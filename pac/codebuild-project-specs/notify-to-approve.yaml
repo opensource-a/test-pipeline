@@ -4,9 +4,15 @@ phases:
   install:
     commands:
       - yum install -y jq
+      - npm install -g anypoint-cli@latest
   build:
     commands:
       - ls
+      - MulesoftAccountSecret=$(aws secretsmanager get-secret-value --secret-id $EnvironmentSecret --query SecretString --output text | jq -rR 'fromjson? | .ArgOne')
+      - anypoint_username=$(aws secretsmanager get-secret-value --secret-id $MulesoftAccountSecret --query SecretString --output text | jq -rR 'fromjson? | .username')
+      - anypoint_password=$(aws secretsmanager get-secret-value --secret-id $MulesoftAccountSecret --query SecretString --output text | jq -rR 'fromjson? | .password')
+      - export ANYPOINT_USERNAME=$anypoint_username
+      - export ANYPOINT_PASSWORD=$anypoint_password
       - cp pac/ses-templates/approval-message-template.json approval-message.json
       - cp pac/ses-templates/destination-template.json destination.json
       - echo $PipelineExecutionId
@@ -16,7 +22,7 @@ phases:
       - echo $Env
       - echo $NextEnv
       - echo $DeploymentStackName
-      - TestUrl=$(aws cloudformation describe-stacks --stack-name $DeploymentStackName --query "Stacks[0].Outputs[?OutputKey=='oALBDNS'].OutputValue" --output text)
+      - TestUrl=$(anypoint-cli runtime-mgr cloudhub-application describe-json  --environment=Sandbox $CompanyName-$SystemName-$SystemComponent | jq -r .fullDomain)/helloWorld
       - echo $TestUrl
       - ApproveUrl="https://$ApprovalApiName.execute-api.$AWS_DEFAULT_REGION.amazonaws.com/$ApprovalApiStg/pipeline-approval?action=Approved\&pipeline=$PipelineName\&stage=$ApprovalStg-$SystemName-$SystemComponent-$Env-env\&approval_action=promote-$Env-to-$NextEnv\&pipelineexecutionid=$PipelineExecutionId"
       - RejectUrl="https://$ApprovalApiName.execute-api.$AWS_DEFAULT_REGION.amazonaws.com/$ApprovalApiStg/pipeline-approval?action=Rejected\&pipeline=$PipelineName\&stage=$ApprovalStg-$SystemName-$SystemComponent-$Env-env\&approval_action=promote-$Env-to-$NextEnv\&pipelineexecutionid=$PipelineExecutionId"
