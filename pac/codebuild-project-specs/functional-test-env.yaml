@@ -17,11 +17,18 @@ phases:
       - unzip chromedriver_linux64.zip
       - cp chromedriver $TestDirectory/chromedriver
       - mv chromedriver /usr/bin/chromedriver   
+      - npm install -g anypoint-cli@latest
   build:
     commands:
       - pwd
+      - MulesoftAccountSecret=$(aws secretsmanager get-secret-value --secret-id $EnvironmentSecret --query SecretString --output text | jq -rR 'fromjson? | .ArgOne')
+      - anypoint_username=$(aws secretsmanager get-secret-value --secret-id $MulesoftAccountSecret --query SecretString --output text | jq -rR 'fromjson? | .username')
+      - anypoint_password=$(aws secretsmanager get-secret-value --secret-id $MulesoftAccountSecret --query SecretString --output text | jq -rR 'fromjson? | .password')
+      - export ANYPOINT_USERNAME=$anypoint_username
+      - export ANYPOINT_PASSWORD=$anypoint_password
+      - ls
       - cd $TestDirectory
-      - TestIp=$(aws cloudformation describe-stacks --stack-name $DeploymentStackName --query "Stacks[0].Outputs[?OutputKey=='oALBDNS'].OutputValue" --output text)
+      - TestIp=$(anypoint-cli runtime-mgr cloudhub-application describe-json  --environment=Sandbox $CompanyName-$SystemName-$SystemComponent | jq -r .fullDomain)/helloWorld
       - |
         echo -e "Checking if deployment installation was successful"
         echo "DNS to test is $TestIp";
