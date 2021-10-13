@@ -1,0 +1,18 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - yum install -y jq
+      - npm install -g anypoint-cli@latest
+  build:
+    commands:
+      - MulesoftAccountSecret=$(aws secretsmanager get-secret-value --secret-id $EnvironmentSecret --query SecretString --output text | jq -rR 'fromjson? | .MulesoftAccountSecret')
+      - anypoint_username=$(aws secretsmanager get-secret-value --secret-id $MulesoftAccountSecret --query SecretString --output text | jq -rR 'fromjson? | .username')
+      - anypoint_password=$(aws secretsmanager get-secret-value --secret-id $MulesoftAccountSecret --query SecretString --output text | jq -rR 'fromjson? | .password')
+      - export ANYPOINT_USERNAME=$anypoint_username
+      - export ANYPOINT_PASSWORD=$anypoint_password
+      - ls
+      - cd aac 
+      - ls
+      - anypoint-cli runtime-mgr cloudhub-application deploy --runtime=4.4.0 --workers=1 --workerSize=0.2 --region=us-east-1 --property=http.port:8081 --property=https.port:8082 --environment="Sandbox" "$CompanyName-$SystemName-$SystemComponent" "HelloWorld.jar"
