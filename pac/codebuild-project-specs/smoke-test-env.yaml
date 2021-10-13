@@ -14,7 +14,7 @@ phases:
       - ls
       - cp $TestDirectory/smoke-test-0001.sh smoke-test.sh
       - sleep 60
-      - SMOKEIP=$(anypoint-cli runtime-mgr cloudhub-application describe-json  --environment=Sandbox $CompanyName-$SystemName-$SystemComponent | jq -r .fullDomain)/helloWorld 
+      - SMOKEIP=$(anypoint-cli runtime-mgr cloudhub-application describe-json  --environment=$Env $CompanyName-$SystemName-$SystemComponent-$Env | jq -r .fullDomain)/helloWorld 
 
       - |
         echo -e "Checking if deployment infrastructure setup was successful"
@@ -24,7 +24,7 @@ phases:
         status=0;
         status1=$(curl -I http://$SMOKEIP 2>/dev/null  | head -n 1 | cut -d' ' -f2);
         echo $status1;
-        timeout 300 bash -c 'while [[ $status -ne "STARTED" ]]; do sleep 5; status=$(anypoint-cli runtime-mgr cloudhub-application describe-json  --environment=Sandbox $CompanyName-$SystemName-$SystemComponent | jq -r .status); echo $status; done' || { echo -e "Deployment installation timed out unsuccessfully"; exit 1; }
+        timeout 300 bash -c 'while [[ $status -ne "STARTED" ]]; do sleep 5; status=$(anypoint-cli runtime-mgr cloudhub-application describe-json  --environment=$Env $CompanyName-$SystemName-$SystemComponent-$Env | jq -r .status); echo $status; done' || { echo -e "Deployment installation timed out unsuccessfully"; exit 1; }
         echo -e "Deployment installation succeeded"
       - | 
         echo -e "Checking if deployment configuration on $SMOKEIP was successful";
