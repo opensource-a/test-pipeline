@@ -3,12 +3,18 @@ phases:
   install:
     commands:
       - yum install -y jq     
+      - npm install -g anypoint-cli@latest
   build:
     commands:
+      - MulesoftAccountSecret=$(aws secretsmanager get-secret-value --secret-id $EnvironmentSecret --query SecretString --output text | jq -rR 'fromjson? | .ArgOne')
+      - anypoint_username=$(aws secretsmanager get-secret-value --secret-id $MulesoftAccountSecret --query SecretString --output text | jq -rR 'fromjson? | .username')
+      - anypoint_password=$(aws secretsmanager get-secret-value --secret-id $MulesoftAccountSecret --query SecretString --output text | jq -rR 'fromjson? | .password')
+      - export ANYPOINT_USERNAME=$anypoint_username
+      - export ANYPOINT_PASSWORD=$anypoint_password
       - ls
       - cp $TestDirectory/smoke-test-0001.sh smoke-test.sh
       - sleep 60
-      - SMOKEIP=$(aws cloudformation describe-stacks --stack-name $DeploymentStackName --query "Stacks[0].Outputs[?OutputKey=='oALBDNS'].OutputValue" --output text)
+      - SMOKEIP=$(anypoint-cli runtime-mgr cloudhub-application describe-json  --environment=Sandbox $CompanyName-$SystemName-$SystemComponent | jq -r .fullDomain)/helloWorld 
 
       - |
         echo -e "Checking if deployment infrastructure setup was successful"
@@ -18,11 +24,11 @@ phases:
         status=0;
         status1=$(curl -I http://$SMOKEIP 2>/dev/null  | head -n 1 | cut -d' ' -f2);
         echo $status1;
-        timeout 300 bash -c 'while [[ $status -ne 200 ]]; do sleep 5; status=$(curl -I http://$SMOKEIP 2> /dev/null  | head -n 1 | cut -d$" " -f2); echo $status; done' || { echo -e "Deployment installation timed out unsuccessfully"; exit 1; }
+        timeout 300 bash -c 'while [[ $status -ne "STARTED" ]]; do sleep 5; status=$(anypoint-cli runtime-mgr cloudhub-application describe-json  --environment=Sandbox $CompanyName-$SystemName-$SystemComponent | jq -r .status); echo $status; done' || { echo -e "Deployment installation timed out unsuccessfully"; exit 1; }
         echo -e "Deployment installation succeeded"
       - | 
         echo -e "Checking if deployment configuration on $SMOKEIP was successful";
         chmod +x smoke-test.sh;
         curl "http://$SMOKEIP";
-        . $PWD/smoke-test.sh; smoke_url_ok "http://$SMOKEIP"; smoke_assert_body "$Env"; smoke_report;
+        . $PWD/smoke-test.sh; smoke_url_ok "http://$SMOKEIP"; smoke_assert_body "World"; smoke_report;
         echo -e "Deployment configuration succeeded"
