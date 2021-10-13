@@ -12,5 +12,5 @@ aws cloudformation wait stack-create-complete --stack-name $stackName
 codepipelineRoleArn=$(aws cloudformation describe-stacks --stack-name $stackName --query "Stacks[0].Outputs[?OutputKey=='CodePipelineRoleArn'].OutputValue" --output text)
 echo $codepipelineRoleArn
 aws kms create-grant --key-id $secretsKeyArn --operations Decrypt Encrypt GenerateDataKey --grantee-principal $codepipelineRoleArn --name $stackName-grant
-
+sleep 30
 aws s3 rm s3://$s3Bucket/$pipelineFilesPath
